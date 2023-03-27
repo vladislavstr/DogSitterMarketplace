@@ -13,6 +13,6 @@ namespace DogSitterMarketplaceApp.Models.Users
         public UserPassportData PassportData { get; set; }
         public UserRole Role { get; set;}
         public UserStatus Status { get; set;}
-        public ICollection<Pat> Pats { get; set;}
+        public ICollection<Pet> Pets { get; set;}
     }
 }

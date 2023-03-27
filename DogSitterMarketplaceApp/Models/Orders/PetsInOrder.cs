@@ -7,7 +7,7 @@ namespace DogSitterMarketplaceApp.Models.Orders
         public int OrderId { get; set; }
         public int PetId { get; set;}
         public Pet Pet { get; set; }
-        public int OrderStatus { get; set; }
+        public Order Order { get; set; }
 
     }
 }
