@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceApp.Models.User
+﻿namespace DogSitterMarketplaceApp.Models.Users
 {
     public class UserPassportData
     {

@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceApp.Models.Pet
+﻿namespace DogSitterMarketplaceApp.Models.Pets
 {
     public class AnimalType
     {

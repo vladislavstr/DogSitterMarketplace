@@ -1,6 +1,6 @@
-﻿namespace DogSitterMarketplaceApp.Models.User
+﻿namespace DogSitterMarketplaceApp.Models.Users
 {
-    public class UserRoles
+    public class UserRole
     {
         public int Id { get; set; }
         public string Name { get; set; }

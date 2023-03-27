@@ -1,6 +1,6 @@
-﻿using DogSitterMarketplaceApp.Models.Pet;
+﻿using DogSitterMarketplaceApp.Models.Pets;
 
-namespace DogSitterMarketplaceApp.Models.User
+namespace DogSitterMarketplaceApp.Models.Users
 {
     public class User
     {
@@ -11,8 +11,8 @@ namespace DogSitterMarketplaceApp.Models.User
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
         public UserPassportData PassportData { get; set; }
-        public UserRoles Role { get; set;}
-        public UserStatuses Status { get; set;}
-        public ICollection<Pats> Pats { get; set;}
+        public UserRole Role { get; set;}
+        public UserStatus Status { get; set;}
+        public ICollection<Pat> Pats { get; set;}
     }
 }
