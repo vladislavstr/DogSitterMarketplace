@@ -7,7 +7,7 @@ namespace DogSitterMarketplaceBll.Models.Pets.Request
     {
         public string Name { get; set; }
         public string Characteristics { get; set; }
-        public AnimalTypeRequest AnimalType { get; set; }
-        public UserRequest User { get; set; }
+        public int AnimalTypeId { get; set; }
+        public int UserId { get; set; }
     }
 }

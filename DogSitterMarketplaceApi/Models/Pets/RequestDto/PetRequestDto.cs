@@ -6,7 +6,7 @@ namespace DogSitterMarketplaceApi.Models.Pets.RequestDto
     {
         public string Name { get; set; }
         public string Characteristics { get; set; }
-        public AnimalTypeRequestDto AnimalType { get; set; }
-        public UserRequestDto User { get; set; }
+        public int AnimalTypeId { get; set; }
+        public int UserId { get; set; }
     }
 }
