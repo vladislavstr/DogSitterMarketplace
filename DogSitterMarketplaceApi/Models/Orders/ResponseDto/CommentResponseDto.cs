@@ -1,6 +1,6 @@
 ﻿using DogSitterMarketplaceApi.Models.Users;
 
-namespace DogSitterMarketplaceApi.Models.Orders.Response
+namespace DogSitterMarketplaceApi.Models.Orders.ResponseDto
 {
     public class CommentResponseDto
     {

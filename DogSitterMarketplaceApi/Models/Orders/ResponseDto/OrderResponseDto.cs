@@ -1,7 +1,7 @@
 ﻿using DogSitterMarketplaceApi.Models.Services;
 using DogSitterMarketplaceBll.Models.Services;
 
-namespace DogSitterMarketplaceApi.Models.Orders.Response
+namespace DogSitterMarketplaceApi.Models.Orders.ResponseDto
 {
     public class OrderResponseDto
     {

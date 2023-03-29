@@ -1,5 +1,5 @@
 ﻿using DogSitterMarketplaceApi.Models.Orders;
-using DogSitterMarketplaceApi.Models.Orders.Response;
+using DogSitterMarketplaceApi.Models.Orders.ResponseDto;
 using DogSitterMarketplaceApi.Models.Users;
 
 namespace DogSitterMarketplaceApi.Models.Appeals

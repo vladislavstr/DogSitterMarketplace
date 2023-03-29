@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceBll.Models.Pets;
+﻿using DogSitterMarketplaceBll.Models.Pets.Response;
 
 namespace DogSitterMarketplaceBll.Models.Orders.Response
 {

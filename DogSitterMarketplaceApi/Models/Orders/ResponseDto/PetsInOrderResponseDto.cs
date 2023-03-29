@@ -1,6 +1,6 @@
-﻿using DogSitterMarketplaceApi.Models.Pets;
+﻿using DogSitterMarketplaceApi.Models.Pets.ResponseDto;
 
-namespace DogSitterMarketplaceApi.Models.Orders.Response
+namespace DogSitterMarketplaceApi.Models.Orders.ResponseDto
 {
     public class PetsInOrderResponseDto
     {
