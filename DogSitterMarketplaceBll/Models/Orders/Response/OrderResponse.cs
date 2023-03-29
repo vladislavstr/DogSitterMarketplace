@@ -1,4 +1,5 @@
-﻿using DogSitterMarketplaceBll.Models.Services;
+﻿using DogSitterMarketplaceBll.Models.Pets;
+using DogSitterMarketplaceBll.Models.Services;
 
 namespace DogSitterMarketplaceBll.Models.Orders.Response
 {
@@ -12,5 +13,7 @@ namespace DogSitterMarketplaceBll.Models.Orders.Response
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
         public LocationResponse Location { get; set; }
+        public List<PetResponse> Pets { get; set; }
+
     }
 }

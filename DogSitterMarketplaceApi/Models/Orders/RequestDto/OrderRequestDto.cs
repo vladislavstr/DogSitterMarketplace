@@ -1,4 +1,5 @@
-﻿using DogSitterMarketplaceApi.Models.Services;
+﻿using DogSitterMarketplaceApi.Models.Pets;
+using DogSitterMarketplaceApi.Models.Services;
 
 namespace DogSitterMarketplaceApi.Models.Orders.RequestDto
 {
@@ -11,5 +12,6 @@ namespace DogSitterMarketplaceApi.Models.Orders.RequestDto
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
         public int LocationId { get; set; }
+        public List<PetRequestDto> Pets { get; set; }
     }
 }
