@@ -6,5 +6,7 @@ namespace DogSitterMarketplaceBll.Models.Orders.Request
     {
         public OrderRequest Order { get; set; }
         public PetRequest Pet { get; set; }
+        public int OrderId { get; set; }
+        public int PetId { get; set; }
     }
 }
