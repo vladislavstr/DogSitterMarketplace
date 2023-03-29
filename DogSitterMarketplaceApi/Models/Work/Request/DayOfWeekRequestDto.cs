@@ -1,8 +1,9 @@
 ﻿namespace DogSitterMarketplaceApi.Models.Services
 {
-    public class LocationService
+    public class DayOfWeekRequestDto
     {
         public int Id { get; set; }
-        public int Price { get; set; }
+
+        public string Name { get; set; }
     }
 }

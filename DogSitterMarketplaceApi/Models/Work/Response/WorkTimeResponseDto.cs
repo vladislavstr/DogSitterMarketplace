@@ -1,9 +1,11 @@
 ﻿namespace DogSitterMarketplaceApi.Models.Services
 {
-    public class ServiceTime
+    public class WorkTimeResponseDto
     {
         public int Id { get; set; }
+
         public TimeOnly Start { get; set; }
-        public TimeOnly End { get; set; }
+
+        public TimeOnly Stop { get; set; }
     }
 }
