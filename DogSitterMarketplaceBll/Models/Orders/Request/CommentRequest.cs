@@ -7,8 +7,8 @@ namespace DogSitterMarketplaceBll.Models.Orders.Request
         public int Id { get; set; }
         public string Text { get; set; }
         public int Score { get; set; }
-        public OrderRequest Order { get; set; }
-        public UserRequest CommentFromUser { get; set; }
-        public UserRequest CommentToUser { get; set; }
+        public int OrderId { get; set; }
+        public int CommentFromUserId { get; set; }
+        public int CommentToUserId { get; set; }
     }
 }

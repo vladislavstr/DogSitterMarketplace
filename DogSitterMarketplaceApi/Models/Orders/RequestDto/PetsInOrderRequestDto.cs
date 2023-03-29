@@ -6,5 +6,8 @@ namespace DogSitterMarketplaceApi.Models.Orders.RequestDto
     {
         public OrderRequestDto Order { get; set; }
         public PetRequestDto Pet { get; set; }
+
+        public int OrderId { get; set; }
+        public int PetId { get; set; }
     }
 }
