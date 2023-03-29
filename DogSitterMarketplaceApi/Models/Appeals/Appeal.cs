@@ -1,4 +1,5 @@
 ﻿using DogSitterMarketplaceApi.Models.Orders;
+using DogSitterMarketplaceApi.Models.Orders.Response;
 using DogSitterMarketplaceApi.Models.Users;
 
 namespace DogSitterMarketplaceApi.Models.Appeals
@@ -9,7 +10,7 @@ namespace DogSitterMarketplaceApi.Models.Appeals
         public string Text { get; set; }
         public TypeOfAppeal Type { get; set; }
         public AppealStatus Status { get; set; }
-        public Order? Order { get; set; }
+        public OrderResponseDto? Order { get; set; }
         public User AppealFromUser { get; set; }
         public User? AppealToUser { get; set; }
     }
