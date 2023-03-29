@@ -1,6 +1,6 @@
-﻿namespace DogSitterMarketplaceApp.Models.Services
+﻿namespace DogSitterMarketplaceApi.Models.Appeals
 {
-    public class DayOfWeek
+    public class TypeOfAppeal
     {
         public int Id { get; set; }
         public string Name { get; set; }

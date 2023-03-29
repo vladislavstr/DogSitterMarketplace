@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceApp.Models.Services
+﻿namespace DogSitterMarketplaceApi.Models.Services
 {
     public class ServiceTime
     {

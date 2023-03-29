@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "DogSitterMarketplaceApp": {
+    "DogSitterMarketplaceApi": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

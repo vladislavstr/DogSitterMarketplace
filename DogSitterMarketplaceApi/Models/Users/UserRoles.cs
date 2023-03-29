@@ -1,6 +1,6 @@
-﻿namespace DogSitterMarketplaceApp.Models.Appeals
+﻿namespace DogSitterMarketplaceApi.Models.Users
 {
-    public class AppealStatus
+    public class UserRole
     {
         public int Id { get; set; }
         public string Name { get; set; }

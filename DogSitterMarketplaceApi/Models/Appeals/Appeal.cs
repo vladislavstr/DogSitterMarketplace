@@ -1,7 +1,7 @@
-﻿using DogSitterMarketplaceApp.Models.Orders;
-using DogSitterMarketplaceApp.Models.Users;
+﻿using DogSitterMarketplaceApi.Models.Orders;
+using DogSitterMarketplaceApi.Models.Users;
 
-namespace DogSitterMarketplaceApp.Models.Appeals
+namespace DogSitterMarketplaceApi.Models.Appeals
 {
     public class AppealOutput
     {

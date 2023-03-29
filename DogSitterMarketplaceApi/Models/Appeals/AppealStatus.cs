@@ -1,6 +1,6 @@
-﻿namespace DogSitterMarketplaceApp.Models.Appeals
+﻿namespace DogSitterMarketplaceApi.Models.Appeals
 {
-    public class TypeOfAppeal
+    public class AppealStatus
     {
         public int Id { get; set; }
         public string Name { get; set; }

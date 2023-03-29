@@ -1,6 +1,6 @@
-﻿using DogSitterMarketplaceApp.Models.Users;
+﻿using DogSitterMarketplaceApi.Models.Users;
 
-namespace DogSitterMarketplaceApp.Models.Pets
+namespace DogSitterMarketplaceApi.Models.Pets
 {
     public class Pet
     {
