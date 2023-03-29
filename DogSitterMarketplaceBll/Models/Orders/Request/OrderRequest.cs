@@ -1,4 +1,5 @@
 ﻿using DogSitterMarketplaceBll.Models.Orders.Response;
+using DogSitterMarketplaceBll.Models.Pets;
 using DogSitterMarketplaceBll.Models.Services;
 
 namespace DogSitterMarketplaceBll.Models.Orders.Request
@@ -12,5 +13,6 @@ namespace DogSitterMarketplaceBll.Models.Orders.Request
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
         public int LocationId { get; set; }
+        public List<PetRequest> Pets { get; set; }
     }
 }

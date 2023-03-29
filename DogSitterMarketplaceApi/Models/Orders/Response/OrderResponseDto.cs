@@ -1,4 +1,5 @@
-﻿using DogSitterMarketplaceApi.Models.Services;
+﻿using DogSitterMarketplaceApi.Models.Pets;
+using DogSitterMarketplaceApi.Models.Services;
 using DogSitterMarketplaceBll.Models.Services;
 
 namespace DogSitterMarketplaceApi.Models.Orders.Response
@@ -13,5 +14,7 @@ namespace DogSitterMarketplaceApi.Models.Orders.Response
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
         public LocationResponseDto Location { get; set; }
+        public List<PetResponseDto> Pets { get; set; }
+
     }
 }
