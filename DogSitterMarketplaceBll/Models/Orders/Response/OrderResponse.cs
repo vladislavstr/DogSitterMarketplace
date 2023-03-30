@@ -8,7 +8,7 @@ namespace DogSitterMarketplaceBll.Models.Orders.Response
     {
         public int Id { get; set; }
         public string? Comment { get; set; }
-        public OrderStatusResponce OrderStatus { get; set; }
+        public OrderStatusResponse OrderStatus { get; set; }
         public SitterWorkResponse SitterService { get; set; }
         public int Summ { get; set; }
         public DateTime DateStart { get; set; }

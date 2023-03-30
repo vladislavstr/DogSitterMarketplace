@@ -1,6 +1,6 @@
 ﻿namespace DogSitterMarketplaceApi.Models.Orders.ResponseDto
 {
-    public class OrderStatusResponce
+    public class OrderStatusResponseDto
     {
         public int Id { get; set; }
 

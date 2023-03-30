@@ -1,6 +1,6 @@
 ﻿namespace DogSitterMarketplaceBll.Models.Orders.Response
 {
-    public class OrderStatusResponce
+    public class OrderStatusResponse
     {
         public int Id { get; set; }
 
