@@ -1,6 +1,6 @@
-﻿namespace DogSitterMarketplaceDal.Models.Services
+﻿namespace DogSitterMarketplaceDal.Models.Works
 {
-    public class SitterServiceEntity
+    public class SitterWorkEntity
     {
         public int Id { get; set; }
 
@@ -8,7 +8,7 @@
 
         public UserEntity User { get; set; }
 
-        public ServiceTypeEntity Type { get; set; }
+        public WorkTypeEntity Type { get; set; }
 
         public bool IsDeleted { get; set; }
     }

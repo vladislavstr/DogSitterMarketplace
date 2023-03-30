@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceDal.Models.Services
+﻿namespace DogSitterMarketplaceDal.Models.Works
 {
     public class LocationEntity
     {

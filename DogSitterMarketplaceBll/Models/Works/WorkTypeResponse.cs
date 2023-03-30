@@ -1,6 +1,6 @@
-﻿namespace DogSitterMarketplaceBll.Models.Services
+﻿namespace DogSitterMarketplaceBll.Models.Works
 {
-    public class ServiceTypeResponseDto
+    public class WorkTypeResponse
     {
         public int Id { get; set; }
 

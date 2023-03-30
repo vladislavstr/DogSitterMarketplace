@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceDal.Models.Services;
+﻿using DogSitterMarketplaceDal.Models.Works;
 
 namespace DogSitterMarketplaceDal.Models.Orders
 {
@@ -7,7 +7,7 @@ namespace DogSitterMarketplaceDal.Models.Orders
         public int Id { get; set; }
         public string? Comment { get; set; }
         public OrderStatusEntity OrderStatus { get; set; }
-        public SitterServiceEntity SitterService { get; set; }
+        public SitterWorkEntity SitterService { get; set; }
         public int Summ { get; set; }
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }

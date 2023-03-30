@@ -1,8 +1,9 @@
-﻿namespace DogSitterMarketplaceApi.Models.Services
+﻿namespace DogSitterMarketplaceBll.Models.Works
 {
-    public class LocationResponseDto
+    public class WorkTypeResponseDto
     {
         public int Id { get; set; }
+
         public string Name { get; set; }
     }
 }

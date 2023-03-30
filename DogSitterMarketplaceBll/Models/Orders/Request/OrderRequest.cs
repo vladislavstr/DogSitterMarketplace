@@ -1,6 +1,7 @@
 ﻿using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets;
-using DogSitterMarketplaceBll.Models.Services;
+using DogSitterMarketplaceBll.Models.Pets.Request;
+using DogSitterMarketplaceBll.Models.Works;
 
 namespace DogSitterMarketplaceBll.Models.Orders.Request
 {

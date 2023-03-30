@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceBll.Models.Services
+﻿namespace DogSitterMarketplaceBll.Models.Works
 {
     public class LocationRequest
     {

@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceApi.Models.Services
+﻿namespace DogSitterMarketplaceApi.Models.Works
 {
     public class LocationRequestDto
     {

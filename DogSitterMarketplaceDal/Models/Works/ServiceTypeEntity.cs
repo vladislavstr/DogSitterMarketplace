@@ -1,6 +1,6 @@
-﻿namespace DogSitterMarketplaceDal.Models.Services
+﻿namespace DogSitterMarketplaceDal.Models.Works
 {
-    public class ServiceTypeEntity
+    public class WorkTypeEntity
     {
         public int Id { get; set; }
 

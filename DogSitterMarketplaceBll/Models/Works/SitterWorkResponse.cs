@@ -1,8 +1,8 @@
 ﻿using DogSitterMarketplaceBll.Models.Users;
 
-namespace DogSitterMarketplaceBll.Models.Services
+namespace DogSitterMarketplaceBll.Models.Works
 {
-    public class SitterServiceResponse
+    public class SitterWorkResponse
     {
         public int Id { get; set; }
 
@@ -10,6 +10,6 @@ namespace DogSitterMarketplaceBll.Models.Services
 
         public UserResponse User { get; set; }
 
-        public ServiceTypeResponse Type { get; set; }
+        public WorkTypeResponse Type { get; set; }
     }
 }
