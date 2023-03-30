@@ -7,7 +7,7 @@ namespace DogSitterMarketplaceDal.Models.Orders
         public int Id { get; set; }
         public string? Comment { get; set; }
         public OrderStatusEntity OrderStatus { get; set; }
-        public SitterWorkEntity SitterService { get; set; }
+        public SitterWorkEntity SitterWork { get; set; }
         public int Summ { get; set; }
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
