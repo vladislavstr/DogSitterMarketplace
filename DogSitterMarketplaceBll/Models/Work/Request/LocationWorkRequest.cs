@@ -11,5 +11,7 @@ namespace DogSitterMarketplaceBll.Models.Work.Request
         public int LocationId { get; set; }
 
         public bool IsNotActive { get; set; }
+
+        public List<TimingLocationWorkRequest> TimingLocations { get; set; }
     }
 }
