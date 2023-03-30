@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceDal.Models
+﻿namespace DogSitterMarketplaceDal.Models.Users
 {
     public class UserEntity
     {

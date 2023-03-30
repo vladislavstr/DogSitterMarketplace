@@ -1,4 +1,6 @@
-﻿namespace DogSitterMarketplaceDal.Models.Orders
+﻿using DogSitterMarketplaceDal.Models.Users;
+
+namespace DogSitterMarketplaceDal.Models.Orders
 {
     public class CommentEntity
     {

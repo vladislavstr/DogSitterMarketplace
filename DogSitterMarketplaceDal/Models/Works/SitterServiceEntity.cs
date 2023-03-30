@@ -1,6 +1,8 @@
-﻿namespace DogSitterMarketplaceDal.Models.Works
+﻿using DogSitterMarketplaceDal.Models.Users;
+
+namespace DogSitterMarketplaceDal.Models.Works
 {
-    public class SitterWorkEntity
+    public class SitterSerivceEntity
     {
         public int Id { get; set; }
 

@@ -1,9 +1,9 @@
-﻿using DogSitterMarketplaceApi.Models.Users;
+﻿using DogSitterMarketplaceApi.Models.Users.Response;
 using DogSitterMarketplaceBll.Models.Works;
 
 namespace DogSitterMarketplaceApi.Models.Works
 {
-    public class SitterWorkResponseDto
+    public class SitterWorkkResponseDto
     {
         public int Id { get; set; }
 
