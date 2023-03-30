@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceApi.Models.Pets.ResponseDto;
+using DogSitterMarketplaceApi.Models.Pets.ResponseDto;
 using DogSitterMarketplaceApi.Models.Works;
 
 namespace DogSitterMarketplaceApi.Models.Orders.ResponseDto

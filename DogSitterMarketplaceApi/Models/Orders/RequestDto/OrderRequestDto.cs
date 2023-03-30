@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceApi.Models.Pets.RequestDto;
+using DogSitterMarketplaceApi.Models.Pets.RequestDto;
 
 namespace DogSitterMarketplaceApi.Models.Orders.RequestDto
 {
