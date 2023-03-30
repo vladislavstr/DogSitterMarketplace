@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceApi.Models.Services
+﻿namespace DogSitterMarketplaceApi.Models.Work.Response
 {
     public class TimingLocationWorkResponseDto
     {

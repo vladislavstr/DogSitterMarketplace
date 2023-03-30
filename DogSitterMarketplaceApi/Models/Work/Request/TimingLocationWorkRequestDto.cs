@@ -1,6 +1,6 @@
-﻿namespace DogSitterMarketplaceApi.Models.Services
+﻿namespace DogSitterMarketplaceApi.Models.Work.Request
 {
-    public class TimingLocationWorkRequestApi
+    public class TimingLocationWorkRequestDto
     {
         public int DayOfWeekId { get; set; }
 

@@ -1,15 +1,13 @@
-﻿using DogSitterMarketplaceApi.Models.Services;
-
-namespace DogSitterMarketplaceApi.Models.Work
+﻿namespace DogSitterMarketplaceApi.Models.Work.Request
 {
     public class SitterWorkRequestDto
     {
-        public int Id { get; set; }
-
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         public int UserId { get; set; }
 
         public int WorkTypeId { get; set; }
+
+        public List<int> LocationsWorks { get; set; }
     }
 }

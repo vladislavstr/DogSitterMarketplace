@@ -6,7 +6,7 @@
 
         public int Price { get; set; }
 
-        public SitterWorkRequest SitterWork { get; set; }
+        public SitterWorkResponse SitterWork { get; set; }
 
         public LocationResponse Location { get; set; }
 

@@ -1,11 +1,9 @@
-﻿using DogSitterMarketplaceApi.Models.Work;
+﻿using DogSitterMarketplaceApi.Models.Work.Request;
 
-namespace DogSitterMarketplaceApi.Models.Services
+namespace DogSitterMarketplaceApi.Models.Work.Request
 {
     public class LocationWorkRequestDto
     {
-        public int Id { get; set; }
-
         public int Price { get; set; }
 
         public int SitterWorkId { get; set; }
@@ -13,6 +11,5 @@ namespace DogSitterMarketplaceApi.Models.Services
         public int LocationId { get; set; }
 
         public bool IsNotActive { get; set; }
-
     }
 }

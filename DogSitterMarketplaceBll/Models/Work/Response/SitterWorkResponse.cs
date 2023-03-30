@@ -2,16 +2,16 @@
 
 namespace DogSitterMarketplaceBll.Models.Work.Response
 {
-    public class SitterWorkRequest
+    public class SitterWorkResponse
     {
         public int Id { get; set; }
 
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         public UserResponse User { get; set; }
 
         public WorkTypeResponse WorkType { get; set; }
 
-        public List<LocationWorkResponse> locationWork { get; set; }
+        public List<LocationWorkResponse> LocationsWorks { get; set; }
     }
 }

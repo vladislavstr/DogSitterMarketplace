@@ -1,9 +1,7 @@
-﻿namespace DogSitterMarketplaceApi.Models.Work
+﻿namespace DogSitterMarketplaceApi.Models.Work.Request
 {
     public class WorkTypeRequestDto
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
     }
 }

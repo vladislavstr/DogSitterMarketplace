@@ -1,8 +1,8 @@
-﻿using DogSitterMarketplaceApi.Models.Work;
-using DogSitterMarketplaceApi.Models.Work;
-using DogSitterMarketplaceApi.Models.Services;
+﻿using DogSitterMarketplaceApi.Models.Work.Response;
+using DogSitterMarketplaceApi.Models.Work.Response;
+using DogSitterMarketplaceApi.Models.Work.Response;
 
-namespace DogSitterMarketplaceApi.Models.Services
+namespace DogSitterMarketplaceApi.Models.Work
 {
     public class LocationWorkResponseDto
     {

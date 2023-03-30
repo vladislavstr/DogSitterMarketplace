@@ -6,7 +6,7 @@ namespace DogSitterMarketplaceDal.Models.Work
     {
         public int Id { get; set; }
 
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         public UserEntity User { get; set; }
 
