@@ -11,7 +11,7 @@ namespace DogSitterMarketplaceApi.Models.Users.Request
         public bool IsDeleted { get; set; }
         public UserPassportDataRequestDto PassportData { get; set; }
         public UserRoleRequestDto Role { get; set; }
-        public UserStatusRequestDto Status { get; set; }
+        public UserStatusRequestDto? Status { get; set; }
         public ICollection<PetRequestDto>? Pets { get; set; }
     }
 }

@@ -10,9 +10,9 @@ namespace DogSitterMarketplaceApi.Models.Users.Response
         public string PhoneNumber { get; set; }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
-        public UserPassportDataResponseDto PassportData { get; set; }
+        public UserPassportDataResponseDto? PassportData { get; set; }
         public UserRoleResponseDto Role { get; set; }
         public UserStatusResponseDto Status { get; set; }
-        public ICollection<PetResponseDto> Pets { get; set; }
+        public ICollection<PetResponseDto>? Pets { get; set; }
     }
 }
