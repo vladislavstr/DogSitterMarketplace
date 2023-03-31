@@ -1,6 +1,6 @@
-﻿using DogSitterMarketplaceBll.Models.Pets.ResponseDto;
+﻿using DogSitterMarketplaceBll.Models.PetsDto.Response;
 
-namespace DogSitterMarketplaceBll.Models.Users.Response
+namespace DogSitterMarketplaceBll.Models.UsersDto.Response
 {
     public class UserResponse
     {

@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceBll.Models.Users.Response
+﻿namespace DogSitterMarketplaceBll.Models.UsersDto.Response
 {
     public class UserStatusResponse
     {
