@@ -2,5 +2,6 @@
 {
     public class UserResponse
     {
+        public int Id { get; set; }
     }
 }
