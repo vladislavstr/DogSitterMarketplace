@@ -1,6 +1,6 @@
-﻿namespace DogSitterMarketplaceBll.Models.UsersDto.Response
+﻿namespace DogSitterMarketplaceApi.Models.UsersDto.Response
 {
-    public class UserRoleResponse
+    public class UserRoleResponseDto
     {
         public int Id { get; set; }
 

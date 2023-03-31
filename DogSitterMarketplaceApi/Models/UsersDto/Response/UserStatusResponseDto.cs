@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceApi.Models.Users.Response
+﻿namespace DogSitterMarketplaceApi.Models.UsersDto.Response
 {
     public class UserStatusResponseDto
     {
@@ -6,6 +6,6 @@
 
         public string Name { get; set; }
 
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceBll.Models.UsersDto.Request
+﻿namespace DogSitterMarketplaceBll.Models.Users.Request
 {
     public class UserPassportDataRequest
     {
