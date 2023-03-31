@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceApi.Models.Users.Response
+﻿namespace DogSitterMarketplaceApi.Models.UsersDto.Response
 {
     public class UserPassportDataResponseDto
     {
