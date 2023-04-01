@@ -21,6 +21,10 @@ namespace DogSitterMarketplaceDal.Repositories
             order.DateStart = DateTime.Now;
             order.DateEnd = DateTime.Now;
             order.IsDeleted = false;
+            order.OrderStatus = new OrderStatusEntity();
+            order.SitterWork = new SitterWorkEntity();
+            order.Location = new LocationEntity();
+
             OrderStatusEntity orderStatus = new OrderStatusEntity
             {
                 Id = 1,
@@ -78,7 +82,7 @@ namespace DogSitterMarketplaceDal.Repositories
             _context.SaveChanges();
         }
 
-        public void DeleteOrder(int id) 
+        public void DeleteOrder(int id)
         {
             var orderDb = _context.Orders.FirstOrDefault(o => o.Id == id);
             orderDb.IsDeleted = false;

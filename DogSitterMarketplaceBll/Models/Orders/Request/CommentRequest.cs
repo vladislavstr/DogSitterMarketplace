@@ -1,6 +1,4 @@
-﻿using DogSitterMarketplaceBll.Models.Users;
-
-namespace DogSitterMarketplaceBll.Models.Orders.Request
+﻿namespace DogSitterMarketplaceBll.Models.Orders.Request
 {
     public class CommentRequest
     {

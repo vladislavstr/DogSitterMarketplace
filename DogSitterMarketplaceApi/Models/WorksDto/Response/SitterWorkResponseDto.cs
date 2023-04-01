@@ -1,6 +1,5 @@
-﻿using DogSitterMarketplaceApi.Models.WorksDto.Response;
-using DogSitterMarketplaceApi.Models.UsersDto.Response;
-using DogSitterMarketplaceApi.Models.Works;
+﻿using DogSitterMarketplaceApi.Models.UsersDto.Response;
+using DogSitterMarketplaceApi.Models.WorksDto.Response;
 
 namespace DogSitterMarketplaceApi.Models.WorksDto
 {

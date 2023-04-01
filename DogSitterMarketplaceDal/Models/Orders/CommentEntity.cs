@@ -1,5 +1,6 @@
 ﻿using DogSitterMarketplaceDal.Models.Users;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DogSitterMarketplaceDal.Models.Orders
 {
@@ -17,10 +18,8 @@ namespace DogSitterMarketplaceDal.Models.Orders
         [Required]
         public OrderEntity Order { get; set; }
 
-        [Required]
         public UserEntity CommentFromUser { get; set; }
 
-        [Required]
         public UserEntity CommentToUser { get; set; }
 
         [Required]

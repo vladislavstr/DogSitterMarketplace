@@ -1,6 +1,4 @@
-﻿using DogSitterMarketplaceDal.Models.Works;
-
-namespace DogSitterMarketplaceDal.Models.Works
+﻿namespace DogSitterMarketplaceDal.Models.Works
 {
     public class LocationWorkEntity
     {

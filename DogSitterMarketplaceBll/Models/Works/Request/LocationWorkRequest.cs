@@ -1,12 +1,10 @@
-﻿using DogSitterMarketplaceBll.Models.Works.Response;
-
-namespace DogSitterMarketplaceBll.Models.Works.Request
+﻿namespace DogSitterMarketplaceBll.Models.Works.Request
 {
     public class LocationWorkRequest
     {
         public int Price { get; set; }
 
-        public int SitterWorkId  { get; set; }
+        public int SitterWorkId { get; set; }
 
         public int LocationId { get; set; }
 
