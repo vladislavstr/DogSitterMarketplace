@@ -1,6 +1,6 @@
 ﻿namespace DogSitterMarketplaceDal.Models.Users
 {
-    internal class UserPassportDataEntity
+    public class UserPassportDataEntity
     {
         public int Id { get; set; }
 

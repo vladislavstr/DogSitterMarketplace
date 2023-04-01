@@ -1,6 +1,6 @@
 ﻿namespace DogSitterMarketplaceDal.Models.Users
 {
-    internal class UserRoleEntity
+    public class UserRoleEntity
     {
         public int Id { get; set; }
 
