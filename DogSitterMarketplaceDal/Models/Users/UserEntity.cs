@@ -1,9 +1,11 @@
-﻿using DogSitterMarketplaceDal.Models.Pets;
+﻿using System.ComponentModel.DataAnnotations;
+using DogSitterMarketplaceDal.Models.Pets;
 
 namespace DogSitterMarketplaceDal.Models.Users
 {
     public class UserEntity
     {
+        [Key]
         public int Id { get; set; }
 
         public string Email { get; set; }
