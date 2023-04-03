@@ -1,10 +1,12 @@
-﻿using DogSitterMarketplaceDal.Models.Orders;
+﻿using System.ComponentModel.DataAnnotations;
+using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Users;
 
 namespace DogSitterMarketplaceDal.Models.Appeals
 {
     public class AppealEntity
     {
+        [Key]
         public int Id { get; set; }
 
         public string Text { get; set; }
