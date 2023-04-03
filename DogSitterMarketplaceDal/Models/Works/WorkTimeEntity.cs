@@ -1,11 +1,16 @@
-﻿namespace DogSitterMarketplaceDal.Models.Works
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DogSitterMarketplaceDal.Models.Works
 {
     public class WorkTimeEntity
     {
+        [Key]
         public int Id { get; set; }
 
-        public TimeOnly Start { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime Start { get; set; }
 
-        public TimeOnly Stop { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime Stop { get; set; }
     }
 }
