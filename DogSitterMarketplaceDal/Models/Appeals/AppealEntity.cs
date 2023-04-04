@@ -8,7 +8,8 @@ namespace DogSitterMarketplaceDal.Models.Appeals
     {
         [Key]
         public int Id { get; set; }
-
+        
+        [Required]
         public string Text { get; set; }
 
         public AppealTypeEntity Type { get; set; }
@@ -21,6 +22,7 @@ namespace DogSitterMarketplaceDal.Models.Appeals
 
         public UserEntity? AppealToUser { get; set; }
 
+        [Required]
         public bool IsDeleted { get; set; }
     }
 }

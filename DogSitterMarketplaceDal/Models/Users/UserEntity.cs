@@ -8,14 +8,19 @@ namespace DogSitterMarketplaceDal.Models.Users
         [Key]
         public int Id { get; set; }
 
+        [Required]
         public string Email { get; set; }
 
+        [Required]
         public string Password { get; set; }
 
+        [Required]
         public string PhoneNumber { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
+        [Required]
         public bool IsDeleted { get; set; }
 
         public UserPassportDataEntity? PassportData { get; set; }

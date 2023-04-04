@@ -6,6 +6,8 @@ namespace DogSitterMarketplaceDal.Models.Appeals
     {
         [Key]
         public int Id { get; set; }
+        
+        [Required]
         public string Name { get; set; }
     }
 }
