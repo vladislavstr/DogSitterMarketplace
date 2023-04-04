@@ -20,40 +20,19 @@ namespace DogSitterMarketplaceDal
 
         public DbSet<LocationEntity> Location { get; set; }
 
+        public DbSet<PetEntity> Pets { get; set; }
+
+        public DbSet<AnimalTypeEntity> AnimalsTypes { get; set; }
+
+        public DbSet<UserEntity> Users { get; set; }
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             //builder.UseSqlServer("sqlConnectionString");
             //builder.UseInMemoryDatabase("Db");
-            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=DogSitter;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
+            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=DogSitt;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
         }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<CommentEntity>()
-        //        .HasOne(c => c.CommentFromUser)
-        //        .WithOne()
-        //        .HasForeignKey<UserEntity>(u => u.Id)
-        //        .IsRequired(false)
-        //        .OnDelete(DeleteBehavior.Restrict);
-
-        //    modelBuilder.Entity<CommentEntity>()
-        //        .HasOne(c => c.CommentToUser)
-        //        .WithOne()
-        //        .HasForeignKey<UserEntity>(u => u.Id)
-        //        .IsRequired(false)
-        //        .OnDelete(DeleteBehavior.Restrict);
-
-        //    modelBuilder.Entity<PetsInOrderEntity>()
-        //        .HasOne(p => p.Pet)
-        //        .WithOne()
-        //        .HasForeignKey<PetEntity>(p => p.Id)
-        //        .OnDelete(DeleteBehavior.Restrict);
-
-        //    modelBuilder.Entity<PetsInOrderEntity>()
-        //        .HasOne(p => p.Order)
-        //        .WithOne()
-        //        .HasForeignKey<OrderEntity>(o => o.Id)
-        //        .OnDelete(DeleteBehavior.Restrict);
-        //}
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DogSitterMarketplaceDal.Migrations
 {
     /// <inheritdoc />
-    public partial class initialDb : Migration
+    public partial class firsrDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -267,13 +267,13 @@ namespace DogSitterMarketplaceDal.Migrations
                         column: x => x.CommentFromUserId,
                         principalTable: "UserEntity",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Comments_UserEntity_CommentToUserId",
                         column: x => x.CommentToUserId,
                         principalTable: "UserEntity",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,7 +299,7 @@ namespace DogSitterMarketplaceDal.Migrations
                         column: x => x.PetId,
                         principalTable: "PetEntity",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

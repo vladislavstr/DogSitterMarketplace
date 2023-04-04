@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DogSitterMarketplaceDal.Migrations
 {
     [DbContext(typeof(DogSitterContext))]
-    [Migration("20230401142340_initialDb")]
-    partial class initialDb
+    [Migration("20230402171738_firsrDB")]
+    partial class firsrDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

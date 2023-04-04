@@ -71,12 +71,12 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public OrderEntity GetOrderById(int id)
         {
-            return _context.Orders.FirstOrDefault(o => o.Id == id);
+            return _context.Orders.Single(o => o.Id == id);
         }
 
         public void UpdateOrder(OrderEntity order)
         {
-            var orderDb = _context.Orders.FirstOrDefault(o => o.Id == order.Id);
+            var orderDb = _context.Orders.Single(o => o.Id == order.Id);
             orderDb.Summ = order.Summ;
 
             _context.SaveChanges();
@@ -84,7 +84,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public void DeleteOrder(int id)
         {
-            var orderDb = _context.Orders.FirstOrDefault(o => o.Id == id);
+            var orderDb = _context.Orders.Single(o => o.Id == id);
             orderDb.IsDeleted = false;
 
             _context.SaveChanges();
