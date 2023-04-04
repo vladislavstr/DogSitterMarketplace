@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DogSitterMarketplaceDal.Migrations
 {
     [DbContext(typeof(DogSitterContext))]
-    [Migration("20230402171738_firsrDB")]
-    partial class firsrDB
+    [Migration("20230404172923_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,85 @@ namespace DogSitterMarketplaceDal.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DogSitterMarketplaceDal.Models.Appeals.AppealEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AppealFromUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AppealToUserId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppealFromUserId");
+
+                    b.HasIndex("AppealToUserId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("AppealEntity");
+                });
+
+            modelBuilder.Entity("DogSitterMarketplaceDal.Models.Appeals.AppealStatusEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppealStatusEntity");
+                });
+
+            modelBuilder.Entity("DogSitterMarketplaceDal.Models.Appeals.AppealTypeEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppealTypeEntity");
+                });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Orders.CommentEntity", b =>
                 {
@@ -160,8 +239,10 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Name")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Parameters")
                         .IsRequired()
@@ -169,7 +250,7 @@ namespace DogSitterMarketplaceDal.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AnimalTypeEntity");
+                    b.ToTable("AnimalsTypes");
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Pets.PetEntity", b =>
@@ -203,7 +284,7 @@ namespace DogSitterMarketplaceDal.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PetEntity");
+                    b.ToTable("Pets");
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Users.UserEntity", b =>
@@ -250,7 +331,7 @@ namespace DogSitterMarketplaceDal.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("UserEntity");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Users.UserPassportDataEntity", b =>
@@ -376,24 +457,65 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.ToTable("WorkTypeEntity");
                 });
 
+            modelBuilder.Entity("DogSitterMarketplaceDal.Models.Appeals.AppealEntity", b =>
+                {
+                    b.HasOne("DogSitterMarketplaceDal.Models.Users.UserEntity", "AppealFromUser")
+                        .WithMany()
+                        .HasForeignKey("AppealFromUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DogSitterMarketplaceDal.Models.Users.UserEntity", "AppealToUser")
+                        .WithMany()
+                        .HasForeignKey("AppealToUserId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("DogSitterMarketplaceDal.Models.Orders.OrderEntity", "Order")
+                        .WithMany("Appeals")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("DogSitterMarketplaceDal.Models.Appeals.AppealStatusEntity", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DogSitterMarketplaceDal.Models.Appeals.AppealTypeEntity", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AppealFromUser");
+
+                    b.Navigation("AppealToUser");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Status");
+
+                    b.Navigation("Type");
+                });
+
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Orders.CommentEntity", b =>
                 {
                     b.HasOne("DogSitterMarketplaceDal.Models.Users.UserEntity", "CommentFromUser")
                         .WithMany()
                         .HasForeignKey("CommentFromUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DogSitterMarketplaceDal.Models.Users.UserEntity", "CommentToUser")
                         .WithMany()
                         .HasForeignKey("CommentToUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DogSitterMarketplaceDal.Models.Orders.OrderEntity", "Order")
-                        .WithMany()
+                        .WithMany("Comments")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CommentFromUser");
@@ -408,19 +530,19 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.HasOne("DogSitterMarketplaceDal.Models.Works.LocationEntity", "Location")
                         .WithMany()
                         .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DogSitterMarketplaceDal.Models.Orders.OrderStatusEntity", "OrderStatus")
                         .WithMany()
                         .HasForeignKey("OrderStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DogSitterMarketplaceDal.Models.Works.SitterWorkEntity", "SitterWork")
                         .WithMany()
                         .HasForeignKey("SitterWorkId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Location");
@@ -435,13 +557,13 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.HasOne("DogSitterMarketplaceDal.Models.Orders.OrderEntity", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DogSitterMarketplaceDal.Models.Pets.PetEntity", "Pet")
                         .WithMany()
                         .HasForeignKey("PetId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -454,13 +576,13 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.HasOne("DogSitterMarketplaceDal.Models.Pets.AnimalTypeEntity", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DogSitterMarketplaceDal.Models.Users.UserEntity", "User")
                         .WithMany("Pets")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Type");
@@ -472,18 +594,19 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     b.HasOne("DogSitterMarketplaceDal.Models.Users.UserPassportDataEntity", "PassportData")
                         .WithMany()
-                        .HasForeignKey("PassportDataId");
+                        .HasForeignKey("PassportDataId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("DogSitterMarketplaceDal.Models.Users.UserRoleEntity", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DogSitterMarketplaceDal.Models.Users.UserStatusEntity", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("PassportData");
@@ -498,18 +621,25 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.HasOne("DogSitterMarketplaceDal.Models.Users.UserEntity", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DogSitterMarketplaceDal.Models.Works.WorkTypeEntity", "WorkType")
                         .WithMany()
                         .HasForeignKey("WorkTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
 
                     b.Navigation("WorkType");
+                });
+
+            modelBuilder.Entity("DogSitterMarketplaceDal.Models.Orders.OrderEntity", b =>
+                {
+                    b.Navigation("Appeals");
+
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Users.UserEntity", b =>

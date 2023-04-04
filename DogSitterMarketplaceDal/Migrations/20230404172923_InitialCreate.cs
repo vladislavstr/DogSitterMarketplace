@@ -6,24 +6,50 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DogSitterMarketplaceDal.Migrations
 {
     /// <inheritdoc />
-    public partial class firsrDB : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AnimalTypeEntity",
+                name: "AnimalsTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Parameters = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AnimalTypeEntity", x => x.Id);
+                    table.PrimaryKey("PK_AnimalsTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppealStatusEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppealStatusEntity", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppealTypeEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppealTypeEntity", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -109,7 +135,7 @@ namespace DogSitterMarketplaceDal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserEntity",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -125,28 +151,26 @@ namespace DogSitterMarketplaceDal.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserEntity", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserEntity_UserPassportDataEntity_PassportDataId",
+                        name: "FK_Users_UserPassportDataEntity_PassportDataId",
                         column: x => x.PassportDataId,
                         principalTable: "UserPassportDataEntity",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_UserEntity_UserRoleEntity_RoleId",
+                        name: "FK_Users_UserRoleEntity_RoleId",
                         column: x => x.RoleId,
                         principalTable: "UserRoleEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_UserEntity_UserStatusEntity_StatusId",
+                        name: "FK_Users_UserStatusEntity_StatusId",
                         column: x => x.StatusId,
                         principalTable: "UserStatusEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "PetEntity",
+                name: "Pets",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -159,19 +183,17 @@ namespace DogSitterMarketplaceDal.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PetEntity", x => x.Id);
+                    table.PrimaryKey("PK_Pets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PetEntity_AnimalTypeEntity_TypeId",
+                        name: "FK_Pets_AnimalsTypes_TypeId",
                         column: x => x.TypeId,
-                        principalTable: "AnimalTypeEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "AnimalsTypes",
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_PetEntity_UserEntity_UserId",
+                        name: "FK_Pets_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "UserEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -189,17 +211,15 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     table.PrimaryKey("PK_SitterWork", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SitterWork_UserEntity_UserId",
+                        name: "FK_SitterWork_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "UserEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Users",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_SitterWork_WorkTypeEntity_WorkTypeId",
                         column: x => x.WorkTypeId,
                         principalTable: "WorkTypeEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -224,20 +244,61 @@ namespace DogSitterMarketplaceDal.Migrations
                         name: "FK_Orders_Location_LocationId",
                         column: x => x.LocationId,
                         principalTable: "Location",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_OrderStatuses_OrderStatusId",
                         column: x => x.OrderStatusId,
                         principalTable: "OrderStatuses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_SitterWork_SitterWorkId",
                         column: x => x.SitterWorkId,
                         principalTable: "SitterWork",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppealEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeId = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: true),
+                    AppealFromUserId = table.Column<int>(type: "int", nullable: false),
+                    AppealToUserId = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppealEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppealEntity_AppealStatusEntity_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "AppealStatusEntity",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AppealEntity_AppealTypeEntity_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "AppealTypeEntity",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AppealEntity_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AppealEntity_Users_AppealFromUserId",
+                        column: x => x.AppealFromUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AppealEntity_Users_AppealToUserId",
+                        column: x => x.AppealToUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -260,20 +321,17 @@ namespace DogSitterMarketplaceDal.Migrations
                         name: "FK_Comments_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Comments_UserEntity_CommentFromUserId",
+                        name: "FK_Comments_Users_CommentFromUserId",
                         column: x => x.CommentFromUserId,
-                        principalTable: "UserEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Users",
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Comments_UserEntity_CommentToUserId",
+                        name: "FK_Comments_Users_CommentToUserId",
                         column: x => x.CommentToUserId,
-                        principalTable: "UserEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -292,15 +350,38 @@ namespace DogSitterMarketplaceDal.Migrations
                         name: "FK_PetsInOrders_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_PetsInOrders_PetEntity_PetId",
+                        name: "FK_PetsInOrders_Pets_PetId",
                         column: x => x.PetId,
-                        principalTable: "PetEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Pets",
+                        principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppealEntity_AppealFromUserId",
+                table: "AppealEntity",
+                column: "AppealFromUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppealEntity_AppealToUserId",
+                table: "AppealEntity",
+                column: "AppealToUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppealEntity_OrderId",
+                table: "AppealEntity",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppealEntity_StatusId",
+                table: "AppealEntity",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppealEntity_TypeId",
+                table: "AppealEntity",
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_CommentFromUserId",
@@ -333,13 +414,13 @@ namespace DogSitterMarketplaceDal.Migrations
                 column: "SitterWorkId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PetEntity_TypeId",
-                table: "PetEntity",
+                name: "IX_Pets_TypeId",
+                table: "Pets",
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PetEntity_UserId",
-                table: "PetEntity",
+                name: "IX_Pets_UserId",
+                table: "Pets",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -363,18 +444,18 @@ namespace DogSitterMarketplaceDal.Migrations
                 column: "WorkTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserEntity_PassportDataId",
-                table: "UserEntity",
+                name: "IX_Users_PassportDataId",
+                table: "Users",
                 column: "PassportDataId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserEntity_RoleId",
-                table: "UserEntity",
+                name: "IX_Users_RoleId",
+                table: "Users",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserEntity_StatusId",
-                table: "UserEntity",
+                name: "IX_Users_StatusId",
+                table: "Users",
                 column: "StatusId");
         }
 
@@ -382,16 +463,25 @@ namespace DogSitterMarketplaceDal.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AppealEntity");
+
+            migrationBuilder.DropTable(
                 name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "PetsInOrders");
 
             migrationBuilder.DropTable(
+                name: "AppealStatusEntity");
+
+            migrationBuilder.DropTable(
+                name: "AppealTypeEntity");
+
+            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "PetEntity");
+                name: "Pets");
 
             migrationBuilder.DropTable(
                 name: "Location");
@@ -403,10 +493,10 @@ namespace DogSitterMarketplaceDal.Migrations
                 name: "SitterWork");
 
             migrationBuilder.DropTable(
-                name: "AnimalTypeEntity");
+                name: "AnimalsTypes");
 
             migrationBuilder.DropTable(
-                name: "UserEntity");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "WorkTypeEntity");
