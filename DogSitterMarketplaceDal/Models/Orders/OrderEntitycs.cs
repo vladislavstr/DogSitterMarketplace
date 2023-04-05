@@ -33,8 +33,8 @@ namespace DogSitterMarketplaceDal.Models.Orders
         [Required]
         public bool IsDeleted { get; set; }
 
-        public ICollection<CommentEntity> Comments { get; set; }
+        public List<CommentEntity> Comments { get; set; }
 
-        public ICollection<AppealEntity> Appeals { get; set; }
+        public List<AppealEntity> Appeals { get; set; }
     }
 }

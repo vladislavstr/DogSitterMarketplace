@@ -1,9 +1,10 @@
-﻿using DogSitterMarketplaceApi.Models.OrdersDto.Request;
+﻿using AutoMapper;
+using DogSitterMarketplaceApi.Models.OrdersDto.Request;
 using DogSitterMarketplaceApi.Models.OrdersDto.Response;
 using DogSitterMarketplaceApi.Models.PetsDto.Response;
 using DogSitterMarketplaceApi.Models.WorksDto.Response;
+using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Orders.Request;
-using DogSitterMarketplaceBll.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DogSitterMarketplaceApi.Controllers
@@ -13,48 +14,99 @@ namespace DogSitterMarketplaceApi.Controllers
     public class OrderController : ControllerBase
     {
         private readonly ILogger<OrderController> _logger;
+
         private readonly IOrderService _orderService;
 
-        public OrderController(IOrderService orderService, ILogger<OrderController> logger)
+        private readonly IMapper _mapper;
+
+        public OrderController(IOrderService orderService, IMapper mapper, ILogger<OrderController> logger)
         {
             _orderService = orderService;
+            _mapper = mapper;
             _logger = logger;
         }
+
+        [HttpPost(Name = "AddOrder")]
+        public OrderResponseDto AddOrder(OrderRequestDto addOrder)
+        {
+            try
+            {
+                var orderRequest = _mapper.Map<OrderRequest>(addOrder);
+                var addOrderResponse = _orderService.AddOrder(orderRequest);
+                var addOrderResponseDto = _mapper.Map<OrderResponseDto>(addOrderResponse);
+
+                return addOrderResponseDto;
+
+                //var orderRequest = new OrderRequest
+                //{
+                //    LocationId = addOrder.LocationId,
+                //    Summ = addOrder.Summ
+                //};
+
+                //var addOrderRequest = _orderService.AddOrder(orderRequest);
+
+                //var orderResponseDto = new OrderResponseDto
+                //{
+                //    Id = addOrderRequest.Id,
+                //    Summ = addOrderRequest.Summ
+                //};
+
+                //if (addOrderRequest.Location != null)
+                //{
+                //    orderResponseDto.Location = new LocationResponseDto
+                //    {
+                //        Id = addOrderRequest.Location.Id
+                //    };
+                //}
+                //return orderResponseDto;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"{nameof(OrderController)} {nameof(AddOrder)}");
+                return null;
+            }
+        }
+
 
         [HttpGet(Name = "GetAllOrders")]
         public IEnumerable<OrderResponseDto> GetAllOrders()
         {
             try
             {
-                var ordersbll = _orderService.GetAllOrders();
-                return ordersbll.Select(b =>
-                {
-                    var orderResponseDto = new OrderResponseDto
-                    {
-                        Id = b.Id,
-                        Comment = b.Comment
-                    };
+                var ordersResponse = _orderService.GetAllOrders();
+                var ordersResponseDto = _mapper.Map<List<OrderResponseDto>>(ordersResponse);
 
-                    if (b.OrderStatus != null)
-                    {
-                        orderResponseDto.OrderStatus = new OrderStatusResponseDto
-                        {
-                            Id = b.OrderStatus.Id,
-                            Comment = b.OrderStatus.Comment,
-                        };
-                    };
+                return ordersResponseDto;
 
-                    if (b.Pets != null)
-                    {
-                        orderResponseDto.Pets = b.Pets.Select(r => new PetResponseDto
-                        {
-                            Id = r.Id,
-                            Name = r.Name,
-                        }).ToList();
-                    }
+                //var ordersbll = _orderService.GetAllOrders();
+                //return ordersbll.Select(b =>
+                //{
+                //    var orderResponseDto = new OrderResponseDto
+                //    {
+                //        Id = b.Id,
+                //        Comment = b.Comment
+                //    };
 
-                    return orderResponseDto;
-                }).ToList();
+                //    if (b.OrderStatus != null)
+                //    {
+                //        orderResponseDto.OrderStatus = new OrderStatusResponseDto
+                //        {
+                //            Id = b.OrderStatus.Id,
+                //            Comment = b.OrderStatus.Comment,
+                //        };
+                //    };
+
+                //    if (b.Pets != null)
+                //    {
+                //        orderResponseDto.Pets = b.Pets.Select(r => new PetResponseDto
+                //        {
+                //            Id = r.Id,
+                //            Name = r.Name,
+                //        }).ToList();
+                //    }
+
+                //    return orderResponseDto;
+                //}).ToList();
             }
             catch (Exception ex)
             {
@@ -68,51 +120,35 @@ namespace DogSitterMarketplaceApi.Controllers
         {
             try
             {
+                //var orderResponse = _orderService.GetOrderById(id);
+
+                //return new OrderResponseDto
+                //{
+                //    Id = orderResponse.Id
+                //};
+
                 var orderResponse = _orderService.GetOrderById(id);
+                var orderResponseDto = _mapper.Map<OrderResponseDto>(orderResponse);
 
-                return new OrderResponseDto
-                {
-                    Id = orderResponse.Id
-                };
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllOrders)}");
-                return null;
-            }
-        }
-
-        [HttpPost(Name = "AddOrder")]
-        public OrderResponseDto AddOrder(OrderRequestDto addOrder)
-        {
-            try
-            {
-                var orderRequest = new OrderRequest
-                {
-                    LocationId = addOrder.LocationId,
-                    Summ = addOrder.Summ
-                };
-
-                var addOrderRequest = _orderService.AddOrder(orderRequest);
-
-                var orderResponseDto = new OrderResponseDto
-                {
-                    Id = addOrderRequest.Id,
-                    Summ = addOrderRequest.Summ
-                };
-
-                if (addOrderRequest.Location != null)
-                {
-                    orderResponseDto.Location = new LocationResponseDto
-                    {
-                        Id = addOrderRequest.Location.Id
-                    };
-                }
                 return orderResponseDto;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllOrders)}");
+                _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetOrderById)}");
+                return null;
+            }
+        }
+
+        [HttpDelete(Name = "DeleteOrderById")]
+        public IActionResult DeleteOrderById(int id)
+        {
+            try
+            {
+                return NoContent(_orderService.DeleteOrderById(id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"{nameof(OrderController)} {nameof(DeleteOrderById)}");
                 return null;
             }
         }

@@ -12,7 +12,7 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public void UpdateOrder(OrderEntity order);
 
-        public void DeleteOrder(int id);
+        public void DeleteOrderById(int id);
 
     }
 }
