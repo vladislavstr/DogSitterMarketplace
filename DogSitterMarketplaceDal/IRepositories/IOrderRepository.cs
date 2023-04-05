@@ -1,4 +1,7 @@
 ﻿using DogSitterMarketplaceDal.Models.Orders;
+using DogSitterMarketplaceDal.Models.Pets;
+using DogSitterMarketplaceDal.Models.Works;
+using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.IRepositories
 {
@@ -14,5 +17,12 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public void DeleteOrderById(int id);
 
+        public LocationEntity GetLocationById(int id);
+
+        public OrderStatusEntity GetOrderStatusById(int id);
+
+        public SitterWorkEntity GetSitterWorkById(int id);
+
+        public List<PetEntity> GetPetsInOrderEntities(List<int> pets);
     }
 }

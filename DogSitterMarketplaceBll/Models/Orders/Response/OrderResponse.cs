@@ -26,8 +26,8 @@ namespace DogSitterMarketplaceBll.Models.Orders.Response
 
         public List<PetResponse> Pets { get; set; }
 
-        public List<CommentResponse> Comments { get; set; }
+        public List<CommentResponse>? Comments { get; set; }
 
-        public List<AppealResponse> Appeals { get; set; }
+        public List<AppealResponse>? Appeals { get; set; }
     }
 }

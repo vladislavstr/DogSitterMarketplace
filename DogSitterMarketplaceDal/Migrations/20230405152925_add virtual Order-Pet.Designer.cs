@@ -4,6 +4,7 @@ using DogSitterMarketplaceDal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DogSitterMarketplaceDal.Migrations
 {
     [DbContext(typeof(DogSitterContext))]
-    partial class DogSitterContextModelSnapshot : ModelSnapshot
+    [Migration("20230405152925_add virtual Order-Pet")]
+    partial class addvirtualOrderPet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,6 +217,29 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OrderStatuses");
+                });
+
+            modelBuilder.Entity("DogSitterMarketplaceDal.Models.Orders.PetsInOrderEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PetId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("PetId");
+
+                    b.ToTable("PetsInOrders");
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Pets.AnimalTypeEntity", b =>
@@ -463,21 +489,6 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.ToTable("WorkTypeEntity");
                 });
 
-            modelBuilder.Entity("OrderEntityPetEntity", b =>
-                {
-                    b.Property<int>("OrdersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PetsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrdersId", "PetsId");
-
-                    b.HasIndex("PetsId");
-
-                    b.ToTable("OrderEntityPetEntity");
-                });
-
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Appeals.AppealEntity", b =>
                 {
                     b.HasOne("DogSitterMarketplaceDal.Models.Users.UserEntity", "AppealFromUser")
@@ -573,6 +584,25 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.Navigation("SitterWork");
                 });
 
+            modelBuilder.Entity("DogSitterMarketplaceDal.Models.Orders.PetsInOrderEntity", b =>
+                {
+                    b.HasOne("DogSitterMarketplaceDal.Models.Orders.OrderEntity", "Order")
+                        .WithMany("PetsInOrder")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DogSitterMarketplaceDal.Models.Pets.PetEntity", "Pet")
+                        .WithMany("PetsInOrder")
+                        .HasForeignKey("PetId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Pet");
+                });
+
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Pets.PetEntity", b =>
                 {
                     b.HasOne("DogSitterMarketplaceDal.Models.Pets.AnimalTypeEntity", "Type")
@@ -637,26 +667,18 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.Navigation("WorkType");
                 });
 
-            modelBuilder.Entity("OrderEntityPetEntity", b =>
-                {
-                    b.HasOne("DogSitterMarketplaceDal.Models.Orders.OrderEntity", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("DogSitterMarketplaceDal.Models.Pets.PetEntity", null)
-                        .WithMany()
-                        .HasForeignKey("PetsId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Orders.OrderEntity", b =>
                 {
                     b.Navigation("Appeals");
 
                     b.Navigation("Comments");
+
+                    b.Navigation("PetsInOrder");
+                });
+
+            modelBuilder.Entity("DogSitterMarketplaceDal.Models.Pets.PetEntity", b =>
+                {
+                    b.Navigation("PetsInOrder");
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Users.UserEntity", b =>

@@ -5,7 +5,10 @@ using DogSitterMarketplaceApi.Models.PetsDto.Response;
 using DogSitterMarketplaceApi.Models.WorksDto.Response;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Orders.Request;
+using DogSitterMarketplaceBll.Models.Orders.Response;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Threading.Tasks;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -27,129 +30,77 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPost(Name = "AddOrder")]
-        public OrderResponseDto AddOrder(OrderRequestDto addOrder)
+        public ActionResult<OrderResponseDto> AddOrder(OrderCreateRequestDto addOrder)
         {
             try
             {
-                var orderRequest = _mapper.Map<OrderRequest>(addOrder);
+                var orderRequest = _mapper.Map<OrderCreateRequest>(addOrder);
                 var addOrderResponse = _orderService.AddOrder(orderRequest);
                 var addOrderResponseDto = _mapper.Map<OrderResponseDto>(addOrderResponse);
-
-                return addOrderResponseDto;
-
-                //var orderRequest = new OrderRequest
-                //{
-                //    LocationId = addOrder.LocationId,
-                //    Summ = addOrder.Summ
-                //};
-
-                //var addOrderRequest = _orderService.AddOrder(orderRequest);
-
-                //var orderResponseDto = new OrderResponseDto
-                //{
-                //    Id = addOrderRequest.Id,
-                //    Summ = addOrderRequest.Summ
-                //};
-
-                //if (addOrderRequest.Location != null)
-                //{
-                //    orderResponseDto.Location = new LocationResponseDto
-                //    {
-                //        Id = addOrderRequest.Location.Id
-                //    };
-                //}
-                //return orderResponseDto;
+                                
+                return Created(new Uri("api/Order", UriKind.Relative), addOrderResponseDto);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"{nameof(OrderController)} {nameof(AddOrder)}");
-                return null;
+                return Problem();
             }
         }
 
 
         [HttpGet(Name = "GetAllOrders")]
-        public IEnumerable<OrderResponseDto> GetAllOrders()
+        public ActionResult<List<OrderResponseDto>> GetAllOrders()
         {
             try
             {
                 var ordersResponse = _orderService.GetAllOrders();
+
                 var ordersResponseDto = _mapper.Map<List<OrderResponseDto>>(ordersResponse);
 
-                return ordersResponseDto;
-
-                //var ordersbll = _orderService.GetAllOrders();
-                //return ordersbll.Select(b =>
-                //{
-                //    var orderResponseDto = new OrderResponseDto
-                //    {
-                //        Id = b.Id,
-                //        Comment = b.Comment
-                //    };
-
-                //    if (b.OrderStatus != null)
-                //    {
-                //        orderResponseDto.OrderStatus = new OrderStatusResponseDto
-                //        {
-                //            Id = b.OrderStatus.Id,
-                //            Comment = b.OrderStatus.Comment,
-                //        };
-                //    };
-
-                //    if (b.Pets != null)
-                //    {
-                //        orderResponseDto.Pets = b.Pets.Select(r => new PetResponseDto
-                //        {
-                //            Id = r.Id,
-                //            Name = r.Name,
-                //        }).ToList();
-                //    }
-
-                //    return orderResponseDto;
-                //}).ToList();
+                return Ok(ordersResponseDto);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllOrders)}");
-                return Enumerable.Empty<OrderResponseDto>();
+                return Problem();
             }
         }
 
         [HttpGet("{id}", Name = "GetOrderById")]
-        public OrderResponseDto GetOrderById(int id)
+        public ActionResult<OrderResponseDto> GetOrderById(int id)
         {
             try
             {
-                //var orderResponse = _orderService.GetOrderById(id);
-
-                //return new OrderResponseDto
-                //{
-                //    Id = orderResponse.Id
-                //};
-
                 var orderResponse = _orderService.GetOrderById(id);
+
+                if (orderResponse is null)
+                {
+                    return NotFound();
+                }
+
                 var orderResponseDto = _mapper.Map<OrderResponseDto>(orderResponse);
 
-                return orderResponseDto;
+                return Ok(orderResponseDto);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetOrderById)}");
-                return null;
+                return Problem();
             }
         }
 
-        [HttpDelete(Name = "DeleteOrderById")]
+        [HttpDelete("{id}", Name = "DeleteOrderById")]
         public IActionResult DeleteOrderById(int id)
         {
             try
             {
-                return NoContent(_orderService.DeleteOrderById(id));
+                _orderService.DeleteOrderById(id);
+                return NoContent();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"{nameof(OrderController)} {nameof(DeleteOrderById)}");
-                return null;
+                return Problem();
             }
         }
     }

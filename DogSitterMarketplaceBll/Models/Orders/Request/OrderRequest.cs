@@ -21,10 +21,10 @@ namespace DogSitterMarketplaceBll.Models.Orders.Request
 
         public int LocationId { get; set; }
 
-        public List<PetRequest> Pets { get; set; }
+        public List<int> Pets { get; set; }
 
-        public List<CommentRequest> Comments { get; set; }
+        public List<CommentRequest>? Comments { get; set; }
 
-        public List<AppealRequest> Appeals { get; set; }
+        public List<AppealRequest>? Appeals { get; set; }
     }
 }

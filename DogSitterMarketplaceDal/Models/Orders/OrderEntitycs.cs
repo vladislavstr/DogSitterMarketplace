@@ -1,4 +1,5 @@
 ﻿using DogSitterMarketplaceDal.Models.Appeals;
+using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Works;
 using System.ComponentModel.DataAnnotations;
 
@@ -33,8 +34,12 @@ namespace DogSitterMarketplaceDal.Models.Orders
         [Required]
         public bool IsDeleted { get; set; }
 
-        public List<CommentEntity> Comments { get; set; }
+        public List<CommentEntity>? Comments { get; set; }
 
-        public List<AppealEntity> Appeals { get; set; }
+        public List<AppealEntity>? Appeals { get; set; }
+
+        //  public virtual ICollection<PetsInOrderEntity> PetsInOrder { get; set; }
+
+        public List<PetEntity> Pets { get; } = new();
     }
 }

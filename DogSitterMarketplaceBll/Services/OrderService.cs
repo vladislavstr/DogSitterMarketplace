@@ -20,28 +20,18 @@ namespace DogSitterMarketplaceBll.Services
             _mapper = mapper;
         }
 
-        public OrderResponse AddOrder(OrderRequest newOrder)
+        public OrderResponse AddOrder(OrderCreateRequest newOrder)
         {
             var orderEntity = _mapper.Map<OrderEntity>(newOrder);
+            orderEntity.OrderStatus = _orderReposotory.GetOrderStatusById(newOrder.OrderStatusId);
+            orderEntity.SitterWork = _orderReposotory.GetSitterWorkById(newOrder.SitterWorkId);
+            orderEntity.Location = _orderReposotory.GetLocationById(newOrder.LocationId);
+            orderEntity.Pets.AddRange(_orderReposotory.GetPetsInOrderEntities(newOrder.Pets));
+
             var addOrderEntity = _orderReposotory.AddNewOrder(orderEntity);
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
 
             return addOrderResponse;
-
-            //var orderEntity = new OrderEntity
-            //{
-            //    Location = new LocationEntity
-            //    {
-            //        Id = newOrder.LocationId
-            //    },
-            //    Summ = newOrder.Summ
-            //};
-            //var addOrderEntity = _orderReposotory.AddNewOrder(orderEntity);
-
-            //return new OrderResponse
-            //{
-            //    Id = addOrderEntity.Id
-            //};
         }
 
         public List<OrderResponse> GetAllOrders()
@@ -50,38 +40,12 @@ namespace DogSitterMarketplaceBll.Services
             var ordersResponse = _mapper.Map<List<OrderResponse>>(ordersEntity);
 
             return ordersResponse;
-
-
-            //var ordersEntity = _orderReposotory.GetAllOrders();
-            //return ordersEntity.Select(e =>
-            //{
-            //    var orderResponse = new OrderResponse
-            //    {
-            //        Id = e.Id,
-            //        Comment = e.Comment
-            //    };
-            //    if (e.OrderStatus != null)
-            //    {
-            //        orderResponse.OrderStatus = new OrderStatusResponse
-            //        {
-            //            Id = e.OrderStatus.Id,
-            //            Comment = e.OrderStatus.Comment,
-            //        };
-            //    }
-
-            //    return orderResponse;
-            //}).ToList();
         }
 
         public OrderResponse GetOrderById(int id)
         {
-            //var orderEntity = _orderReposotory.GetOrderById(id);
-            //return new OrderResponse
-            //{
-            //    Id = orderEntity.Id
-            //};
-
             var orderEntity = _orderReposotory.GetOrderById(id);
+
             var orderResponse = _mapper.Map<OrderResponse>(orderEntity);
 
             return orderResponse;

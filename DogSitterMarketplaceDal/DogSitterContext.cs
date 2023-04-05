@@ -14,7 +14,7 @@ namespace DogSitterMarketplaceDal
 
         public DbSet<CommentEntity> Comments { get; set; }
 
-        public DbSet<PetsInOrderEntity> PetsInOrders { get; set; }
+      //  public DbSet<PetsInOrderEntity> PetsInOrders { get; set; }
 
         public DbSet<SitterWorkEntity> SitterWork { get; set; }
 

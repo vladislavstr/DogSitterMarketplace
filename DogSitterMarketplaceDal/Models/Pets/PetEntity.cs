@@ -1,4 +1,5 @@
-﻿using DogSitterMarketplaceDal.Models.Users;
+﻿using DogSitterMarketplaceDal.Models.Orders;
+using DogSitterMarketplaceDal.Models.Users;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -25,5 +26,9 @@ namespace DogSitterMarketplaceDal.Models.Pets
 
         [Required]
         public bool IsDeleted { get; set; }
+
+        //public virtual ICollection<PetsInOrderEntity> PetsInOrder { get; set; }
+
+        public List<OrderEntity> Orders { get; } = new();
     }
 }
