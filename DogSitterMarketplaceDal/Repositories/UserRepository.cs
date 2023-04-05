@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceDal.Context;
+﻿using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.Models.Users;
 
 namespace DogSitterMarketplaceDal.Repositories
@@ -12,7 +12,7 @@ namespace DogSitterMarketplaceDal.Repositories
             context = new UserContext();
         }
 
-        public UserEntity Create(UserEntity user)
+        public UserEntity CreateUser(UserEntity user)
         {
             var userDal = new UserEntity
             {
@@ -25,7 +25,6 @@ namespace DogSitterMarketplaceDal.Repositories
 
                 Name = user.Name,
             };
-
 
             context.User.Add(userDal);
             context.SaveChanges();
@@ -42,6 +41,11 @@ namespace DogSitterMarketplaceDal.Repositories
 
                 Name = userDal.Name,
             };
+        }
+
+        public IEnumerable<UserEntity> GetUser()
+        {
+            return context.User.Where(t => !t.IsDeleted).ToList();
         }
     }
 }

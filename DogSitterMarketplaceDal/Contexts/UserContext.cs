@@ -1,13 +1,13 @@
 ﻿using DogSitterMarketplaceDal.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace DogSitterMarketplaceDal.Context
+namespace DogSitterMarketplaceDal.Contexts
 {
     public class UserContext : DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //base.OnConfiguring(optionsBuilder);
+            //optionsBuilder.UseSqlServer("");
             optionsBuilder.UseInMemoryDatabase("UserDb");
         }
 

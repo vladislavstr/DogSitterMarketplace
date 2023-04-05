@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Components;
 
-using DogSitterMarketplaceDal.Repository;
+using DogSitterMarketplaceDal.Repositories;
+using DogSitterMarketplaceApi.Models.UsersDto.Request;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -18,29 +18,36 @@ namespace DogSitterMarketplaceApi.Controllers
             repo = new UserRepository();
         }
 
-        public IActionResult GetPoint()
+        [HttpGet]
+        public IActionResult GrtPing()
         {
-            return Ok(repo.Get());
+            return Ok();
         }
 
         [HttpGet("{id}", Name = "GetUserById")]
-        public IActionResult GetUserById(int id)
+        public IActionResult GetPoint()
         {
-            return Ok(repo.Get(id));
+            return Ok(repo.GetUser());
         }
 
+        //[HttpGet("{id}", Name = "GetUserById")]
+        //public IActionResult GetUserById(int id)
+        //{
+        //    return Ok(repo.Get(id));
+        //}
+
         [HttpPost]
-        public IActionResult CreateForcast(UserEntity user)
+        public IActionResult Create(UserRequestDto user)
         {
-            var result = repo.Create(user);
+            var result = repo.CreateUser(user);
 
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteUserById(int id)
-        {
-            return StatusCode(StatusCodes.Status204NoContent);
-        }
+        //[HttpDelete("{id}")]
+        //public IActionResult DeleteUserById(int id)
+        //{
+        //    return StatusCode(StatusCodes.Status204NoContent);
+        //}
     }
 }
