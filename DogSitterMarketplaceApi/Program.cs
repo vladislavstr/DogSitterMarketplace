@@ -1,3 +1,4 @@
+using DogSitterMarketplaceApi;
 using DogSitterMarketplaceBll.Services;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Repositories;
@@ -13,6 +14,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
 builder.Services.AddSingleton<IOrderService, OrderService>();
+builder.Services.AddAutoMapper(typeof(MapperApiProfile));
+
 
 var app = builder.Build();
 
