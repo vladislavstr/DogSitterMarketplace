@@ -43,9 +43,14 @@ namespace DogSitterMarketplaceDal
                 foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
             }
 
-            modelBuilder.Entity<AnimalTypeEntity>()
-                .Property(b => b.IsDeleted)
-                .HasDefaultValue(0);
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var isDeletedProp = entityType.FindProperty("IsDeleted");
+                if(isDeletedProp != null)
+                {
+                    isDeletedProp.SetDefaultValue(false);
+                }
+            }
         }
     }
 }

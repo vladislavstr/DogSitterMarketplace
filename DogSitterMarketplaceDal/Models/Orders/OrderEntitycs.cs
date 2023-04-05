@@ -9,6 +9,7 @@ namespace DogSitterMarketplaceDal.Models.Orders
         [Key]
         public int Id { get; set; }
 
+        [StringLength(1000, MinimumLength = 2)]
         public string? Comment { get; set; }
 
         [Required]
@@ -35,7 +36,5 @@ namespace DogSitterMarketplaceDal.Models.Orders
         public ICollection<CommentEntity> Comments { get; set; }
 
         public ICollection<AppealEntity> Appeals { get; set; }
-
-
     }
 }

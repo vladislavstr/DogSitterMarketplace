@@ -11,10 +11,11 @@ public class AnimalTypeEntity
     public int Id { get; set; }
 
     [Required]
-   // [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [StringLength(50, MinimumLength = 2)]
     public string Name { get; set; }
 
     [Required]
+    [StringLength(1000, MinimumLength = 2)]
     public string Parameters { get; set; }
 
     [Required]

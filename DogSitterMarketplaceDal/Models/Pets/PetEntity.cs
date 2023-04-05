@@ -10,9 +10,11 @@ namespace DogSitterMarketplaceDal.Models.Pets
         public int Id { get; set; }
 
         [Required]
+        [StringLength(20, MinimumLength = 2)]
         public string Name { get; set; }
 
         [Required]
+        [StringLength(2000, MinimumLength = 2)]
         public string Characteristics { get; set; }
 
         [Required]
