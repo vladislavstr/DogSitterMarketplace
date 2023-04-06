@@ -1,4 +1,5 @@
-﻿using DogSitterMarketplaceDal.Models.Orders;
+﻿using DogSitterMarketplaceDal.Models.Appeals;
+using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
@@ -13,6 +14,8 @@ namespace DogSitterMarketplaceDal
         public DbSet<OrderStatusEntity> OrderStatuses { get; set; }
 
         public DbSet<CommentEntity> Comments { get; set; }
+
+        public DbSet<AppealEntity> Appeals { get; set; }
 
       //  public DbSet<PetsInOrderEntity> PetsInOrders { get; set; }
 

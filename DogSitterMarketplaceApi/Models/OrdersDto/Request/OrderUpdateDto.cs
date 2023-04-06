@@ -1,12 +1,9 @@
-using DogSitterMarketplaceBll.Models.Appeals.Request;
-using DogSitterMarketplaceBll.Models.Pets.Request;
-using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceDal.Models.Orders;
-
-namespace DogSitterMarketplaceBll.Models.Orders.Request
+﻿namespace DogSitterMarketplaceApi.Models.OrdersDto.Request
 {
-    public class OrderRequest
+    public class OrderUpdateDto
     {
+        public int Id { get; set; }
+
         public string? Comment { get; set; }
 
         public int OrderStatusId { get; set; }
@@ -21,10 +18,10 @@ namespace DogSitterMarketplaceBll.Models.Orders.Request
 
         public int LocationId { get; set; }
 
-        public List<int> Pets { get; set; }
-
         public List<int>? Comments { get; set; }
 
         public List<int>? Appeals { get; set; }
+
+        public List<int> Pets { get; set; }
     }
 }

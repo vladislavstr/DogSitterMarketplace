@@ -29,6 +29,13 @@ namespace DogSitterMarketplaceBll
             CreateMap<LocationEntity, LocationResponse>();
             CreateMap<CommentEntity, CommentResponse>();
             CreateMap<AppealEntity, AppealResponse>();
+            CreateMap<OrderUpdate, OrderEntity>()
+                 .ForMember(dest => dest.OrderStatus, opt => opt.Ignore())
+                 .ForMember(dest => dest.SitterWork, opt => opt.Ignore())
+                 .ForMember(dest => dest.Location, opt => opt.Ignore())
+                 .ForMember(dest => dest.Comments, opt => opt.Ignore())
+                 .ForMember(dest => dest.Appeals, opt => opt.Ignore())
+                 .ForMember(dest => dest.Pets, opt => opt.Ignore());
         }
     }
 }

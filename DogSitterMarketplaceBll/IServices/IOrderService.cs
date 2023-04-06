@@ -1,5 +1,6 @@
 ﻿using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
+using DogSitterMarketplaceDal.Models.Orders;
 
 namespace DogSitterMarketplaceBll.IServices
 {
@@ -12,5 +13,7 @@ namespace DogSitterMarketplaceBll.IServices
         public OrderResponse GetOrderById(int id);
 
         public void DeleteOrderById(int id);
+
+        public void UpdateOrder(OrderUpdate orderUpdate);
     }
 }

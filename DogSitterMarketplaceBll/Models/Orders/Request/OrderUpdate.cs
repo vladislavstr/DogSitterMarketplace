@@ -1,12 +1,16 @@
-using DogSitterMarketplaceBll.Models.Appeals.Request;
-using DogSitterMarketplaceBll.Models.Pets.Request;
-using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceDal.Models.Orders;
+﻿using DogSitterMarketplaceBll.Models.Appeals.Request;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DogSitterMarketplaceBll.Models.Orders.Request
 {
-    public class OrderRequest
+    public class OrderUpdate
     {
+        public int Id { get; set; }
+
         public string? Comment { get; set; }
 
         public int OrderStatusId { get; set; }
@@ -21,10 +25,10 @@ namespace DogSitterMarketplaceBll.Models.Orders.Request
 
         public int LocationId { get; set; }
 
-        public List<int> Pets { get; set; }
-
         public List<int>? Comments { get; set; }
 
         public List<int>? Appeals { get; set; }
+
+        public List<int> Pets { get; set; }
     }
 }

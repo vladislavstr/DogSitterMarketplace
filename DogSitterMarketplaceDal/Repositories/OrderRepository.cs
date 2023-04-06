@@ -1,5 +1,5 @@
-﻿
-using DogSitterMarketplaceDal.IRepositories;
+﻿using DogSitterMarketplaceDal.IRepositories;
+using DogSitterMarketplaceDal.Models.Appeals;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Works;
@@ -71,6 +71,28 @@ namespace DogSitterMarketplaceDal.Repositories
             }
 
             return _context.Pets.Where(p => !p.IsDeleted && pets.Contains(p.Id)).ToList();
+        }
+
+        public List<CommentEntity> GetCommentsById(List<int> comments)
+        {
+            if (!comments.Any())
+            {
+                return new List<CommentEntity>();
+            }
+
+            //return _context.Comments.Where(c => c.Id == comments.FirstOrDefault(c.Id)).ToList();
+
+            return _context.Comments.Where(c => !c.IsDeleted && comments.Contains(c.Id)).ToList();
+        }
+
+        public List<AppealEntity> GetAppealsById(List<int> appeals)
+        {
+            if (!appeals.Any())
+            {
+                return new List<AppealEntity>();
+            }
+
+            return _context.Appeals.Where(a => !a.IsDeleted && appeals.Contains(a.Id)).ToList();
         }
     }
 }

@@ -45,7 +45,6 @@ namespace DogSitterMarketplaceBll.Services
         public OrderResponse GetOrderById(int id)
         {
             var orderEntity = _orderReposotory.GetOrderById(id);
-
             var orderResponse = _mapper.Map<OrderResponse>(orderEntity);
 
             return orderResponse;
@@ -54,6 +53,27 @@ namespace DogSitterMarketplaceBll.Services
         public void DeleteOrderById(int id)
         {
             _orderReposotory.DeleteOrderById(id);
+        }
+
+        public void UpdateOrder(OrderUpdate orderUpdate)
+        {
+            var orderEntity = _mapper.Map<OrderEntity>(orderUpdate);
+            orderEntity.OrderStatus = _orderReposotory.GetOrderStatusById(orderUpdate.OrderStatusId);
+            orderEntity.SitterWork = _orderReposotory.GetSitterWorkById(orderUpdate.SitterWorkId);
+            orderEntity.Location = _orderReposotory.GetLocationById(orderUpdate.LocationId);
+            orderEntity.Pets.AddRange(_orderReposotory.GetPetsInOrderEntities(orderUpdate.Pets));
+
+            if (orderEntity.Comments != null)
+            {
+                orderEntity.Comments.AddRange(_orderReposotory.GetCommentsById(orderUpdate.Comments));
+            }
+
+            if (orderEntity.Appeals != null)
+            {
+                orderEntity.Appeals.AddRange(_orderReposotory.GetAppealsById(orderUpdate.Appeals));
+            }
+
+            _orderReposotory.UpdateOrder(orderEntity);
         }
     }
 }

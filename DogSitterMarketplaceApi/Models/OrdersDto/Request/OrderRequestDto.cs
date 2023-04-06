@@ -23,8 +23,8 @@ namespace DogSitterMarketplaceApi.Models.OrdersDto.Request
 
         public List<int> Pets { get; set; }
 
-        public List<CommentRequestDto>? Comments { get; set; }
+        public List<int>? Comments { get; set; }
 
-        public List<AppealRequestDto>? Appeals { get; set; }
+        public List<int>? Appeals { get; set; }
     }
 }

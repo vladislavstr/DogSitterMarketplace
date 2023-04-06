@@ -37,7 +37,7 @@ namespace DogSitterMarketplaceApi.Controllers
                 var orderRequest = _mapper.Map<OrderCreateRequest>(addOrder);
                 var addOrderResponse = _orderService.AddOrder(orderRequest);
                 var addOrderResponseDto = _mapper.Map<OrderResponseDto>(addOrderResponse);
-                                
+
                 return Created(new Uri("api/Order", UriKind.Relative), addOrderResponseDto);
             }
             catch (Exception ex)
@@ -100,6 +100,23 @@ namespace DogSitterMarketplaceApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"{nameof(OrderController)} {nameof(DeleteOrderById)}");
+                return Problem();
+            }
+        }
+
+        [HttpPut(Name = "UpdateOrder")]
+        public ActionResult UpdateOrder(OrderUpdateDto orderUpdateDto)
+        {
+            try
+            {
+                var orderUpdate = _mapper.Map<OrderUpdate>(orderUpdateDto);
+                _orderService.UpdateOrder(orderUpdate);
+
+                return StatusCode(200);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"{nameof(OrderController)} {nameof(UpdateOrder)}");
                 return Problem();
             }
         }
