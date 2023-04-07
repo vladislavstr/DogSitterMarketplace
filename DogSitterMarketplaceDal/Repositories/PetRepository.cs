@@ -28,5 +28,13 @@ namespace DogSitterMarketplaceDal.Repositories
                     .Include(p => p.User)
                     .Single(p => !p.IsDeleted && p.Id == id);
         }
+
+        public void DeletePetById(int id)
+        {
+            var petDB = _context.Pets.Single(p => !p.IsDeleted && p.Id == id);
+            petDB.IsDeleted = true;
+
+            _context.SaveChanges();
+        }
     }
 }

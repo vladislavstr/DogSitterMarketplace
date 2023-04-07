@@ -78,7 +78,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public void DeleteOrderById(int id)
         {
-            var orderDb = _context.Orders.Single(o => o.Id == id);
+            var orderDb = _context.Orders.Single(o => o.Id == id && !o.IsDeleted);
             orderDb.IsDeleted = true;
 
             _context.SaveChanges();

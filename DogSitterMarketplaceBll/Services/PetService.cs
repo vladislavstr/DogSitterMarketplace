@@ -33,5 +33,10 @@ namespace DogSitterMarketplaceBll.Services
 
             return petResponse;
         }
+
+        public void DeletePetById(int id) 
+        {
+            _petRepository.DeletePetById(id);
+        }
     }
 }

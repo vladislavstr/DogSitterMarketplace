@@ -57,7 +57,22 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(PetController)} {nameof(GetAllPets)}");
+                _logger.LogError(ex, $"{nameof(PetController)} {nameof(GetPetById)}");
+                return Problem();
+            }
+        }
+
+        [HttpDelete("{id}", Name = "DeletePetById")]
+        public IActionResult DeletePetById(int id)
+        {
+            try
+            {
+                _petService.DeletePetById(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"{nameof(PetController)} {nameof(DeletePetById)}");
                 return Problem();
             }
         }

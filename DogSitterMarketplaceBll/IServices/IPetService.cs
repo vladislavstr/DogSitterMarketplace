@@ -7,5 +7,7 @@ namespace DogSitterMarketplaceBll.IServices
         public List<PetResponse> GetAllPets();
 
         public PetResponse GetPetById(int id);
+
+        public void DeletePetById(int id);
     }
 }

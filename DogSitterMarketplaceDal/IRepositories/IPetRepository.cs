@@ -7,5 +7,8 @@ namespace DogSitterMarketplaceDal.IRepositories
         public List<PetEntity> GetAllPets();
 
         public PetEntity GetPetById(int id);
+
+        public void DeletePetById(int id);
+
     }
 }
