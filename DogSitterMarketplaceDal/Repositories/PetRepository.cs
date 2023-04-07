@@ -36,5 +36,16 @@ namespace DogSitterMarketplaceDal.Repositories
 
             _context.SaveChanges();
         }
+
+        public PetEntity AddPet(PetEntity addPet)
+        {
+            _context.Pets.Add(addPet);
+            _context.SaveChanges();
+
+            return _context.Pets
+                .Include(p => p.Type)
+                .Include(p => p.User)
+                .Single(p => p.Id == addPet.Id);
+        }
     }
 }

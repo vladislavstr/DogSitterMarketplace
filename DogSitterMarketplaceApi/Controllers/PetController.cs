@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceApi.Models.OrdersDto.Response;
+using DogSitterMarketplaceApi.Models.PetsDto.Request;
 using DogSitterMarketplaceApi.Models.PetsDto.Response;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
+using DogSitterMarketplaceBll.Models.Pets.Request;
 using DogSitterMarketplaceBll.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -48,7 +50,7 @@ namespace DogSitterMarketplaceApi.Controllers
         [HttpGet("{id}", Name = "GetPetById")]
         public ActionResult<PetResponseDto> GetPetById(int id)
         {
-            try 
+            try
             {
                 var petResponse = _petService.GetPetById(id);
                 var petResponseDto = _mapper.Map<PetResponseDto>(petResponse);
@@ -73,6 +75,24 @@ namespace DogSitterMarketplaceApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"{nameof(PetController)} {nameof(DeletePetById)}");
+                return Problem();
+            }
+        }
+
+        [HttpPost(Name = "AddPet")]
+        public ActionResult<PetResponseDto> AddPet(PetRequestDto addPet)
+        {
+            try
+            {
+                var petRequst = _mapper.Map<PetRequest>(addPet);
+                var addPetResponse = _petService.AddPet(petRequst);
+                var addPetResponseDto = _mapper.Map<PetResponseDto>(addPetResponse);
+
+                return Created(new Uri("api/Pet", UriKind.Relative), addPetResponseDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"{nameof(PetController)} {nameof(AddPet)}");
                 return Problem();
             }
         }

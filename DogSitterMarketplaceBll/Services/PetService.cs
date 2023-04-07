@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceBll.IServices;
+using DogSitterMarketplaceBll.Models.Pets.Request;
 using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceDal.IRepositories;
+using DogSitterMarketplaceDal.Models.Pets;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace DogSitterMarketplaceBll.Services
@@ -37,6 +39,15 @@ namespace DogSitterMarketplaceBll.Services
         public void DeletePetById(int id) 
         {
             _petRepository.DeletePetById(id);
+        }
+
+        public PetResponse AddPet(PetRequest addPet)
+        {
+            var petEntity = _mapper.Map<PetEntity>(addPet);
+            var addPetEntity = _petRepository.AddPet(petEntity);
+            var addPetResponse = _mapper.Map<PetResponse>(addPetEntity);
+
+            return addPetResponse;
         }
     }
 }

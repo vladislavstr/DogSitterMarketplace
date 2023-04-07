@@ -1,4 +1,5 @@
-﻿using DogSitterMarketplaceBll.Models.Pets.Response;
+﻿using DogSitterMarketplaceBll.Models.Pets.Request;
+using DogSitterMarketplaceBll.Models.Pets.Response;
 
 namespace DogSitterMarketplaceBll.IServices
 {
@@ -9,5 +10,7 @@ namespace DogSitterMarketplaceBll.IServices
         public PetResponse GetPetById(int id);
 
         public void DeletePetById(int id);
+
+        public PetResponse AddPet(PetRequest addPet);
     }
 }

@@ -10,5 +10,6 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public void DeletePetById(int id);
 
+        public PetEntity AddPet(PetEntity addPet);
     }
 }

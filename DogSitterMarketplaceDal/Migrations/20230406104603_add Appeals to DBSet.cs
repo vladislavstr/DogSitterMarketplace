@@ -78,7 +78,7 @@ namespace DogSitterMarketplaceDal.Migrations
             migrationBuilder.AddForeignKey(
                 name: "FK_Appeals_AppealTypeEntity_TypeId",
                 table: "Appeals",
-                column: "TypeId",
+                column: "AnimalTypeId",
                 principalTable: "AppealTypeEntity",
                 principalColumn: "Id");
 
@@ -175,7 +175,7 @@ namespace DogSitterMarketplaceDal.Migrations
             migrationBuilder.AddForeignKey(
                 name: "FK_AppealEntity_AppealTypeEntity_TypeId",
                 table: "AppealEntity",
-                column: "TypeId",
+                column: "AnimalTypeId",
                 principalTable: "AppealTypeEntity",
                 principalColumn: "Id");
 

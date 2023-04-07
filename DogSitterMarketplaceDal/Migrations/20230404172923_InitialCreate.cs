@@ -381,7 +381,7 @@ namespace DogSitterMarketplaceDal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AppealEntity_TypeId",
                 table: "AppealEntity",
-                column: "TypeId");
+                column: "AnimalTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_CommentFromUserId",
@@ -416,7 +416,7 @@ namespace DogSitterMarketplaceDal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Pets_TypeId",
                 table: "Pets",
-                column: "TypeId");
+                column: "AnimalTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pets_UserId",

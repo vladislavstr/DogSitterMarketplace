@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DogSitterMarketplaceBll.Models.Pets.Request;
 using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceDal.Models.Pets;
@@ -13,6 +14,8 @@ namespace DogSitterMarketplaceBll.Mappings
             CreateMap<PetEntity, PetResponse>();
             CreateMap<AnimalTypeEntity, AnimalTypeResponse>();
             CreateMap<UserEntity, UserShortResponse>();
+            CreateMap<PetRequest, PetEntity>()
+                .ForMember(dest => dest.TypeId, opt => opt.MapFrom(source => source.AnimalTypeId));
         }
     }
 }

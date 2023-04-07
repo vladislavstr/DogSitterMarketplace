@@ -255,6 +255,9 @@ namespace DogSitterMarketplaceDal.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AnimalTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Characteristics")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -270,15 +273,12 @@ namespace DogSitterMarketplaceDal.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TypeId");
+                    b.HasIndex("AnimalTypeId");
 
                     b.HasIndex("UserId");
 
@@ -575,9 +575,9 @@ namespace DogSitterMarketplaceDal.Migrations
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Pets.PetEntity", b =>
                 {
-                    b.HasOne("DogSitterMarketplaceDal.Models.Pets.AnimalTypeEntity", "Type")
+                    b.HasOne("DogSitterMarketplaceDal.Models.Pets.AnimalTypeEntity", "AnimalType")
                         .WithMany()
-                        .HasForeignKey("TypeId")
+                        .HasForeignKey("AnimalTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -587,7 +587,7 @@ namespace DogSitterMarketplaceDal.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Type");
+                    b.Navigation("AnimalType");
 
                     b.Navigation("User");
                 });

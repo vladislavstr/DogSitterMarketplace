@@ -52,7 +52,7 @@ namespace DogSitterMarketplaceDal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TypeId")
+                    b.Property<int>("AnimalTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -65,7 +65,7 @@ namespace DogSitterMarketplaceDal.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.HasIndex("TypeId");
+                    b.HasIndex("AnimalTypeId");
 
                     b.ToTable("AppealEntity");
                 });
@@ -279,7 +279,7 @@ namespace DogSitterMarketplaceDal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TypeId")
+                    b.Property<int>("AnimalTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -287,7 +287,7 @@ namespace DogSitterMarketplaceDal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TypeId");
+                    b.HasIndex("AnimalTypeId");
 
                     b.HasIndex("UserId");
 
@@ -488,9 +488,9 @@ namespace DogSitterMarketplaceDal.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("DogSitterMarketplaceDal.Models.Appeals.AppealTypeEntity", "Type")
+                    b.HasOne("DogSitterMarketplaceDal.Models.Appeals.AppealTypeEntity", "AnimalType")
                         .WithMany()
-                        .HasForeignKey("TypeId")
+                        .HasForeignKey("AnimalTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -502,7 +502,7 @@ namespace DogSitterMarketplaceDal.Migrations
 
                     b.Navigation("Status");
 
-                    b.Navigation("Type");
+                    b.Navigation("AnimalType");
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Orders.CommentEntity", b =>
@@ -580,9 +580,9 @@ namespace DogSitterMarketplaceDal.Migrations
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Pets.PetEntity", b =>
                 {
-                    b.HasOne("DogSitterMarketplaceDal.Models.Pets.AnimalTypeEntity", "Type")
+                    b.HasOne("DogSitterMarketplaceDal.Models.Pets.AnimalTypeEntity", "AnimalType")
                         .WithMany()
-                        .HasForeignKey("TypeId")
+                        .HasForeignKey("AnimalTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -592,7 +592,7 @@ namespace DogSitterMarketplaceDal.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Type");
+                    b.Navigation("AnimalType");
 
                     b.Navigation("User");
                 });
