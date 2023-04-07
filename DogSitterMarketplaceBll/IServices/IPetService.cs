@@ -5,5 +5,7 @@ namespace DogSitterMarketplaceBll.IServices
     public interface IPetService
     {
         public List<PetResponse> GetAllPets();
+
+        public PetResponse GetPetById(int id);
     }
 }

@@ -44,6 +44,23 @@ namespace DogSitterMarketplaceApi.Controllers
                 return Problem();
             }
         }
+
+        [HttpGet("{id}", Name = "GetPetById")]
+        public ActionResult<PetResponseDto> GetPetById(int id)
+        {
+            try 
+            {
+                var petResponse = _petService.GetPetById(id);
+                var petResponseDto = _mapper.Map<PetResponseDto>(petResponse);
+
+                return Ok(petResponseDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"{nameof(PetController)} {nameof(GetAllPets)}");
+                return Problem();
+            }
+        }
     }
 }
 

@@ -25,5 +25,13 @@ namespace DogSitterMarketplaceBll.Services
 
             return petsResponse;
         }
+
+        public PetResponse GetPetById(int id)
+        {
+            var petEntity = _petRepository.GetPetById(id);
+            var petResponse = _mapper.Map<PetResponse>(petEntity);
+
+            return petResponse;
+        }
     }
 }

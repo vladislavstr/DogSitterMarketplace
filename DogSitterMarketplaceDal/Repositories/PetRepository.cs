@@ -20,5 +20,13 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(p => p.User)
                 .Where(p => !p.IsDeleted).ToList();
         }
+
+        public PetEntity GetPetById(int id)
+        {
+            return _context.Pets
+                    .Include(p => p.Type)
+                    .Include(p => p.User)
+                    .Single(p => !p.IsDeleted && p.Id == id);
+        }
     }
 }
