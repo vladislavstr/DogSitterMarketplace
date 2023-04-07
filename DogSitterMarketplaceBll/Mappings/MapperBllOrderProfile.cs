@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper;
 using DogSitterMarketplaceBll.Models.Appeals.Response;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
@@ -21,8 +20,6 @@ namespace DogSitterMarketplaceBll.Mappings
                  .ForMember(dest => dest.OrderStatus, opt => opt.Ignore())
                  .ForMember(dest => dest.SitterWork, opt => opt.Ignore())
                  .ForMember(dest => dest.Location, opt => opt.Ignore())
-                 //.ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(source =>  new OrderStatusEntity { Id = source .OrderStatusId}))
-
                  .ForMember(dest => dest.Pets, opt => opt.Ignore());
             CreateMap<OrderEntity, OrderResponse>();
             CreateMap<PetEntity, PetResponse>().ReverseMap();

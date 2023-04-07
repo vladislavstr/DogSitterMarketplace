@@ -14,7 +14,7 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public OrderEntity GetOrderById(int id);
 
-        public void UpdateOrder(OrderEntity order);
+        public int UpdateOrder(OrderEntity order);
 
         public void DeleteOrderById(int id);
 

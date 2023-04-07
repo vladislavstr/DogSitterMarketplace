@@ -30,15 +30,27 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public List<OrderEntity> GetAllOrders()
         {
-            return _context.Orders.Where(o => !o.IsDeleted).ToList();
+            return _context.Orders
+                .Include(o => o.OrderStatus)
+                .Include(o => o.SitterWork)
+                .Include(o => o.Location)
+                //.Include(o => o.Comments)
+                //.Include(o => o.Appeals)
+                .Where(o => !o.IsDeleted).ToList();
         }
 
         public OrderEntity GetOrderById(int id)
         {
-            return _context.Orders.SingleOrDefault(o => o.Id == id && !o.IsDeleted);
+            return _context.Orders
+                .Include(o => o.OrderStatus)
+                .Include(o => o.SitterWork)
+                .Include(o => o.Location)
+                //.Include(o => o.Comments)
+                //.Include(o => o.Appeals)
+                .Single(o => o.Id == id && !o.IsDeleted);
         }
 
-        public void UpdateOrder(OrderEntity orderUpdateEntity)
+        public int UpdateOrder(OrderEntity orderUpdateEntity)
         {
             // _context.Orders.Update(orderUpdateEntity);
 
@@ -60,6 +72,8 @@ namespace DogSitterMarketplaceDal.Repositories
             orderDB.Pets.AddRange(orderUpdateEntity.Pets);
 
             _context.SaveChanges();
+
+            return orderDB.Id;
         }
 
         public void DeleteOrderById(int id)

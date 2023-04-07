@@ -110,9 +110,9 @@ namespace DogSitterMarketplaceApi.Controllers
             try
             {
                 var orderUpdate = _mapper.Map<OrderUpdate>(orderUpdateDto);
-                _orderService.UpdateOrder(orderUpdate);
+                int id = _orderService.UpdateOrder(orderUpdate);
 
-                return StatusCode(200);
+                return Ok(id);
             }
             catch (Exception ex)
             {

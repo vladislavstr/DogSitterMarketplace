@@ -57,23 +57,17 @@ namespace DogSitterMarketplaceBll.Services
             _orderReposotory.DeleteOrderById(id);
         }
 
-        public void UpdateOrder(OrderUpdate orderUpdate)
+        public int UpdateOrder(OrderUpdate orderUpdate)
         {
             var orderEntity = _mapper.Map<OrderEntity>(orderUpdate);
             orderEntity.OrderStatus = _orderReposotory.GetOrderStatusById(orderUpdate.OrderStatusId);
             orderEntity.SitterWork = _orderReposotory.GetSitterWorkById(orderUpdate.SitterWorkId);
             orderEntity.Location = _orderReposotory.GetLocationById(orderUpdate.LocationId);
             orderEntity.Pets.AddRange(_orderReposotory.GetPetsInOrderEntities(orderUpdate.Pets));
-
-            ////if (orderEntity.Comments != null)
-            ////{
-            //    orderEntity.Comments.AddRange(_orderReposotory.GetCommentsById(orderUpdate.Comments));
-            ////}
-
-            
-            //    orderEntity.Appeals.AddRange(_orderReposotory.GetAppealsById(orderUpdate.Appeals));
-            
+                        
             _orderReposotory.UpdateOrder(orderEntity);
+
+            return orderEntity.Id;
         }
     }
 }
