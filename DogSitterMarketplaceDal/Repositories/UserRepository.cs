@@ -26,7 +26,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 Name = user.Name,
             };
 
-            context.User.Add(userDal);
+            context.Users.Add(userDal);
             context.SaveChanges();
 
             return new UserEntity
@@ -45,7 +45,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public IEnumerable<UserEntity> GetUser()
         {
-            return context.User.Where(t => !t.IsDeleted).ToList();
+            return context.Users.Where(t => !t.IsDeleted).ToList();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public IEnumerable<AppealEntity> GetUser()
         {
-            return context.Appeal.Where(t => !t.IsDeleted).ToList();
+            return context.Appeals.Where(t => !t.IsDeleted).ToList();
         }
     }
 }

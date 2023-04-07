@@ -11,9 +11,9 @@ namespace DogSitterMarketplaceDal.Contexts
             optionsBuilder.UseInMemoryDatabase("UserDb");
         }
 
-        public DbSet<UserEntity> User { get; set; }
-        public DbSet<UserPassportDataEntity> UserPassportData { get; set; }
-        public DbSet<UserRoleEntity> UserRole { get; set; }
-        public DbSet<UserStatusEntity> UserStatus { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<UserPassportDataEntity> UsersPassportData { get; set; }
+        public DbSet<UserRoleEntity> UsersRoles { get; set; }
+        public DbSet<UserStatusEntity> UsersStatuses { get; set; }
     }
 }

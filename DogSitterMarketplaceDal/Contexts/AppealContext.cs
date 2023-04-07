@@ -11,9 +11,9 @@ namespace DogSitterMarketplaceDal.Contexts
             optionsBuilder.UseInMemoryDatabase("AppealDb");
         }
 
-        public DbSet<AppealEntity> Appeal { get; set; }
-        public DbSet<AppealStatusEntity> AppealStatus { get; set; }
-        public DbSet<AppealTypeEntity> AppealType { get; set; }
+        public DbSet<AppealEntity> Appeals { get; set; }
+        public DbSet<AppealStatusEntity> AppealsStatuses { get; set; }
+        public DbSet<AppealTypeEntity> AppealsTypes { get; set; }
     }
 }
 
