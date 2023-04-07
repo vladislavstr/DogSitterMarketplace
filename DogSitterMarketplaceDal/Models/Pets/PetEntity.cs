@@ -1,6 +1,7 @@
 ﻿using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Users;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace DogSitterMarketplaceDal.Models.Pets
@@ -19,10 +20,16 @@ namespace DogSitterMarketplaceDal.Models.Pets
         public string Characteristics { get; set; }
 
         [Required]
+        [ForeignKey(nameof(TypeId))]
         public AnimalTypeEntity Type { get; set; }
 
+        public int TypeId { get; set; }
+
         [Required]
+        [ForeignKey(nameof(UserId))]
         public UserEntity User { get; set; }
+
+        public int UserId { get; set; }
 
         [Required]
         public bool IsDeleted { get; set; }

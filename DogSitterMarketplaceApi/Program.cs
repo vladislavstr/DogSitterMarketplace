@@ -1,6 +1,6 @@
-using DogSitterMarketplaceApi;
-using DogSitterMarketplaceBll;
+using DogSitterMarketplaceApi.Mappings;
 using DogSitterMarketplaceBll.IServices;
+using DogSitterMarketplaceBll.Mappings;
 using DogSitterMarketplaceBll.Services;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Repositories;
@@ -14,9 +14,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
-builder.Services.AddSingleton<IOrderService, OrderService>();
-builder.Services.AddAutoMapper(typeof(MapperApiProfile), typeof(MapperBllProfile));
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddAutoMapper(typeof(MapperApiOrderProfile), typeof(MapperBllOrderProfile));
 
 
 var app = builder.Build();

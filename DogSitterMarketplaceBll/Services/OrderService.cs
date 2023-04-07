@@ -23,9 +23,11 @@ namespace DogSitterMarketplaceBll.Services
         public OrderResponse AddOrder(OrderCreateRequest newOrder)
         {
             var orderEntity = _mapper.Map<OrderEntity>(newOrder);
-            orderEntity.OrderStatus = _orderReposotory.GetOrderStatusById(newOrder.OrderStatusId);
-            orderEntity.SitterWork = _orderReposotory.GetSitterWorkById(newOrder.SitterWorkId);
-            orderEntity.Location = _orderReposotory.GetLocationById(newOrder.LocationId);
+
+            //orderEntity.OrderStatus = _orderReposotory.GetOrderStatusById(newOrder.OrderStatusId);
+            //orderEntity.SitterWork = _orderReposotory.GetSitterWorkById(newOrder.SitterWorkId);
+            //orderEntity.Location = _orderReposotory.GetLocationById(newOrder.LocationId);
+
             orderEntity.Pets.AddRange(_orderReposotory.GetPetsInOrderEntities(newOrder.Pets));
 
             var addOrderEntity = _orderReposotory.AddNewOrder(orderEntity);
@@ -63,16 +65,14 @@ namespace DogSitterMarketplaceBll.Services
             orderEntity.Location = _orderReposotory.GetLocationById(orderUpdate.LocationId);
             orderEntity.Pets.AddRange(_orderReposotory.GetPetsInOrderEntities(orderUpdate.Pets));
 
-            if (orderEntity.Comments != null)
-            {
-                orderEntity.Comments.AddRange(_orderReposotory.GetCommentsById(orderUpdate.Comments));
-            }
+            ////if (orderEntity.Comments != null)
+            ////{
+            //    orderEntity.Comments.AddRange(_orderReposotory.GetCommentsById(orderUpdate.Comments));
+            ////}
 
-            if (orderEntity.Appeals != null)
-            {
-                orderEntity.Appeals.AddRange(_orderReposotory.GetAppealsById(orderUpdate.Appeals));
-            }
-
+            
+            //    orderEntity.Appeals.AddRange(_orderReposotory.GetAppealsById(orderUpdate.Appeals));
+            
             _orderReposotory.UpdateOrder(orderEntity);
         }
     }

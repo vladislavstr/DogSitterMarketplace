@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DogSitterMarketplaceDal.Migrations
 {
     [DbContext(typeof(OrdersAndPetsContext))]
-    [Migration("20230405083325_upd")]
-    partial class upd
+    [Migration("20230406104603_add Appeals to DBSet")]
+    partial class addAppealstoDBSet
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,7 +40,9 @@ namespace DogSitterMarketplaceDal.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int?>("OrderId")
                         .HasColumnType("int");
@@ -67,7 +69,7 @@ namespace DogSitterMarketplaceDal.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("AppealEntity");
+                    b.ToTable("Appeals");
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Appeals.AppealStatusEntity", b =>
@@ -119,7 +121,9 @@ namespace DogSitterMarketplaceDal.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -151,7 +155,8 @@ namespace DogSitterMarketplaceDal.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime>("DateEnd")
                         .HasColumnType("datetime2");
@@ -160,7 +165,9 @@ namespace DogSitterMarketplaceDal.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("LocationId")
                         .HasColumnType("int");
@@ -194,38 +201,22 @@ namespace DogSitterMarketplaceDal.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
                     b.ToTable("OrderStatuses");
-                });
-
-            modelBuilder.Entity("DogSitterMarketplaceDal.Models.Orders.PetsInOrderEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PetId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("PetId");
-
-                    b.ToTable("PetsInOrders");
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Pets.AnimalTypeEntity", b =>
@@ -243,11 +234,13 @@ namespace DogSitterMarketplaceDal.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Parameters")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("Id");
 
@@ -267,14 +260,18 @@ namespace DogSitterMarketplaceDal.Migrations
 
                     b.Property<string>("Characteristics")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
@@ -304,7 +301,9 @@ namespace DogSitterMarketplaceDal.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -401,7 +400,9 @@ namespace DogSitterMarketplaceDal.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -424,7 +425,9 @@ namespace DogSitterMarketplaceDal.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -450,7 +453,9 @@ namespace DogSitterMarketplaceDal.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -459,6 +464,21 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WorkTypeEntity");
+                });
+
+            modelBuilder.Entity("OrderEntityPetEntity", b =>
+                {
+                    b.Property<int>("OrdersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PetsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrdersId", "PetsId");
+
+                    b.HasIndex("PetsId");
+
+                    b.ToTable("OrderEntityPetEntity");
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Appeals.AppealEntity", b =>
@@ -556,25 +576,6 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.Navigation("SitterWork");
                 });
 
-            modelBuilder.Entity("DogSitterMarketplaceDal.Models.Orders.PetsInOrderEntity", b =>
-                {
-                    b.HasOne("DogSitterMarketplaceDal.Models.Orders.OrderEntity", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("DogSitterMarketplaceDal.Models.Pets.PetEntity", "Pet")
-                        .WithMany()
-                        .HasForeignKey("PetId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Pet");
-                });
-
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Pets.PetEntity", b =>
                 {
                     b.HasOne("DogSitterMarketplaceDal.Models.Pets.AnimalTypeEntity", "Type")
@@ -637,6 +638,21 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.Navigation("User");
 
                     b.Navigation("WorkType");
+                });
+
+            modelBuilder.Entity("OrderEntityPetEntity", b =>
+                {
+                    b.HasOne("DogSitterMarketplaceDal.Models.Orders.OrderEntity", null)
+                        .WithMany()
+                        .HasForeignKey("OrdersId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DogSitterMarketplaceDal.Models.Pets.PetEntity", null)
+                        .WithMany()
+                        .HasForeignKey("PetsId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Orders.OrderEntity", b =>

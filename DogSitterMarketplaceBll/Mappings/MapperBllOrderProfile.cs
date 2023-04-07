@@ -11,16 +11,18 @@ using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace DogSitterMarketplaceBll
+namespace DogSitterMarketplaceBll.Mappings
 {
-    public class MapperBllProfile : Profile
+    public class MapperBllOrderProfile : Profile
     {
-        public MapperBllProfile()
+        public MapperBllOrderProfile()
         {
             CreateMap<OrderCreateRequest, OrderEntity>()
                  .ForMember(dest => dest.OrderStatus, opt => opt.Ignore())
                  .ForMember(dest => dest.SitterWork, opt => opt.Ignore())
                  .ForMember(dest => dest.Location, opt => opt.Ignore())
+                 //.ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(source =>  new OrderStatusEntity { Id = source .OrderStatusId}))
+
                  .ForMember(dest => dest.Pets, opt => opt.Ignore());
             CreateMap<OrderEntity, OrderResponse>();
             CreateMap<PetEntity, PetResponse>().ReverseMap();

@@ -16,14 +16,25 @@ namespace DogSitterMarketplaceDal.Models.Orders
         public int Score { get; set; }
 
         [Required]
+        [ForeignKey(nameof(OrderId))]
         [StringLength(1000, MinimumLength = 2)]
         public OrderEntity Order { get; set; }
 
-        [Required]
-        public UserEntity CommentFromUser { get; set; }
+        public int OrderId { get; set; }
 
         [Required]
+        [ForeignKey(nameof(CommentFromUserId))]
+        public UserEntity CommentFromUser { get; set; }
+
+        public int CommentFromUserId { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(CommentToUserId))]
+
         public UserEntity CommentToUser { get; set; }
+
+        public int CommentToUserId { get; set; }
+
 
         [Required]
         public bool IsDeleted { get; set; }

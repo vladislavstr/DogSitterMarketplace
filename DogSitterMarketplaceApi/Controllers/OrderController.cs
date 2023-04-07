@@ -104,7 +104,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpPut(Name = "UpdateOrder")]
+        [HttpPut("{id}", Name = "UpdateOrder")]
         public ActionResult UpdateOrder(OrderUpdateDto orderUpdateDto)
         {
             try

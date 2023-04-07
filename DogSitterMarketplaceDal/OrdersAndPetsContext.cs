@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal
 {
-    public class DogSitterContext : DbContext
+    public class OrdersAndPetsContext : DbContext
     {
         public DbSet<OrderEntity> Orders { get; set; }
 

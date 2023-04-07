@@ -12,11 +12,11 @@ using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceDal.Models.Orders;
 
-namespace DogSitterMarketplaceApi
+namespace DogSitterMarketplaceApi.Mappings
 {
-    public class MapperApiProfile : Profile
+    public class MapperApiOrderProfile : Profile
     {
-        public MapperApiProfile()
+        public MapperApiOrderProfile()
         {
             CreateMap<OrderCreateRequestDto, OrderCreateRequest>();
             CreateMap<OrderResponse, OrderResponseDto>();

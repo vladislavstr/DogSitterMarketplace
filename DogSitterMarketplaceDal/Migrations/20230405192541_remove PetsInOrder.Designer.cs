@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DogSitterMarketplaceDal.Migrations
 {
-    [DbContext(typeof(DogSitterContext))]
+    [DbContext(typeof(OrdersAndPetsContext))]
     [Migration("20230405192541_remove PetsInOrder")]
     partial class removePetsInOrder
     {

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DogSitterMarketplaceDal.Migrations
 {
-    [DbContext(typeof(DogSitterContext))]
+    [DbContext(typeof(OrdersAndPetsContext))]
     partial class DogSitterContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -66,7 +66,7 @@ namespace DogSitterMarketplaceDal.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("AppealEntity");
+                    b.ToTable("Appeals");
                 });
 
             modelBuilder.Entity("DogSitterMarketplaceDal.Models.Appeals.AppealStatusEntity", b =>

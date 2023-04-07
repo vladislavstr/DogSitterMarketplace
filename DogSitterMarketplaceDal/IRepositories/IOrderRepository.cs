@@ -26,8 +26,8 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public List<PetEntity> GetPetsInOrderEntities(List<int> pets);
 
-        public List<CommentEntity> GetCommentsById(List<int> comments);
+        //public List<CommentEntity> GetCommentsById(List<int> comments);
 
-        public List<AppealEntity> GetAppealsById(List<int> appeals);
+        //public List<AppealEntity> GetAppealsById(List<int> appeals);
     }
 }
