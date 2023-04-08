@@ -56,7 +56,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
             var orderDB = _context.Orders
                 .Include(o => o.Pets)
-                .SingleOrDefault(o => o.Id == orderUpdateEntity.Id);
+                .Single(o => o.Id == orderUpdateEntity.Id);
             orderDB.Comment = orderUpdateEntity.Comment;
             orderDB.OrderStatus = orderUpdateEntity.OrderStatus;
             orderDB.SitterWork = orderUpdateEntity.SitterWork;

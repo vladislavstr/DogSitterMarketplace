@@ -96,6 +96,23 @@ namespace DogSitterMarketplaceApi.Controllers
                 return Problem();
             }
         }
+
+        [HttpPut("{id}", Name = "UpdatePet")]
+        public ActionResult UpdatePet(PetUpdateDto petUpdateDto)
+        {
+            try
+            {
+                var petUpdate = _mapper.Map<PetUpdate>(petUpdateDto);
+                var id = _petService.UpdatePet(petUpdate);
+
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"{nameof(PetController)} {nameof(UpdatePet)}");
+                return Problem();
+            }
+        }
     }
 }
 

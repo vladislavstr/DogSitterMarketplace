@@ -16,6 +16,7 @@ namespace DogSitterMarketplaceApi.Mappings
             CreateMap<AnimalTypeResponse, AnimalTypeResponseDto>();
             CreateMap<UserShortResponse, UserShortResponseDto>();
             CreateMap<PetRequestDto, PetRequest>();
+            CreateMap<PetUpdateDto, PetUpdate>();
         }
     }
 }

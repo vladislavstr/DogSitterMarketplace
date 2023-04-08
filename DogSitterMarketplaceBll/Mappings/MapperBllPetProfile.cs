@@ -16,6 +16,8 @@ namespace DogSitterMarketplaceBll.Mappings
             CreateMap<UserEntity, UserShortResponse>();
             CreateMap<PetRequest, PetEntity>()
                 .ForMember(dest => dest.TypeId, opt => opt.MapFrom(source => source.AnimalTypeId));
+            CreateMap<PetUpdate, PetEntity>()
+                .ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.AnimalTypeId));
         }
     }
 }

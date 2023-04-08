@@ -49,5 +49,13 @@ namespace DogSitterMarketplaceBll.Services
 
             return addPetResponse;
         }
+
+        public int UpdatePet(PetUpdate petUpdate)
+        {
+            var petEntity = _mapper.Map<PetEntity>(petUpdate);
+            var id = _petRepository.UpdatePet(petEntity);
+
+            return id;
+        }
     }
 }

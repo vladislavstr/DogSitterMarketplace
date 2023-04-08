@@ -12,5 +12,8 @@ namespace DogSitterMarketplaceBll.IServices
         public void DeletePetById(int id);
 
         public PetResponse AddPet(PetRequest addPet);
+
+        public int UpdatePet(PetUpdate petUpdate);
+
     }
 }
