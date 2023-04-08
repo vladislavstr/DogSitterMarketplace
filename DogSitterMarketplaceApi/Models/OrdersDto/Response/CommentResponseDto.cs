@@ -8,10 +8,10 @@ namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
 
         public int Score { get; set; }
 
-        public OrderResponseDto Order { get; set; }
+        //public OrderResponseDto Order { get; set; }
 
-        public UserResponseDto CommentFromUser { get; set; }
+        public UserShortResponseDto CommentFromUser { get; set; }
 
-        public UserResponseDto CommentToUser { get; set; }
+        public UserShortResponseDto CommentToUser { get; set; }
     }
 }

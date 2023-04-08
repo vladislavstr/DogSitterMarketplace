@@ -55,11 +55,11 @@ namespace DogSitterMarketplaceDal.Repositories
             petDB.Characteristics = updatePet.Characteristics;
             petDB.Type = updatePet.Type;
             petDB.TypeId = updatePet.TypeId;
-            petDB.User = updatePet.User;
+          //  petDB.User = updatePet.User;
             petDB.UserId = updatePet.UserId;
-            petDB.IsDeleted = updatePet.IsDeleted;
-            petDB.Orders.Clear();
-            petDB.Orders.AddRange(updatePet.Orders);
+            // petDB.IsDeleted = updatePet.IsDeleted;
+          //  petDB.Orders.Clear();
+           // petDB.Orders.AddRange(updatePet.Orders);
 
             _context.SaveChanges();
 

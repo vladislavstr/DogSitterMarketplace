@@ -13,10 +13,10 @@ namespace DogSitterMarketplaceApi.Models.AppealsDto.Response
 
         public AppealStatusResponseDto Status { get; set; }
 
-        public OrderResponseDto? Order { get; set; }
+        //public OrderResponseDto? Order { get; set; }
 
-        public UserResponseDto AppealFromUser { get; set; }
+        public UserShortResponseDto AppealFromUser { get; set; }
 
-        public UserResponseDto? AppealToUser { get; set; }
+        public UserShortResponseDto? AppealToUser { get; set; }
     }
 }

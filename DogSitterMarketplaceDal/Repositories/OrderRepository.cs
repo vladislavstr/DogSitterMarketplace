@@ -34,8 +34,10 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(o => o.OrderStatus)
                 .Include(o => o.SitterWork)
                 .Include(o => o.Location)
-                //.Include(o => o.Comments)
-                //.Include(o => o.Appeals)
+                .Include(o => o.SitterWork.User)
+                .Include(o => o.Comments)
+                .Include(o => o.Appeals)
+                .Include(o => o.Pets)
                 .Where(o => !o.IsDeleted).ToList();
         }
 
@@ -45,8 +47,10 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(o => o.OrderStatus)
                 .Include(o => o.SitterWork)
                 .Include(o => o.Location)
-                //.Include(o => o.Comments)
-                //.Include(o => o.Appeals)
+                .Include(o => o.SitterWork.User)
+                .Include(o => o.Comments)
+                .Include(o => o.Appeals)
+                .Include(o => o.Pets)
                 .Single(o => o.Id == id && !o.IsDeleted);
         }
 
@@ -58,13 +62,13 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(o => o.Pets)
                 .Single(o => o.Id == orderUpdateEntity.Id);
             orderDB.Comment = orderUpdateEntity.Comment;
-            orderDB.OrderStatus = orderUpdateEntity.OrderStatus;
-            orderDB.SitterWork = orderUpdateEntity.SitterWork;
+            orderDB.OrderStatusId = orderUpdateEntity.OrderStatusId;
+            orderDB.SitterWorkId = orderUpdateEntity.SitterWorkId;
             orderDB.Summ = orderUpdateEntity.Summ;
             orderDB.DateStart = orderUpdateEntity.DateStart;
             orderDB.DateEnd = orderUpdateEntity.DateEnd;
-            orderDB.Location = orderUpdateEntity.Location;
-            orderDB.IsDeleted = orderUpdateEntity.IsDeleted;
+            orderDB.LocationId = orderUpdateEntity.LocationId;
+            //orderDB.IsDeleted = orderUpdateEntity.IsDeleted;
             //orderDB.Comments = orderUpdateEntity.Comments;
             //orderDB.Appeals = orderUpdateEntity.Appeals;
             //orderDB.Pets.
@@ -106,7 +110,10 @@ namespace DogSitterMarketplaceDal.Repositories
                 return new List<PetEntity>();
             }
 
-            return _context.Pets.Where(p => !p.IsDeleted && pets.Contains(p.Id)).ToList();
+            return _context.Pets
+                .Include(p => p.Type)
+                .Include(p => p.User)
+                .Where(p => !p.IsDeleted && pets.Contains(p.Id)).ToList();
         }
 
         //public List<CommentEntity> GetCommentsById(List<int> comments)

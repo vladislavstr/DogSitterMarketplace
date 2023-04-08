@@ -9,7 +9,7 @@ namespace DogSitterMarketplaceApi.Models.WorksDto
 
         public string? Comment { get; set; }
 
-        public UserResponseDto User { get; set; }
+        public UserShortResponseDto User { get; set; }
 
         public WorkTypeResponseDto WorkType { get; set; }
 
