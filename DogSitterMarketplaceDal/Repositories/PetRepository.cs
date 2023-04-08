@@ -65,5 +65,18 @@ namespace DogSitterMarketplaceDal.Repositories
 
             return petDB.Id;
         }
+
+        public List<PetEntity> GetPetsInOrderEntities(List<int> pets)
+        {
+            if (!pets.Any())
+            {
+                return new List<PetEntity>();
+            }
+
+            return _context.Pets
+                .Include(p => p.Type)
+                .Include(p => p.User)
+                .Where(p => !p.IsDeleted && pets.Contains(p.Id)).ToList();
+        }
     }
 }

@@ -24,6 +24,8 @@ namespace DogSitterMarketplaceDal.Repositories
             return _context.Orders
                 .Include(o => o.OrderStatus)
                 .Include(o => o.SitterWork)
+                .Include(o => o.SitterWork.User)
+                .Include(o => o.SitterWork.WorkType)
                 .Include(o => o.Location)
                 .Single(o => o.Id == order.Id);
         }
@@ -35,6 +37,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(o => o.SitterWork)
                 .Include(o => o.Location)
                 .Include(o => o.SitterWork.User)
+                .Include(o => o.SitterWork.WorkType)
                 .Include(o => o.Comments)
                 .Include(o => o.Appeals)
                 .Include(o => o.Pets)
@@ -48,6 +51,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(o => o.SitterWork)
                 .Include(o => o.Location)
                 .Include(o => o.SitterWork.User)
+                .Include(o => o.SitterWork.WorkType)
                 .Include(o => o.Comments)
                 .Include(o => o.Appeals)
                 .Include(o => o.Pets)
@@ -115,25 +119,5 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(p => p.User)
                 .Where(p => !p.IsDeleted && pets.Contains(p.Id)).ToList();
         }
-
-        //public List<CommentEntity> GetCommentsById(List<int> comments)
-        //{
-        //    if (!comments.Any())
-        //    {
-        //        return new List<CommentEntity>();
-        //    }
-
-        //    return _context.Comments.Where(c => !c.IsDeleted && comments.Contains(c.Id)).ToList();
-        //}
-
-        //public List<AppealEntity> GetAppealsById(List<int> appeals)
-        //{
-        //    if (!appeals.Any())
-        //    {
-        //        return new List<AppealEntity>();
-        //    }
-
-        //    return _context.Appeals.Where(a => !a.IsDeleted && appeals.Contains(a.Id)).ToList();
-        //}
     }
 }

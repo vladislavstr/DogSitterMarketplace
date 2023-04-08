@@ -54,7 +54,6 @@ namespace DogSitterMarketplaceApi.Controllers
             try
             {
                 var ordersResponse = _orderService.GetAllOrders();
-
                 var ordersResponseDto = _mapper.Map<List<OrderResponseDto>>(ordersResponse);
 
                 return Ok(ordersResponseDto);

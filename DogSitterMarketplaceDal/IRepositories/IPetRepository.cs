@@ -14,5 +14,6 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public int UpdatePet(PetEntity updatePet);
 
+        public List<PetEntity> GetPetsInOrderEntities(List<int> pets);
     }
 }

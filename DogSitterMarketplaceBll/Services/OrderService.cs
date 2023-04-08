@@ -5,6 +5,7 @@ using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Works;
+using DogSitterMarketplaceDal.Repositories;
 
 namespace DogSitterMarketplaceBll.Services
 {
@@ -14,9 +15,12 @@ namespace DogSitterMarketplaceBll.Services
 
         private readonly IOrderRepository _orderReposotory;
 
-        public OrderService(IOrderRepository orderReposotory, IMapper mapper)
+        private readonly IPetRepository _petReposotory;
+
+        public OrderService(IOrderRepository orderReposotory, IPetRepository petReposotory, IMapper mapper)
         {
             _orderReposotory = orderReposotory;
+            _petReposotory = petReposotory;
             _mapper = mapper;
         }
 
