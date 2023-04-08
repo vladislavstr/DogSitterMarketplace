@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DogSitterMarketplaceDal.Migrations
 {
-    [DbContext(typeof(OrdersAndPetsContext))]
+    [DbContext(typeof(OrdersAndPetsAndCommentsContext))]
     [Migration("20230405152925_add virtual Order-Pet")]
     partial class addvirtualOrderPet
     {

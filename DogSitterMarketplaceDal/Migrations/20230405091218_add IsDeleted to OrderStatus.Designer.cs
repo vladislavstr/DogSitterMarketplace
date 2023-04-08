@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DogSitterMarketplaceDal.Migrations
 {
-    [DbContext(typeof(OrdersAndPetsContext))]
+    [DbContext(typeof(OrdersAndPetsAndCommentsContext))]
     [Migration("20230405091218_add IsDeleted to OrderStatus")]
     partial class addIsDeletedtoOrderStatus
     {

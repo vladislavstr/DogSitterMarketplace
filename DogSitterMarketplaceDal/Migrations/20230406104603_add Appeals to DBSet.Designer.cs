@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DogSitterMarketplaceDal.Migrations
 {
-    [DbContext(typeof(OrdersAndPetsContext))]
+    [DbContext(typeof(OrdersAndPetsAndCommentsContext))]
     [Migration("20230406104603_add Appeals to DBSet")]
     partial class addAppealstoDBSet
     {

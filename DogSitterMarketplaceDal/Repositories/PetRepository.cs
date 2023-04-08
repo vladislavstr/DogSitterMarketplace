@@ -6,11 +6,11 @@ namespace DogSitterMarketplaceDal.Repositories
 {
     public class PetRepository : IPetRepository
     {
-        private static OrdersAndPetsContext _context;
+        private static OrdersAndPetsAndCommentsContext _context;
 
         public PetRepository()
         {
-            _context = new OrdersAndPetsContext();
+            _context = new OrdersAndPetsAndCommentsContext();
         }
 
         public List<PetEntity> GetAllPets()

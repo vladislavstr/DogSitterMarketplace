@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DogSitterMarketplaceDal.Migrations
 {
-    [DbContext(typeof(OrdersAndPetsContext))]
+    [DbContext(typeof(OrdersAndPetsAndCommentsContext))]
     [Migration("20230405094057_add default (0) for IsDeleted for each tables ")]
     partial class adddefault0forIsDeletedforeachtables
     {

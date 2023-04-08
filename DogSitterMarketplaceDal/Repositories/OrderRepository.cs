@@ -9,11 +9,11 @@ namespace DogSitterMarketplaceDal.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
-        private static OrdersAndPetsContext _context;
+        private static OrdersAndPetsAndCommentsContext _context;
 
         public OrderRepository()
         {
-            _context = new OrdersAndPetsContext();
+            _context = new OrdersAndPetsAndCommentsContext();
         }
 
         public OrderEntity AddNewOrder(OrderEntity order)

@@ -18,8 +18,11 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPetRepository, PetRepository>();
 builder.Services.AddScoped<IPetService, PetService>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddAutoMapper(typeof(MapperApiOrderProfile), typeof(MapperBllOrderProfile),  
-                               typeof(MapperApiPetProfile), typeof(MapperBllPetProfile));
+                               typeof(MapperApiPetProfile), typeof(MapperBllPetProfile),
+                               typeof(MapperApiCommentProfile), typeof(MapperBllCommentProfile));
 
 
 var app = builder.Build();
