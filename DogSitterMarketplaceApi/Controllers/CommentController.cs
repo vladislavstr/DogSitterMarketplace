@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceApi.Models.OrdersDto.Response;
 using DogSitterMarketplaceBll.IServices;
+using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DogSitterMarketplaceApi.Controllers
@@ -23,20 +24,21 @@ namespace DogSitterMarketplaceApi.Controllers
             _logger = logger;
         }
 
-        //[HttpGet(Name = "GetAllComments")]
-        //public ActionResult<CommentResponseDto> GetAllComments()
-        //{
-        //    try
-        //    {
-        //        var commentsResponse = _commentService.GetAllComments();
-        //        var commentsResponseDto = _mapper.Map<List<CommentResponseDto>>(commentsResponse);
+        [HttpGet(Name = "GetAllComments")]
+        public ActionResult<CommentOrderResponseDto> GetAllComments()
+        {
+            try
+            {
+                var commentsResponse = _commentService.GetAllComments();
+                var commentsResponseDto = _mapper.Map<List<CommentOrderResponseDto>>(commentsResponse);
 
-        //        return Ok(commentsResponseDto);
-        //    }
-        //    catch ()
-        //    { 
-        //    // прокинуть ошибки
-        //    }
-        //}
+                return Ok(commentsResponseDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{nameof(CommentController)} {nameof(GetAllComments)}");
+                return Problem();
+            }
+        }
     }
 }

@@ -46,7 +46,12 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(o => o.Comments)
                 .Include(o => o.Appeals)
                 .Include(o => o.Pets)
-                .Where(o => !o.IsDeleted).ToList();
+                .Where(o => !o.IsDeleted
+                && !o.OrderStatus.IsDeleted
+                && !o.SitterWork.IsDeleted
+                && !o.SitterWork.User.IsDeleted
+                && !o.SitterWork.WorkType.IsDeleted
+                ).ToList();
         }
 
         public OrderEntity GetOrderById(int id)
@@ -68,7 +73,11 @@ namespace DogSitterMarketplaceDal.Repositories
                     .Include(o => o.Appeals)
                     .ThenInclude(o => o.AppealToUser)
                     .Include(o => o.Pets)
-                    .Single(o => o.Id == id && !o.IsDeleted);
+                    .Single(o => o.Id == id && !o.IsDeleted
+                     && !o.OrderStatus.IsDeleted
+                     && !o.SitterWork.IsDeleted
+                     && !o.SitterWork.User.IsDeleted
+                     && !o.SitterWork.WorkType.IsDeleted);
             }
             catch (InvalidOperationException ex)
             {
@@ -174,7 +183,10 @@ namespace DogSitterMarketplaceDal.Repositories
             return _context.Pets
                 .Include(p => p.Type)
                 .Include(p => p.User)
-                .Where(p => !p.IsDeleted && pets.Contains(p.Id)).ToList();
+                .Where(p => !p.IsDeleted && pets.Contains(p.Id)
+                && !p.Type.IsDeleted
+                && !p.User.IsDeleted)
+                .ToList();
         }
     }
 }

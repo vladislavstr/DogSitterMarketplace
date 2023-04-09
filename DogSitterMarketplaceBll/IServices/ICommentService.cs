@@ -4,6 +4,6 @@ namespace DogSitterMarketplaceBll.IServices
 {
     public interface ICommentService
     {
-        public List<CommentResponse> GetAllComments();
+        public List<CommentOrderResponse> GetAllComments();
     }
 }

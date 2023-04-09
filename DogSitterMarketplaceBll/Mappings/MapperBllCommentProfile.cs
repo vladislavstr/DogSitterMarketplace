@@ -10,7 +10,7 @@ namespace DogSitterMarketplaceBll.Mappings
     {
         public MapperBllCommentProfile() 
         {
-            CreateMap<CommentEntity, CommentResponse>();
+            CreateMap<CommentEntity, CommentOrderResponse>();
         }
     }
 }

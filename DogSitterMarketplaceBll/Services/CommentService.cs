@@ -17,10 +17,10 @@ namespace DogSitterMarketplaceBll.Services
             _mapper = mapper;
         }
 
-        public List<CommentResponse> GetAllComments()
+        public List<CommentOrderResponse> GetAllComments()
         {
             var commentsEntity = _commentRepository.GetAllComments();
-            var commentsResponse = _mapper.Map<List<CommentResponse>>(commentsEntity);
+            var commentsResponse = _mapper.Map<List<CommentOrderResponse>>(commentsEntity);
 
             return commentsResponse;
         }

@@ -8,7 +8,7 @@ namespace DogSitterMarketplaceApi.Mappings
     {
         public MapperApiCommentProfile() 
         {
-            CreateMap<CommentResponse, CommentResponseDto>();
+            CreateMap<CommentOrderResponse, CommentOrderResponseDto>();
         }
     }
 }

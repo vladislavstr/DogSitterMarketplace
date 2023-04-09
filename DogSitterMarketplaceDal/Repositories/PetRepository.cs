@@ -1,6 +1,8 @@
-﻿using DogSitterMarketplaceDal.IRepositories;
+﻿using DogSitterMarketplaceCore.Exceptions;
+using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Pets;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -8,9 +10,12 @@ namespace DogSitterMarketplaceDal.Repositories
     {
         private static OrdersAndPetsAndCommentsContext _context;
 
-        public PetRepository()
+        private readonly ILogger<IPetRepository> _logger;
+
+        public PetRepository(ILogger<IPetRepository> logger)
         {
             _context = new OrdersAndPetsAndCommentsContext();
+            _logger = logger;
         }
 
         public List<PetEntity> GetAllPets()
@@ -18,23 +23,43 @@ namespace DogSitterMarketplaceDal.Repositories
             return _context.Pets
                 .Include(p => p.Type)
                 .Include(p => p.User)
-                .Where(p => !p.IsDeleted).ToList();
+                .Where(p => !p.IsDeleted
+                && !p.Type.IsDeleted
+                && !p.User.IsDeleted)
+                .ToList();
         }
 
         public PetEntity GetPetById(int id)
         {
-            return _context.Pets
-                    .Include(p => p.Type)
-                    .Include(p => p.User)
-                    .Single(p => !p.IsDeleted && p.Id == id);
+            try
+            {
+                return _context.Pets
+                        .Include(p => p.Type)
+                        .Include(p => p.User)
+                        .Single(p => !p.IsDeleted && p.Id == id
+                         && !p.Type.IsDeleted
+                         && !p.User.IsDeleted);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogDebug($"{nameof(PetEntity)} with id {id} not found");
+                throw new NotFoundException(id, nameof(PetEntity));
+            }
         }
 
         public void DeletePetById(int id)
         {
-            var petDB = _context.Pets.Single(p => !p.IsDeleted && p.Id == id);
-            petDB.IsDeleted = true;
-
-            _context.SaveChanges();
+            try
+            {
+                var petDB = _context.Pets.Single(p => !p.IsDeleted && p.Id == id);
+                petDB.IsDeleted = true;
+                _context.SaveChanges();
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogDebug($"{nameof(PetEntity)} with id {id} not found");
+                throw new NotFoundException(id, nameof(PetEntity));
+            }
         }
 
         public PetEntity AddPet(PetEntity addPet)
@@ -50,7 +75,14 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public int UpdatePet(PetEntity updatePet)
         {
-            var petDB = _context.Pets.Single(p => !p.IsDeleted && p.Id == updatePet.Id);
+            var petDB = _context.Pets.SingleOrDefault(p => !p.IsDeleted && p.Id == updatePet.Id);
+
+            if (petDB == null)
+            {
+                _logger.LogDebug($"{nameof(PetEntity)} with id {updatePet.Id} not found");
+                throw new NotFoundException(updatePet.Id, nameof(PetEntity));
+            }
+
             petDB.Name = updatePet.Name;
             petDB.Characteristics = updatePet.Characteristics;
             petDB.Type = updatePet.Type;
@@ -76,7 +108,10 @@ namespace DogSitterMarketplaceDal.Repositories
             return _context.Pets
                 .Include(p => p.Type)
                 .Include(p => p.User)
-                .Where(p => !p.IsDeleted && pets.Contains(p.Id)).ToList();
+                .Where(p => !p.IsDeleted && pets.Contains(p.Id)
+                && !p.Type.IsDeleted
+                && !p.User.IsDeleted)
+                .ToList();
         }
     }
 }

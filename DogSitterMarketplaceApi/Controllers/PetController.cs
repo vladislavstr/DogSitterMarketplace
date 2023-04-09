@@ -7,6 +7,7 @@ using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets.Request;
 using DogSitterMarketplaceBll.Services;
+using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Threading.Tasks;
@@ -57,10 +58,9 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(petResponseDto);
             }
-            catch (Exception ex)
+            catch (NotFoundException)
             {
-                _logger.LogError(ex, $"{nameof(PetController)} {nameof(GetPetById)}");
-                return Problem();
+                return NotFound();
             }
         }
 
@@ -72,10 +72,9 @@ namespace DogSitterMarketplaceApi.Controllers
                 _petService.DeletePetById(id);
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (NotFoundException)
             {
-                _logger.LogError(ex, $"{nameof(PetController)} {nameof(DeletePetById)}");
-                return Problem();
+                return NotFound();
             }
         }
 
@@ -107,10 +106,9 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(id);
             }
-            catch (Exception ex)
+            catch (NotFoundException)
             {
-                _logger.LogError(ex, $"{nameof(PetController)} {nameof(UpdatePet)}");
-                return Problem();
+                return NotFound();
             }
         }
     }

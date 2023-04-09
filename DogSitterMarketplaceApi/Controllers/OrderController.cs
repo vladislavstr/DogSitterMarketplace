@@ -82,7 +82,7 @@ namespace DogSitterMarketplaceApi.Controllers
                 return Ok(orderResponseDto);
             }
 
-            catch (NotFoundException ex)
+            catch (NotFoundException)
             {
                 return NotFound();
             }
@@ -96,7 +96,7 @@ namespace DogSitterMarketplaceApi.Controllers
                 _orderService.DeleteOrderById(id);
                 return NoContent();
             }
-            catch (NotFoundException ex)
+            catch (NotFoundException)
             {
                 return NotFound();
             }
@@ -112,7 +112,7 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(id);
             }
-            catch (NotFoundException ex)
+            catch (NotFoundException)
             {
                 return NotFound();
             }
