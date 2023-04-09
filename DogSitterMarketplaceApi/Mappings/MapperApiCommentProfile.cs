@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DogSitterMarketplaceApi.Models.OrdersDto.Response;
+using DogSitterMarketplaceBll.Models.Orders.Response;
 
 namespace DogSitterMarketplaceApi.Mappings
 {
@@ -6,6 +8,7 @@ namespace DogSitterMarketplaceApi.Mappings
     {
         public MapperApiCommentProfile() 
         {
+            CreateMap<CommentResponse, CommentResponseDto>();
         }
     }
 }

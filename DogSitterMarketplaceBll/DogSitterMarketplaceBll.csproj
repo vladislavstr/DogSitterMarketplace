@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DogSitterMarketplaceCore\DogSitterMarketplaceCore.csproj" />
     <ProjectReference Include="..\DogSitterMarketplaceDal\DogSitterMarketplaceDal.csproj" />
   </ItemGroup>
 

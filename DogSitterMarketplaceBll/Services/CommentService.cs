@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceBll.IServices;
+using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceDal.IRepositories;
 
 namespace DogSitterMarketplaceBll.Services
@@ -14,6 +15,14 @@ namespace DogSitterMarketplaceBll.Services
         {
             _commentRepository = commentRepository;
             _mapper = mapper;
+        }
+
+        public List<CommentResponse> GetAllComments()
+        {
+            var commentsEntity = _commentRepository.GetAllComments();
+            var commentsResponse = _mapper.Map<List<CommentResponse>>(commentsEntity);
+
+            return commentsResponse;
         }
     }
 }
