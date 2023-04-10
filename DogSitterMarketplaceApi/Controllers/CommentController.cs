@@ -25,7 +25,7 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet(Name = "GetAllComments")]
-        public ActionResult<CommentOrderResponseDto> GetAllComments()
+        public ActionResult<List<CommentOrderResponseDto>> GetAllComments()
         {
             try
             {
@@ -40,5 +40,22 @@ namespace DogSitterMarketplaceApi.Controllers
                 return Problem();
             }
         }
+
+        [HttpGet("{id}", Name = "GetCommentById")]
+        public ActionResult<CommentOrderResponseDto> GetCommentById(int id)
+        {
+            try
+            {
+                var commentResponse = _commentService.GetCommentById(id);
+                var commentResponseDto = _mapper.Map<CommentOrderResponseDto>(commentResponse);
+
+                return Ok(commentResponseDto);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
     }
 }

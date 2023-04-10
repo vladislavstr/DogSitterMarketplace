@@ -24,5 +24,13 @@ namespace DogSitterMarketplaceBll.Services
 
             return commentsResponse;
         }
+
+        public CommentOrderResponse GetCommentById(int id)
+        {
+            var commentEntity = _commentRepository.GetCommentById(id);
+            var commentResponse = _mapper.Map<CommentOrderResponse>(commentEntity);
+
+            return commentResponse; 
+        }
     }
 }

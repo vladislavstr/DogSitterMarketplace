@@ -1,4 +1,5 @@
-﻿using DogSitterMarketplaceDal.IRepositories;
+﻿using DogSitterMarketplaceCore.Exceptions;
+using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -24,6 +25,26 @@ namespace DogSitterMarketplaceDal.Repositories
         .Include(c => c.CommentFromUser)
         .Include(c => c.CommentToUser)
         .Where(c => !c.IsDeleted && !c.Order.IsDeleted).ToList();
+        }
+
+        public CommentEntity GetCommentById(int id)
+        {
+            try
+            {
+                return _context.Comments
+                    .Include(c => c.Order)
+                    .Include(c => c.Order.OrderStatus)
+                    .Include(c => c.CommentFromUser)
+                    .Include(c => c.CommentToUser)
+                    .Single(c => c.Id == id && !c.IsDeleted
+                    && !c.Order.IsDeleted
+                    && !c.Order.OrderStatus.IsDeleted);
+            }
+            catch (InvalidOperationException)
+            {
+                _logger.LogDebug($"({nameof(CommentEntity)} with id {id} not found)");
+                throw new NotFoundException(id, nameof(CommentEntity));
+            }
         }
     }
 }

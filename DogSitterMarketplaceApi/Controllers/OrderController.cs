@@ -71,12 +71,6 @@ namespace DogSitterMarketplaceApi.Controllers
             try
             {
                 var orderResponse = _orderService.GetOrderById(id);
-
-                if (orderResponse is null)
-                {
-                    return NotFound();
-                }
-
                 var orderResponseDto = _mapper.Map<OrderResponseDto>(orderResponse);
 
                 return Ok(orderResponseDto);
