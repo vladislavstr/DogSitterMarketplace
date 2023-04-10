@@ -46,5 +46,20 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new NotFoundException(id, nameof(CommentEntity));
             }
         }
+
+        public void DeleteCommentById(int id)
+        {
+            try
+            {
+                var commentDB = _context.Comments.Single(c => c.Id == id && !c.IsDeleted);
+                commentDB.IsDeleted = true;
+                _context.SaveChanges();
+            }
+            catch (InvalidOperationException)
+            {
+                _logger.LogDebug($"{nameof(CommentEntity)} with id {id} not found");
+                throw new NotFoundException(id, nameof(CommentEntity));
+            }
+        }
     }
 }

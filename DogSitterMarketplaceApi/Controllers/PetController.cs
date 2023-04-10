@@ -70,6 +70,7 @@ namespace DogSitterMarketplaceApi.Controllers
             try
             {
                 _petService.DeletePetById(id);
+
                 return NoContent();
             }
             catch (NotFoundException)

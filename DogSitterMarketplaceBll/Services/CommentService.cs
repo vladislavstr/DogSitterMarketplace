@@ -32,5 +32,10 @@ namespace DogSitterMarketplaceBll.Services
 
             return commentResponse; 
         }
+
+        public void DeleteCommentById(int id)
+        {
+            _commentRepository.DeleteCommentById(id);
+        }
     }
 }

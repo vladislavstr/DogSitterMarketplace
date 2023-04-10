@@ -7,5 +7,7 @@ namespace DogSitterMarketplaceDal.IRepositories
         public List<CommentEntity> GetAllComments();
 
         public CommentEntity GetCommentById(int id);
+
+        public void DeleteCommentById(int id);
     }
 }

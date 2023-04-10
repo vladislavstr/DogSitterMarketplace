@@ -57,5 +57,19 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
+        [HttpDelete("{id}", Name = "DeleteCommentById")]
+        public IActionResult DeleteCommentById(int id)
+        {
+            try
+            {
+                _commentService.DeleteCommentById(id);
+
+                return NoContent();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+        }
     }
 }

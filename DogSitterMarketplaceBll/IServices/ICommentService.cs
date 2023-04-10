@@ -7,5 +7,7 @@ namespace DogSitterMarketplaceBll.IServices
         public List<CommentOrderResponse> GetAllComments();
 
         public CommentOrderResponse GetCommentById(int id);
+
+        public void DeleteCommentById(int id);
     }
 }
