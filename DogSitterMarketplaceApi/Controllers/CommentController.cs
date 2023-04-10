@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using DogSitterMarketplaceApi.Models.OrdersDto.Request;
 using DogSitterMarketplaceApi.Models.OrdersDto.Response;
 using DogSitterMarketplaceBll.IServices;
+using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -69,6 +71,24 @@ namespace DogSitterMarketplaceApi.Controllers
             catch (NotFoundException)
             {
                 return NotFound();
+            }
+        }
+
+        [HttpPost(Name = "AddComment")]
+        public ActionResult<CommentOrderResponseDto> AddComment(CommentRequestDto addCommentRequestDto)
+        {
+            try
+            {
+                var commentRequest = _mapper.Map<CommentRequest>(addCommentRequestDto);
+                var addCommentResponse = _commentService.AddComment(commentRequest);
+                var addCommentResponseDto = _mapper.Map<CommentOrderResponseDto>(addCommentResponse);
+
+                return Created(new Uri("api/Comment", UriKind.Relative), addCommentResponseDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, nameof(CommentController), nameof(AddComment));
+                return Problem();
             }
         }
     }

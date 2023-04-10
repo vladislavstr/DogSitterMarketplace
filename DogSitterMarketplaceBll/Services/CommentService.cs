@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceBll.IServices;
+using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceDal.IRepositories;
+using DogSitterMarketplaceDal.Models.Orders;
 
 namespace DogSitterMarketplaceBll.Services
 {
@@ -36,6 +38,15 @@ namespace DogSitterMarketplaceBll.Services
         public void DeleteCommentById(int id)
         {
             _commentRepository.DeleteCommentById(id);
+        }
+
+        public CommentOrderResponse AddComment(CommentRequest commentRequest)
+        {
+            var commentEntity = _mapper.Map<CommentEntity>(commentRequest);
+            var addCommentEntity = _commentRepository.AddComment(commentEntity);
+            var addCommentResponse = _mapper.Map<CommentOrderResponse>(addCommentEntity);
+
+            return addCommentResponse;
         }
     }
 }

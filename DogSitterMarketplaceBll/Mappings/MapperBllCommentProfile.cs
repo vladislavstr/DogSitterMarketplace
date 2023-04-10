@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceDal.Models.Orders;
@@ -11,6 +12,7 @@ namespace DogSitterMarketplaceBll.Mappings
         public MapperBllCommentProfile() 
         {
             CreateMap<CommentEntity, CommentOrderResponse>();
+            CreateMap<CommentRequest, CommentEntity>();
         }
     }
 }

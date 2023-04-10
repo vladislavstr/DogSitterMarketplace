@@ -61,5 +61,17 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new NotFoundException(id, nameof(CommentEntity));
             }
         }
+
+        public CommentEntity AddComment(CommentEntity addComment)
+        {
+            _context.Comments.Add(addComment);
+            _context.SaveChanges();
+
+            return _context.Comments
+                .Include(c => c.Order)
+                .Include(c => c.CommentFromUser)
+                .Include(c => c.CommentToUser)
+                .Single(c => c.Id == addComment.Id);
+        }
     }
 }
