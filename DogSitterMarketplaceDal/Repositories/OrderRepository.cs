@@ -92,7 +92,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
             var orderDB = _context.Orders
                 .Include(o => o.Pets)
-                .SingleOrDefault(o => o.Id == orderUpdateEntity.Id);
+                .SingleOrDefault(o => o.Id == orderUpdateEntity.Id && !o.IsDeleted);
 
             if (orderDB == null)
             {

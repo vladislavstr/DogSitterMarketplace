@@ -13,6 +13,7 @@ namespace DogSitterMarketplaceBll.Mappings
         {
             CreateMap<CommentEntity, CommentOrderResponse>();
             CreateMap<CommentRequest, CommentEntity>();
+            CreateMap<CommentUpdate, CommentEntity>();
         }
     }
 }

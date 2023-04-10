@@ -1,6 +1,7 @@
 ﻿using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Pets;
+using DogSitterMarketplaceDal.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -112,6 +113,32 @@ namespace DogSitterMarketplaceDal.Repositories
                 && !p.Type.IsDeleted
                 && !p.User.IsDeleted)
                 .ToList();
+        }
+
+        public AnimalTypeEntity GetAnimalTypeById(int id)
+        {
+            try
+            {
+                return _context.AnimalsTypes.Single(at => at.Id == id && !at.IsDeleted);
+            }
+            catch (InvalidOperationException)
+            {
+                _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetAnimalTypeById)} {nameof(AnimalTypeEntity)} with id {id} not found");
+                throw new NotFoundException(id, nameof(AnimalTypeEntity));
+            }
+        }
+
+        public UserEntity GetUserById(int id)
+        {
+            try
+            {
+                return _context.Users.Single(u => u.Id == id && !u.IsDeleted);
+            }
+            catch (InvalidOperationException)
+            {
+                _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetUserById)} {nameof(UserEntity)} with id {id} not found.");
+                throw new NotFoundException(id, nameof(UserEntity));
+            }
         }
     }
 }

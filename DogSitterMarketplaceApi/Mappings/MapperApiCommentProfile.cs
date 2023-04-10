@@ -12,6 +12,7 @@ namespace DogSitterMarketplaceApi.Mappings
         {
             CreateMap<CommentOrderResponse, CommentOrderResponseDto>();
             CreateMap<CommentRequestDto, CommentRequest>();
+            CreateMap<CommentUpdateDto, CommentUpdate>();
         }
     }
 }

@@ -53,6 +53,8 @@ namespace DogSitterMarketplaceBll.Services
         public int UpdatePet(PetUpdate petUpdate)
         {
             var petEntity = _mapper.Map<PetEntity>(petUpdate);
+            var animalTypeEntity = _petRepository.GetAnimalTypeById(petUpdate.AnimalTypeId);
+            var userEntity = _petRepository.GetUserById(petUpdate.UserId);
             var id = _petRepository.UpdatePet(petEntity);
 
             return id;

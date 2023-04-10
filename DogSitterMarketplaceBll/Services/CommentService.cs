@@ -48,5 +48,16 @@ namespace DogSitterMarketplaceBll.Services
 
             return addCommentResponse;
         }
+
+        public int UpdateComment(CommentUpdate commentUpdate)
+        {
+            var commentEntity = _mapper.Map<CommentEntity>(commentUpdate);
+            var orderEtity = _commentRepository.GetOrderById(commentUpdate.OrderId);
+            var userCommentFromEntity = _commentRepository.GetUserById(commentUpdate.CommentFromUserId);
+            var userCommentToEntity = _commentRepository.GetUserById(commentUpdate.CommentToUserId);
+            var id = _commentRepository.UpdateComment(commentEntity);
+
+            return id;
+        }
     }
 }

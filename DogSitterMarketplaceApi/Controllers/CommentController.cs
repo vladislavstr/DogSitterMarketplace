@@ -91,5 +91,21 @@ namespace DogSitterMarketplaceApi.Controllers
                 return Problem();
             }
         }
+
+        [HttpPut("{id}", Name = "UpdateComment")]
+        public ActionResult<int> UpdateComment(CommentUpdateDto commentUpdatetDto)
+        {
+            try
+            {
+                var commentUpdate = _mapper.Map<CommentUpdate>(commentUpdatetDto);
+                var id = _commentService.UpdateComment(commentUpdate);
+
+                return Ok(id);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+        }
     }
 }

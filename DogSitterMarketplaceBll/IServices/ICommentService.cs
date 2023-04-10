@@ -12,5 +12,7 @@ namespace DogSitterMarketplaceBll.IServices
         public void DeleteCommentById(int id);
 
         public CommentOrderResponse AddComment(CommentRequest commentRequest);
+
+        public int UpdateComment(CommentUpdate commentRequest);
     }
 }

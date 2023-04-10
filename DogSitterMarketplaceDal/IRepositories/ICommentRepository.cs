@@ -1,4 +1,5 @@
 ﻿using DogSitterMarketplaceDal.Models.Orders;
+using DogSitterMarketplaceDal.Models.Users;
 
 namespace DogSitterMarketplaceDal.IRepositories
 {
@@ -11,5 +12,11 @@ namespace DogSitterMarketplaceDal.IRepositories
         public void DeleteCommentById(int id);
 
         public CommentEntity AddComment(CommentEntity addComment);
+
+        public int UpdateComment(CommentEntity comment);
+
+        public OrderEntity GetOrderById(int id);
+
+        public UserEntity GetUserById(int id);
     }
 }
