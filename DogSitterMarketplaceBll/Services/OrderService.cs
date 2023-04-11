@@ -32,7 +32,9 @@ namespace DogSitterMarketplaceBll.Services
             //orderEntity.SitterWork = _orderReposotory.GetSitterWorkById(newOrder.SitterWorkId);
             //orderEntity.Location = _orderReposotory.GetLocationById(newOrder.LocationId);
 
-            orderEntity.Pets.AddRange(_orderReposotory.GetPetsInOrderEntities(newOrder.Pets));
+            orderEntity.Pets.AddRange(_petReposotory.GetPetsInOrderEntities(newOrder.Pets));
+
+            //orderEntity.Pets.AddRange(_orderReposotory.GetPetsInOrderEntities(newOrder.Pets));
 
             var addOrderEntity = _orderReposotory.AddNewOrder(orderEntity);
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);

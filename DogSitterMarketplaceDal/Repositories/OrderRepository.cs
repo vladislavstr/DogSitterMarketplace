@@ -15,9 +15,9 @@ namespace DogSitterMarketplaceDal.Repositories
 
         private readonly ILogger<IOrderRepository> _logger;
 
-        public OrderRepository(ILogger<IOrderRepository> logger)
+        public OrderRepository(OrdersAndPetsAndCommentsContext context, ILogger<IOrderRepository> logger)
         {
-            _context = new OrdersAndPetsAndCommentsContext();
+            _context = context;
             _logger = logger;
         }
 
@@ -43,15 +43,15 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(o => o.Location)
                 .Include(o => o.SitterWork.User)
                 .Include(o => o.SitterWork.WorkType)
-                .Include(o => o.Comments)
-                .Include(o => o.Appeals)
+                .Include(o => o.Comments.Where(c => !c.IsDeleted))
+                .Include(o => o.Appeals.Where (a => !a.IsDeleted))
                 .Include(o => o.Pets)
                 .Where(o => !o.IsDeleted
-                && !o.OrderStatus.IsDeleted
-                && !o.SitterWork.IsDeleted
-                && !o.SitterWork.User.IsDeleted
-                && !o.SitterWork.WorkType.IsDeleted
-                ).ToList();
+                       && !o.OrderStatus.IsDeleted
+                       && !o.SitterWork.IsDeleted
+                       && !o.SitterWork.User.IsDeleted
+                       && !o.SitterWork.WorkType.IsDeleted
+                ).AsNoTracking().ToList();
         }
 
         public OrderEntity GetOrderById(int id)
@@ -151,7 +151,7 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             try
             {
-                return _context.OrderStatuses.Single(o => o.Id == id && !o.IsDeleted);
+                return _context.OrderStatuses.Single(o => o.Id == id); //&& !o.IsDeleted);
             }
             catch (InvalidOperationException ex)
             {
@@ -184,8 +184,8 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(p => p.Type)
                 .Include(p => p.User)
                 .Where(p => !p.IsDeleted && pets.Contains(p.Id)
-                && !p.Type.IsDeleted
-                && !p.User.IsDeleted)
+                       && !p.Type.IsDeleted
+                       && !p.User.IsDeleted)
                 .ToList();
         }
     }

@@ -30,5 +30,7 @@ namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
         public List<CommentResponseDto>? Comments { get; set; }
 
         public List<AppealResponseDto>? Appeals { get; set; }
+
+        public List<string> Messages { get; set; } = new();
     }
 }

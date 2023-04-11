@@ -14,9 +14,9 @@ namespace DogSitterMarketplaceDal.Repositories
 
         private readonly ILogger<ICommentRepository> _logger;
 
-        public CommentRepository(ILogger<ICommentRepository> logger)
+        public CommentRepository(OrdersAndPetsAndCommentsContext context, ILogger<ICommentRepository> logger)
         {
-            _context = new OrdersAndPetsAndCommentsContext();
+            _context = context;
             _logger = logger;
         }
 
