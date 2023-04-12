@@ -5,14 +5,14 @@ namespace DogSitterMarketplaceBll.IServices
 {
     public interface ICommentService
     {
-        public List<CommentOrderResponse> GetAllComments();
+        public List<CommentOrderResponse> GetAllNotDeletedComments();
 
-        public CommentOrderResponse GetCommentById(int id);
+        public CommentOrderResponse GetNotDeletedCommentById(int id);
 
         public void DeleteCommentById(int id);
 
         public CommentOrderResponse AddComment(CommentRequest commentRequest);
 
-        public int UpdateComment(CommentUpdate commentRequest);
+        public CommentOrderResponse UpdateComment(CommentUpdate commentRequest);
     }
 }

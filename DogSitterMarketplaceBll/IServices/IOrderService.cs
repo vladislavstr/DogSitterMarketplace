@@ -8,12 +8,12 @@ namespace DogSitterMarketplaceBll.IServices
     {
         public OrderResponse AddOrder(OrderCreateRequest newOrder);
 
-        public List<OrderResponse> GetAllOrders();
+        public List<OrderResponse> GetAllNotDeletedOrders();
 
-        public OrderResponse GetOrderById(int id);
+        public OrderResponse GetNotDeletedOrderById(int id);
 
         public void DeleteOrderById(int id);
 
-        public int UpdateOrder(OrderUpdate orderUpdate);
+        public OrderResponse UpdateOrder(OrderUpdate orderUpdate);
     }
 }

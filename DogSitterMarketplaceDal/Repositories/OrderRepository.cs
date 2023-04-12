@@ -23,41 +23,81 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public OrderEntity AddNewOrder(OrderEntity order)
         {
-            _context.Orders.Add(order);
-            _context.SaveChanges();
+            try
+            {
+                _context.Orders.Add(order);
+                _context.SaveChanges();
 
-            return _context.Orders
-                .Include(o => o.OrderStatus)
-                .Include(o => o.SitterWork)
-                .Include(o => o.SitterWork.User)
-                .Include(o => o.SitterWork.WorkType)
-                .Include(o => o.Location)
-                .Single(o => o.Id == order.Id);
+                return _context.Orders
+                    .Include(o => o.OrderStatus)
+                    .Include(o => o.SitterWork)
+                    .Include(o => o.SitterWork.User)
+                    .Include(o => o.SitterWork.WorkType)
+                    .Include(o => o.Location)
+                    .Single(o => o.Id == order.Id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug($"{ex}, {nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddNewOrder)}");
+                throw new ArgumentException();
+            }
         }
 
         public List<OrderEntity> GetAllOrders()
         {
+            //return _context.Orders
+            //    .Include(o => o.OrderStatus)
+            //    .Include(o => o.SitterWork)
+            //    .Include(o => o.Location)
+            //    .Include(o => o.SitterWork.User)
+            //    .Include(o => o.SitterWork.WorkType)
+            //    .Include(o => o.Comments.Where(c => !c.IsDeleted))
+            //    .Include(o => o.Appeals.Where(a => !a.IsDeleted))
+            //    .Include(o => o.Pets)
+            //    .Where(o => !o.IsDeleted
+            //           && !o.OrderStatus.IsDeleted
+            //           && !o.SitterWork.IsDeleted
+            //           && !o.SitterWork.User.IsDeleted
+            //           && !o.SitterWork.WorkType.IsDeleted
+            //    ).AsNoTracking().ToList();
+
             return _context.Orders
                 .Include(o => o.OrderStatus)
                 .Include(o => o.SitterWork)
                 .Include(o => o.Location)
                 .Include(o => o.SitterWork.User)
                 .Include(o => o.SitterWork.WorkType)
-                .Include(o => o.Comments.Where(c => !c.IsDeleted))
-                .Include(o => o.Appeals.Where (a => !a.IsDeleted))
+                .Include(o => o.Comments)
+                .Include(o => o.Appeals)
                 .Include(o => o.Pets)
-                .Where(o => !o.IsDeleted
-                       && !o.OrderStatus.IsDeleted
-                       && !o.SitterWork.IsDeleted
-                       && !o.SitterWork.User.IsDeleted
-                       && !o.SitterWork.WorkType.IsDeleted
-                ).AsNoTracking().ToList();
+                .AsNoTracking().ToList();
         }
 
         public OrderEntity GetOrderById(int id)
         {
             try
             {
+                //return _context.Orders
+                //    .Include(o => o.OrderStatus)
+                //    .Include(o => o.SitterWork)
+                //    .Include(o => o.Location)
+                //    .Include(o => o.SitterWork.User)
+                //    .Include(o => o.SitterWork.WorkType)
+                //    .Include(o => o.Comments)
+                //    .ThenInclude(o => o.CommentToUser)
+                //    .Include(o => o.Comments)
+                //    .ThenInclude(o => o.CommentFromUser)
+                //    .Include(o => o.Appeals)
+                //    .ThenInclude(o => o.AppealFromUser)
+                //    .Include(o => o.Appeals)
+                //    .ThenInclude(o => o.AppealToUser)
+                //    .Include(o => o.Pets)
+                //    .Single(o => o.Id == id && !o.IsDeleted
+                //     && !o.OrderStatus.IsDeleted
+                //     && !o.SitterWork.IsDeleted
+                //     && !o.SitterWork.User.IsDeleted
+                //     && !o.SitterWork.WorkType.IsDeleted);
+
                 return _context.Orders
                     .Include(o => o.OrderStatus)
                     .Include(o => o.SitterWork)
@@ -73,11 +113,7 @@ namespace DogSitterMarketplaceDal.Repositories
                     .Include(o => o.Appeals)
                     .ThenInclude(o => o.AppealToUser)
                     .Include(o => o.Pets)
-                    .Single(o => o.Id == id && !o.IsDeleted
-                     && !o.OrderStatus.IsDeleted
-                     && !o.SitterWork.IsDeleted
-                     && !o.SitterWork.User.IsDeleted
-                     && !o.SitterWork.WorkType.IsDeleted);
+                    .Single(o => o.Id == id);
             }
             catch (InvalidOperationException ex)
             {
@@ -86,7 +122,7 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public int UpdateOrder(OrderEntity orderUpdateEntity)
+        public OrderEntity UpdateOrder(OrderEntity orderUpdateEntity)
         {
             // _context.Orders.Update(orderUpdateEntity);
 
@@ -116,7 +152,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
             _context.SaveChanges();
 
-            return orderDB.Id;
+            return orderDB;
         }
 
         public void DeleteOrderById(int id)
@@ -134,6 +170,7 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
+        // перенести в Сервис
         public LocationEntity GetLocationById(int id)
         {
             try
@@ -160,6 +197,7 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
+        // перенести в Сервис
         public SitterWorkEntity GetSitterWorkById(int id)
         {
             try
@@ -171,22 +209,6 @@ namespace DogSitterMarketplaceDal.Repositories
                 _logger.LogDebug($"{nameof(SitterWorkEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(SitterWorkEntity));
             }
-        }
-
-        public List<PetEntity> GetPetsInOrderEntities(List<int> pets)
-        {
-            if (!pets.Any())
-            {
-                return new List<PetEntity>();
-            }
-
-            return _context.Pets
-                .Include(p => p.Type)
-                .Include(p => p.User)
-                .Where(p => !p.IsDeleted && pets.Contains(p.Id)
-                       && !p.Type.IsDeleted
-                       && !p.User.IsDeleted)
-                .ToList();
         }
     }
 }

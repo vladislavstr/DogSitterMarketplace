@@ -13,7 +13,7 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public PetEntity AddPet(PetEntity addPet);
 
-        public int UpdatePet(PetEntity updatePet);
+        public PetEntity UpdatePet(PetEntity updatePet);
 
         public List<PetEntity> GetPetsInOrderEntities(List<int> pets);
 

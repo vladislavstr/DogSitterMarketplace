@@ -6,6 +6,7 @@ using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets.Request;
+using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceBll.Services;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -31,12 +32,12 @@ namespace DogSitterMarketplaceApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetAllPets")]
+        [HttpGet(Name = "GetAllNotDeletedPets")]
         public ActionResult<List<PetResponseDto>> GetAllPets()
         {
             try
             {
-                var petsResponse = _petService.GetAllPets();
+                var petsResponse = _petService.GetAllNotDeletedPets();
                 var petsResponseDto = _mapper.Map<List<PetResponseDto>>(petsResponse);
 
                 return Ok(petsResponseDto);
@@ -48,12 +49,12 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetPetById")]
+        [HttpGet("{id}", Name = "GetNotDeletedPetById")]
         public ActionResult<PetResponseDto> GetPetById(int id)
         {
             try
             {
-                var petResponse = _petService.GetPetById(id);
+                var petResponse = _petService.GetNotDeletedPetById(id);
                 var petResponseDto = _mapper.Map<PetResponseDto>(petResponse);
 
                 return Ok(petResponseDto);
@@ -92,24 +93,28 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(PetController)} {nameof(AddPet)}");
-                return Problem();
+                return BadRequest();
             }
         }
 
         [HttpPut("{id}", Name = "UpdatePet")]
-        public ActionResult UpdatePet(PetUpdateDto petUpdateDto)
+        public ActionResult<PetResponseDto> UpdatePet(PetUpdateDto petUpdateDto)
         {
             try
             {
                 var petUpdate = _mapper.Map<PetUpdate>(petUpdateDto);
-                var id = _petService.UpdatePet(petUpdate);
+                var petResponse = _petService.UpdatePet(petUpdate);
+                var petResponseDto = _mapper.Map<PetResponseDto>(petResponse);
 
-                return Ok(id);
+                return Ok(petResponseDto);
             }
             catch (NotFoundException)
             {
                 return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
             }
         }
     }

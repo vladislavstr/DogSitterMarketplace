@@ -5,15 +5,15 @@ namespace DogSitterMarketplaceBll.IServices
 {
     public interface IPetService
     {
-        public List<PetResponse> GetAllPets();
+        public List<PetResponse> GetAllNotDeletedPets();
 
-        public PetResponse GetPetById(int id);
+        public PetResponse GetNotDeletedPetById(int id);
 
         public void DeletePetById(int id);
 
         public PetResponse AddPet(PetRequest addPet);
 
-        public int UpdatePet(PetUpdate petUpdate);
+        public PetResponse UpdatePet(PetUpdate petUpdate);
 
     }
 }

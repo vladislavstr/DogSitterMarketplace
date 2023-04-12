@@ -3,6 +3,7 @@ using DogSitterMarketplaceApi.Models.OrdersDto.Request;
 using DogSitterMarketplaceApi.Models.OrdersDto.Response;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Orders.Request;
+using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,29 +27,29 @@ namespace DogSitterMarketplaceApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetAllComments")]
-        public ActionResult<List<CommentOrderResponseDto>> GetAllComments()
+        [HttpGet(Name = "GetAllNotDeletedComments")]
+        public ActionResult<List<CommentOrderResponseDto>> GetAllNotDeletedComments()
         {
             try
             {
-                var commentsResponse = _commentService.GetAllComments();
+                var commentsResponse = _commentService.GetAllNotDeletedComments();
                 var commentsResponseDto = _mapper.Map<List<CommentOrderResponseDto>>(commentsResponse);
 
                 return Ok(commentsResponseDto);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"{nameof(CommentController)} {nameof(GetAllComments)}");
+                _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
                 return Problem();
             }
         }
 
-        [HttpGet("{id}", Name = "GetCommentById")]
+        [HttpGet("{id}", Name = "GetNotDeletedCommentById")]
         public ActionResult<CommentOrderResponseDto> GetCommentById(int id)
         {
             try
             {
-                var commentResponse = _commentService.GetCommentById(id);
+                var commentResponse = _commentService.GetNotDeletedCommentById(id);
                 var commentResponseDto = _mapper.Map<CommentOrderResponseDto>(commentResponse);
 
                 return Ok(commentResponseDto);
@@ -85,22 +86,26 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/Comment", UriKind.Relative), addCommentResponseDto);
             }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, nameof(CommentController), nameof(AddComment));
-                return Problem();
+                 return BadRequest();
             }
         }
 
         [HttpPut("{id}", Name = "UpdateComment")]
-        public ActionResult<int> UpdateComment(CommentUpdateDto commentUpdatetDto)
+        public ActionResult<CommentOrderResponseDto> UpdateComment(CommentUpdateDto commentUpdatetDto)
         {
             try
             {
                 var commentUpdate = _mapper.Map<CommentUpdate>(commentUpdatetDto);
-                var id = _commentService.UpdateComment(commentUpdate);
+                var updateCommentResponse = _commentService.UpdateComment(commentUpdate);
+                var commentResponseDto = _mapper.Map<CommentOrderResponseDto>(updateCommentResponse);
 
-                return Ok(id);
+                return Ok(commentResponseDto);
             }
             catch (NotFoundException)
             {

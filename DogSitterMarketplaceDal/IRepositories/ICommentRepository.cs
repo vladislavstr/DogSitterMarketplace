@@ -13,7 +13,7 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public CommentEntity AddComment(CommentEntity addComment);
 
-        public int UpdateComment(CommentEntity comment);
+        public CommentEntity UpdateComment(CommentEntity comment);
 
         public OrderEntity GetOrderById(int id);
 

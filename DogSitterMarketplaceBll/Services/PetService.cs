@@ -2,7 +2,9 @@
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Pets.Request;
 using DogSitterMarketplaceBll.Models.Pets.Response;
+using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
+using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
@@ -20,20 +22,31 @@ namespace DogSitterMarketplaceBll.Services
             _mapper = mapper;
         }
 
-        public List<PetResponse> GetAllPets()
+        public List<PetResponse> GetAllNotDeletedPets()
         {
-            var petsEntitys = _petRepository.GetAllPets();
+            var allpetsEntitys = _petRepository.GetAllPets();
+            var petsEntitys = allpetsEntitys
+                .Where(p => !p.IsDeleted && !p.User.IsDeleted);
             var petsResponse = _mapper.Map<List<PetResponse>>(petsEntitys);
 
             return petsResponse;
         }
 
-        public PetResponse GetPetById(int id)
+        public PetResponse GetNotDeletedPetById(int id)
         {
             var petEntity = _petRepository.GetPetById(id);
-            var petResponse = _mapper.Map<PetResponse>(petEntity);
 
-            return petResponse;
+            if (!petEntity.IsDeleted)
+            {
+                var petResponse = _mapper.Map<PetResponse>(petEntity);
+
+                return petResponse;
+            }
+            else
+            {
+                // что возвращать?  + logger??
+                throw new NotFoundException(id, nameof(PetEntity));
+            }
         }
 
         public void DeletePetById(int id) 
@@ -50,14 +63,14 @@ namespace DogSitterMarketplaceBll.Services
             return addPetResponse;
         }
 
-        public int UpdatePet(PetUpdate petUpdate)
+        public PetResponse UpdatePet(PetUpdate petUpdate)
         {
             var petEntity = _mapper.Map<PetEntity>(petUpdate);
-            var animalTypeEntity = _petRepository.GetAnimalTypeById(petUpdate.AnimalTypeId);
-            var userEntity = _petRepository.GetUserById(petUpdate.UserId);
-            var id = _petRepository.UpdatePet(petEntity);
+            petUpdate.UserId = _petRepository.GetUserById(petUpdate.UserId).Id;
+            var updatePetEntity = _petRepository.UpdatePet(petEntity);
+            var updatePetResponse = _mapper.Map<PetResponse>(updatePetEntity);
 
-            return id;
+            return updatePetResponse;
         }
     }
 }

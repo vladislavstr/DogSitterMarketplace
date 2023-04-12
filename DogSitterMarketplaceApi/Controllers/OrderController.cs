@@ -40,37 +40,36 @@ namespace DogSitterMarketplaceApi.Controllers
                 var addOrderResponseDto = _mapper.Map<OrderResponseDto>(addOrderResponse);
 
                 return Created(new Uri("api/Order", UriKind.Relative), addOrderResponseDto);
-            }
+        }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(OrderController)} {nameof(AddOrder)}");
-                return Problem();
-            }
-        }
+                return BadRequest();
+    }
+}
 
-        [HttpGet(Name = "GetAllOrders")]
-        public ActionResult<List<OrderResponseDto>> GetAllOrders()
+        [HttpGet(Name = "GetAllNotDeletedOrders")]
+        public ActionResult<List<OrderResponseDto>> GetAllNotDeletedOrders()
         {
             try
             {
-                var ordersResponse = _orderService.GetAllOrders();
+                var ordersResponse = _orderService.GetAllNotDeletedOrders();
                 var ordersResponseDto = _mapper.Map<List<OrderResponseDto>>(ordersResponse);
 
                 return Ok(ordersResponseDto);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllOrders)}");
+                _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllNotDeletedOrders)}");
                 return Problem();
             }
         }
 
-        [HttpGet("{id}", Name = "GetOrderById")]
-        public ActionResult<OrderResponseDto> GetOrderById(int id)
+        [HttpGet("{id}", Name = "GetNotDeletedOrderById")]
+        public ActionResult<OrderResponseDto> GetNotDeletedOrderById(int id)
         {
             try
             {
-                var orderResponse = _orderService.GetOrderById(id);
+                var orderResponse = _orderService.GetNotDeletedOrderById(id);
                 var orderResponseDto = _mapper.Map<OrderResponseDto>(orderResponse);
 
                 return Ok(orderResponseDto);
@@ -97,14 +96,22 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateOrder")]
-        public ActionResult<int> UpdateOrder(OrderUpdateDto orderUpdateDto)
+        public ActionResult<OrderResponseDto> UpdateOrder(OrderUpdateDto orderUpdateDto)
         {
             try
             {
                 var orderUpdate = _mapper.Map<OrderUpdate>(orderUpdateDto);
-                int id = _orderService.UpdateOrder(orderUpdate);
+                var orderResponse = _orderService.UpdateOrder(orderUpdate);
+                var orderResponseDto = _mapper.Map<OrderResponseDto>(orderResponse);
 
-                return Ok(id);
+                if (orderResponseDto.Messages.Any())
+                {
+                    return Ok(orderResponseDto.Messages);
+                }
+                else
+                {
+                    return Ok(orderResponseDto);
+                }
             }
             catch (NotFoundException)
             {

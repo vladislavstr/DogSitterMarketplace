@@ -22,25 +22,37 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public List<CommentEntity> GetAllComments()
         {
+        //    return _context.Comments
+        //.Include(c => c.Order)
+        //.Include(c => c.CommentFromUser)
+        //.Include(c => c.CommentToUser)
+        //.Where(c => !c.IsDeleted && !c.Order.IsDeleted).ToList();
+
             return _context.Comments
-        .Include(c => c.Order)
-        .Include(c => c.CommentFromUser)
-        .Include(c => c.CommentToUser)
-        .Where(c => !c.IsDeleted && !c.Order.IsDeleted).ToList();
+                    .Include(c => c.Order)
+                    .Include(c => c.CommentFromUser)
+                    .Include(c => c.CommentToUser).ToList();
         }
 
         public CommentEntity GetCommentById(int id)
         {
             try
             {
+                //return _context.Comments
+                //    .Include(c => c.Order)
+                //    .Include(c => c.Order.OrderStatus)
+                //    .Include(c => c.CommentFromUser)
+                //    .Include(c => c.CommentToUser)
+                //    .Single(c => c.Id == id && !c.IsDeleted
+                //    && !c.Order.IsDeleted
+                //    && !c.Order.OrderStatus.IsDeleted);
+
                 return _context.Comments
-                    .Include(c => c.Order)
-                    .Include(c => c.Order.OrderStatus)
-                    .Include(c => c.CommentFromUser)
-                    .Include(c => c.CommentToUser)
-                    .Single(c => c.Id == id && !c.IsDeleted
-                    && !c.Order.IsDeleted
-                    && !c.Order.OrderStatus.IsDeleted);
+                   .Include(c => c.Order)
+                   .Include(c => c.Order.OrderStatus)
+                   .Include(c => c.CommentFromUser)
+                   .Include(c => c.CommentToUser)
+                   .Single(c => c.Id == id);
             }
             catch (InvalidOperationException)
             {
@@ -66,17 +78,25 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public CommentEntity AddComment(CommentEntity addComment)
         {
-            _context.Comments.Add(addComment);
-            _context.SaveChanges();
+            try
+            {
+                _context.Comments.Add(addComment);
+                _context.SaveChanges();
 
-            return _context.Comments
-                .Include(c => c.Order)
-                .Include(c => c.CommentFromUser)
-                .Include(c => c.CommentToUser)
-                .Single(c => c.Id == addComment.Id);
+                return _context.Comments
+                    .Include(c => c.Order)
+                    .Include(c => c.CommentFromUser)
+                    .Include(c => c.CommentToUser)
+                    .Single(c => c.Id == addComment.Id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug($"{ex}, {nameof(CommentRepository)} {nameof(CommentEntity)} {nameof(AddComment)}");
+                throw new ArgumentException();
+            }
         }
 
-        public int UpdateComment(CommentEntity comment)
+        public CommentEntity UpdateComment(CommentEntity comment)
         {
             var commentDB = _context.Comments.SingleOrDefault(c => c.Id == comment.Id && !c.IsDeleted);
 
@@ -93,7 +113,7 @@ namespace DogSitterMarketplaceDal.Repositories
             commentDB.CommentToUserId = comment.CommentToUserId;
             _context.SaveChanges();
 
-            return commentDB.Id;
+            return commentDB;
         }
 
 

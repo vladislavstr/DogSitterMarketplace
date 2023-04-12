@@ -48,8 +48,6 @@ namespace DogSitterMarketplaceDal.Models.Orders
 
         public List<AppealEntity> Appeals { get; set; } = new();
 
-        //  public virtual ICollection<PetsInOrderEntity> PetsInOrder { get; set; }
-
         public List<PetEntity> Pets { get; } = new();
     }
 }
