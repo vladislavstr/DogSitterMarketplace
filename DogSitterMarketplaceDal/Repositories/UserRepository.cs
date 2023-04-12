@@ -1,51 +1,34 @@
 ﻿using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.Models.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
     public class UserRepository
     {
-        private static UserContext context;
+        private static UserContext _context;
 
         public UserRepository()
         {
-            context = new UserContext();
+            _context = new UserContext();
         }
 
-        public UserEntity CreateUser(UserEntity user)
+        public IEnumerable<UserEntity> GetAllUsers()
         {
-            var userDal = new UserEntity
-            {
-
-                Email = user.Email,
-
-                Password = user.Password,
-
-                PhoneNumber = user.PhoneNumber,
-
-                Name = user.Name,
-            };
-
-            context.Users.Add(userDal);
-            context.SaveChanges();
-
-            return new UserEntity
-            {
-                Id = userDal.Id,
-
-                Email = userDal.Email,
-
-                Password = userDal.Password,
-
-                PhoneNumber = userDal.PhoneNumber,
-
-                Name = userDal.Name,
-            };
+            return _context.Users.Where(t => !t.IsDeleted).ToList();
         }
 
-        public IEnumerable<UserEntity> GetUser()
+        public UserEntity AddUser(UserEntity user)
         {
-            return context.Users.Where(t => !t.IsDeleted).ToList();
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            return _context.Users
+                .Include(u => u.PassportData)
+                .Include(u => u.Role)
+                .Include(u => u.Status)
+                .Include(u => u.Pets)
+                .Single(u=>u.Id == user.Id);
         }
     }
 }
