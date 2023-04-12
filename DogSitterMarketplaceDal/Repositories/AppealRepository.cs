@@ -1,23 +1,36 @@
 ﻿using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.Models.Appeals;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
     internal class AppealRepository
     {
 
-        private static AppealContext context;
+        private static AppealContext _context;
 
         public AppealRepository()
         {
-            context = new AppealContext();
+            _context = new AppealContext();
         }
-
 
         public IEnumerable<AppealEntity> GetUser()
         {
-            return context.Appeals.Where(t => !t.IsDeleted).ToList();
+            return _context.Appeals.Where(t => !t.IsDeleted).ToList();
+        }
+
+        public AppealEntity AddUser(AppealEntity appeal)
+        {
+            _context.Appeals.Add(appeal);
+            _context.SaveChanges();
+
+            return _context.Appeals
+                .Include(a => a.Type)
+                .Include(a => a.Status)
+                .Include(a => a.Order)
+                .Include(a => a.AppealFromUser)
+                .Include(a => a.AppealToUser)
+                .Single(a => a.Id == appeal.Id);
         }
     }
 }
