@@ -40,12 +40,12 @@ namespace DogSitterMarketplaceApi.Controllers
                 var addOrderResponseDto = _mapper.Map<OrderResponseDto>(addOrderResponse);
 
                 return Created(new Uri("api/Order", UriKind.Relative), addOrderResponseDto);
-        }
+            }
             catch (Exception ex)
             {
                 return BadRequest();
-    }
-}
+            }
+        }
 
         [HttpGet(Name = "GetAllNotDeletedOrders")]
         public ActionResult<List<OrderResponseDto>> GetAllNotDeletedOrders()
@@ -104,14 +104,8 @@ namespace DogSitterMarketplaceApi.Controllers
                 var orderResponse = _orderService.UpdateOrder(orderUpdate);
                 var orderResponseDto = _mapper.Map<OrderResponseDto>(orderResponse);
 
-                if (orderResponseDto.Messages.Any())
-                {
-                    return Ok(orderResponseDto.Messages);
-                }
-                else
-                {
-                    return Ok(orderResponseDto);
-                }
+                return Ok(orderResponseDto);
+
             }
             catch (NotFoundException)
             {

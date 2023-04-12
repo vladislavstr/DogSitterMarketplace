@@ -42,24 +42,30 @@ namespace DogSitterMarketplaceBll.Services
             var allOrdersEntity = _orderReposotory.GetAllOrders();
             var ordersEntity = allOrdersEntity
                 .Where(o => !o.IsDeleted)
-                .Select(o => new OrderEntity
+                .Select(o =>
                 {
-                    Id = o.Id,
-                    Comment = o.Comment,
-                    OrderStatus = o.OrderStatus,
-                    OrderStatusId = o.OrderStatusId,
-                    SitterWork = o.SitterWork,
-                    SitterWorkId = o.SitterWorkId,
-                    Summ = o.Summ,
-                    DateStart = o.DateStart,
-                    DateEnd = o.DateEnd,
-                    Location = o.Location,
-                    LocationId = o.LocationId,
-                    IsDeleted = o.IsDeleted,
-                    Comments = o.Comments.Where(c => !c.IsDeleted).ToList(),
-                    Appeals = o.Appeals.Where(a => !a.IsDeleted).ToList(),
-                    //  Pets = o.Pets
-                });
+                    var q = new OrderEntity
+                    {
+                        Id = o.Id,
+                        Comment = o.Comment,
+                        OrderStatus = o.OrderStatus,
+                        OrderStatusId = o.OrderStatusId,
+                        SitterWork = o.SitterWork,
+                        SitterWorkId = o.SitterWorkId,
+                        Summ = o.Summ,
+                        DateStart = o.DateStart,
+                        DateEnd = o.DateEnd,
+                        Location = o.Location,
+                        LocationId = o.LocationId,
+                        IsDeleted = o.IsDeleted,
+                        Comments = o.Comments.Where(c => !c.IsDeleted).ToList(),
+                        Appeals = o.Appeals.Where(a => !a.IsDeleted).ToList()
+                    };
+                    q.Pets.Clear();
+                    q.Pets.AddRange(o.Pets);
+                    return q;
+                    });
+
             var ordersResponse = _mapper.Map<List<OrderResponse>>(ordersEntity);
 
             return ordersResponse;
@@ -101,35 +107,26 @@ namespace DogSitterMarketplaceBll.Services
             // orderEntity.Pets.AddRange(_petReposotory.GetPetsInOrderEntities(orderUpdate.Pets));
 
             var allPets = _petReposotory.GetPetsInOrderEntities(orderUpdate.Pets);
-            List<PetEntity> notMatchPets = new List<PetEntity>();
-            if (allPets.Count < orderUpdate.Pets.Count)
-            {
-                foreach (int petId in orderUpdate.Pets)
-                {
-                    var match = allPets.FirstOrDefault(p => p.Id == petId);
-                    if (match != null)
-                    {
-                        notMatchPets.Add(match);
-                    }
-                }
-            }
 
-            if (orderEntity.Pets.Any(p => p.IsDeleted))
-            { 
-            // сщщбщение куда записывать??
-            }
+            var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
 
             orderEntity.Pets.AddRange(allPets.Where(p => !p.IsDeleted));
             var updateOrderEntity = _orderReposotory.UpdateOrder(orderEntity);
             var updateOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
 
-            if (notMatchPets.Any())
+            if (allPets.Count != orderUpdate.Pets.Count)
             {
-                foreach (var matchPet in notMatchPets)
+                foreach (int petId in orderUpdate.Pets)
                 {
-                    updateOrderResponse.Messages.Add($"Pet with id {matchPet.Id} not found now");
+                    var match = allPets.FirstOrDefault(p => p.Id == petId);
+                    if (match == null)
+                    {
+                       updateOrderResponse.Messages.Add($"Pet with id {petId} not found now.");
+                    }
                 }
             }
+
+            updateOrderResponse.Messages.AddRange(messages);
 
             return updateOrderResponse;
         }
