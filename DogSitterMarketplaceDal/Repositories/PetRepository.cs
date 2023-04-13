@@ -85,7 +85,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 return _context.Pets
                     .Include(p => p.Type)
                     .Include(p => p.User)
-                    .Single(p => p.Id == addPet.Id);
+                    .Single(p => !p.IsDeleted && p.Id == addPet.Id);
             }
             catch (Exception ex)
             {

@@ -5,7 +5,9 @@ using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Orders;
+using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace DogSitterMarketplaceBll.Services
 {
@@ -17,11 +19,14 @@ namespace DogSitterMarketplaceBll.Services
 
         private readonly IMapper _mapper;
 
-        public CommentService(ICommentRepository commentRepository, IOrderRepository orderRepository, IMapper mapper)
+        private readonly ILogger<ICommentService> _logger;
+
+        public CommentService(ICommentRepository commentRepository, IOrderRepository orderRepository, IMapper mapper, ILogger<ICommentService> logger)
         {
             _commentRepository = commentRepository;
             _orderRepository = orderRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public List<CommentOrderResponse> GetAllNotDeletedComments()
@@ -45,7 +50,7 @@ namespace DogSitterMarketplaceBll.Services
             }
             else
             {
-                // что возвращать?  + logger??
+                _logger.LogDebug($"{nameof(CommentService)} {nameof(GetNotDeletedCommentById)} {nameof(CommentEntity)} with id {id} is deleted.");
                 throw new NotFoundException(id, nameof(commentEntity));
             }
         }

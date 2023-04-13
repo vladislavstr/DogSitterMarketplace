@@ -6,6 +6,7 @@ using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace DogSitterMarketplaceBll.Services
@@ -16,10 +17,13 @@ namespace DogSitterMarketplaceBll.Services
 
         private readonly IPetRepository _petRepository;
 
-        public PetService(IPetRepository petRepository, IMapper mapper)
+        private readonly ILogger<IPetService> _logger;
+
+        public PetService(IPetRepository petRepository, IMapper mapper, ILogger<IPetService> logger)
         {
             _petRepository = petRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public List<PetResponse> GetAllNotDeletedPets()
@@ -44,7 +48,7 @@ namespace DogSitterMarketplaceBll.Services
             }
             else
             {
-                // что возвращать?  + logger??
+                _logger.LogDebug($"{nameof(PetService)} {nameof(GetNotDeletedPetById)} {nameof(PetEntity)} with id {id} is deleted.");
                 throw new NotFoundException(id, nameof(PetEntity));
             }
         }
