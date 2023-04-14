@@ -12,6 +12,8 @@ using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Threading.Tasks;
+using NLog;
+using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -19,17 +21,17 @@ namespace DogSitterMarketplaceApi.Controllers
     [ApiController]
     public class PetController : ControllerBase
     {
-        private readonly ILogger<PetController> _logger;
-
         private readonly IMapper _mapper;
 
         private readonly IPetService _petService;
 
-        public PetController(IPetService petService, IMapper mapper, ILogger<PetController> logger)
+        private readonly ILogger _logger;
+
+        public PetController(IPetService petService, IMapper mapper, ILogger nLogger)
         {
             _petService = petService;
             _mapper = mapper;
-            _logger = logger;
+            _logger = nLogger;
         }
 
         [HttpGet(Name = "GetAllNotDeletedPets")]
@@ -44,7 +46,8 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(PetController)} {nameof(GetAllPets)}");
+                //_logger.LogError(ex, $"{nameof(PetController)} {nameof(GetAllPets)}");
+                _logger.Log(NLog.LogLevel.Error, $"({ex}, {nameof(PetController)} {nameof(GetAllPets)}");
                 return Problem();
             }
         }

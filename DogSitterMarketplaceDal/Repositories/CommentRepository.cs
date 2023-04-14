@@ -4,7 +4,7 @@ using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using NLog;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -12,12 +12,12 @@ namespace DogSitterMarketplaceDal.Repositories
     {
         private static OrdersAndPetsAndCommentsContext _context;
 
-        private readonly ILogger<ICommentRepository> _logger;
+        private readonly ILogger _logger;
 
-        public CommentRepository(OrdersAndPetsAndCommentsContext context, ILogger<ICommentRepository> logger)
+        public CommentRepository(OrdersAndPetsAndCommentsContext context, ILogger nLogger)
         {
             _context = context;
-            _logger = logger;
+            _logger = nLogger;
         }
 
         public List<CommentEntity> GetAllComments()
@@ -56,7 +56,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException)
             {
-                _logger.LogDebug($"({nameof(CommentEntity)} with id {id} not found)");
+                // _logger.LogDebug($"({nameof(CommentEntity)} with id {id} not found)");
+                _logger.Log(LogLevel.Debug, $"({nameof(CommentRepository)} {nameof(GetCommentById)} {nameof(CommentEntity)} with id {id} not found)");
                 throw new NotFoundException(id, nameof(CommentEntity));
             }
         }
@@ -71,7 +72,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException)
             {
-                _logger.LogDebug($"{nameof(CommentEntity)} with id {id} not found");
+                // _logger.LogDebug($"{nameof(CommentEntity)} with id {id} not found");
+                _logger.Log(LogLevel.Debug, $"({nameof(CommentRepository)} {nameof(DeleteCommentById)} {nameof(CommentEntity)} with id {id} not found)");
                 throw new NotFoundException(id, nameof(CommentEntity));
             }
         }
@@ -91,7 +93,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDebug($"{ex}, {nameof(CommentRepository)} {nameof(CommentEntity)} {nameof(AddComment)}");
+                //_logger.LogDebug($"{ex}, {nameof(CommentRepository)} {nameof(CommentEntity)} {nameof(AddComment)}");
+                _logger.Log(LogLevel.Debug, $"({ex}, {nameof(CommentRepository)} {nameof(AddComment)} {nameof(CommentEntity)}");
                 throw new ArgumentException();
             }
         }
@@ -102,7 +105,8 @@ namespace DogSitterMarketplaceDal.Repositories
 
             if (commentDB == null)
             {
-                _logger.LogDebug($"{nameof(CommentRepository)} {nameof(UpdateComment)} {(nameof(CommentEntity))} with id {comment.Id} not found");
+                //_logger.LogDebug($"{nameof(CommentRepository)} {nameof(UpdateComment)} {(nameof(CommentEntity))} with id {comment.Id} not found");
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentRepository)} {nameof(UpdateComment)} {(nameof(CommentEntity))} with id {comment.Id} not found");
                 throw new NotFoundException(comment.Id, nameof(CommentEntity));
             }
 
@@ -116,21 +120,6 @@ namespace DogSitterMarketplaceDal.Repositories
             return commentDB;
         }
 
-
-        // Этот метод есть в Ордер Репозитории
-        public OrderEntity GetOrderById(int id)
-        {
-            try
-            {
-                return _context.Orders.Single(o => o.Id == id && !o.IsDeleted);
-            }
-            catch (InvalidOperationException)
-            {
-                _logger.LogDebug($"{nameof(OrderEntity)} with id {id} not found.");
-                throw new NotFoundException(id, nameof(OrderEntity));
-            }
-        }
-
         public UserEntity GetUserById(int id)
         {
             try
@@ -139,7 +128,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException)
             {
-                _logger.LogDebug($"{nameof(UserEntity)} with id {id} not found.");
+                //_logger.LogDebug($"{nameof(UserEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
                 throw new NotFoundException(id, nameof(UserEntity));
             }
         }

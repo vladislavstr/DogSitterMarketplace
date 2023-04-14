@@ -5,7 +5,7 @@ using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using NLog;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -13,12 +13,14 @@ namespace DogSitterMarketplaceDal.Repositories
     {
         private static OrdersAndPetsAndCommentsContext _context;
 
-        private readonly ILogger<IOrderRepository> _logger;
+        // private readonly ILogger<IOrderRepository> _logger;
 
-        public OrderRepository(OrdersAndPetsAndCommentsContext context, ILogger<IOrderRepository> logger)
+        private readonly ILogger _logger;
+
+        public OrderRepository(OrdersAndPetsAndCommentsContext context, ILogger nLogger)
         {
             _context = context;
-            _logger = logger;
+            _logger = nLogger;
         }
 
         public OrderEntity AddNewOrder(OrderEntity order)
@@ -38,7 +40,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDebug($"{ex}, {nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddNewOrder)}");
+                //_logger.LogDebug($"{ex}, {nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddNewOrder)}");
+                _logger.Log(LogLevel.Debug, $"{ex}, {nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddNewOrder)}");
                 throw new ArgumentException();
             }
         }
@@ -117,7 +120,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogDebug($"{nameof(OrderEntity)} with id {id} not found.");
+                //_logger.LogDebug($"{nameof(OrderEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $"{ex}, {nameof(OrderEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(OrderEntity));
             }
         }
@@ -132,7 +136,8 @@ namespace DogSitterMarketplaceDal.Repositories
 
             if (orderDB == null)
             {
-                _logger.LogDebug($"{nameof(OrderEntity)} with id {orderUpdateEntity.Id} not found.");
+                // _logger.LogDebug($"{nameof(OrderEntity)} with id {orderUpdateEntity.Id} not found.");
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderEntity)} with id {orderUpdateEntity.Id} not found.");
                 throw new NotFoundException(orderUpdateEntity.Id, nameof(OrderEntity));
             }
 
@@ -165,7 +170,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogDebug($"{nameof(OrderEntity)} with id {id} not found.");
+                //_logger.LogDebug($"{nameof(OrderEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(OrderEntity));
             }
         }
@@ -179,7 +185,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogDebug($"{nameof(LocationEntity)} with id {id} not found.");
+                //_logger.LogDebug($"{nameof(LocationEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $"{nameof(LocationEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(LocationEntity));
             }
         }
@@ -192,7 +199,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogDebug($"{nameof(OrderStatusEntity)} with id {id} not found.");
+                //_logger.LogDebug($"{nameof(OrderStatusEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderStatusEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(OrderStatusEntity));
             }
         }
@@ -206,7 +214,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogDebug($"{nameof(SitterWorkEntity)} with id {id} not found.");
+                // logger.LogDebug($"{nameof(SitterWorkEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $"{nameof(SitterWorkEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(SitterWorkEntity));
             }
         }

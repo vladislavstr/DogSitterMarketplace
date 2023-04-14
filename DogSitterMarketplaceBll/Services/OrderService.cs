@@ -8,7 +8,7 @@ using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Works;
 using DogSitterMarketplaceDal.Repositories;
-using Microsoft.Extensions.Logging;
+using NLog;
 using System.Linq;
 
 namespace DogSitterMarketplaceBll.Services
@@ -21,19 +21,19 @@ namespace DogSitterMarketplaceBll.Services
 
         private readonly IPetRepository _petReposotory;
 
-        private readonly ILogger<IOrderService> _logger;
+        private readonly ILogger _logger;
 
-
-        public OrderService(IOrderRepository orderReposotory, IPetRepository petReposotory, IMapper mapper, ILogger<IOrderService> logger)
+        public OrderService(IOrderRepository orderReposotory, IPetRepository petReposotory, IMapper mapper, ILogger nLogger)
         {
             _orderReposotory = orderReposotory;
             _petReposotory = petReposotory;
             _mapper = mapper;
-            _logger = logger;
+            _logger = nLogger;
         }
 
         public OrderResponse AddOrder(OrderCreateRequest newOrder)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(AddOrder)}");
             var orderEntity = _mapper.Map<OrderEntity>(newOrder);
             //orderEntity.Pets.AddRange(_petReposotory.GetPetsInOrderEntities(newOrder.Pets));
             //var addOrderEntity = _orderReposotory.AddNewOrder(orderEntity);
@@ -48,12 +48,14 @@ namespace DogSitterMarketplaceBll.Services
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
             CheckPetsInOrderIsExist(allPets, newOrder.Pets, addOrderResponse);
             addOrderResponse.Messages.AddRange(messages);
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(AddOrder)}");
 
             return addOrderResponse;
         }
 
         public List<OrderResponse> GetAllNotDeletedOrders()
         {
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(GetAllNotDeletedOrders)}");
             var allOrdersEntity = _orderReposotory.GetAllOrders();
             var ordersEntity = allOrdersEntity
                 .Where(o => !o.IsDeleted)
@@ -82,12 +84,14 @@ namespace DogSitterMarketplaceBll.Services
                 });
 
             var ordersResponse = _mapper.Map<List<OrderResponse>>(ordersEntity);
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(GetAllNotDeletedOrders)}");
 
             return ordersResponse;
         }
 
         public OrderResponse GetNotDeletedOrderById(int id)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(GetNotDeletedOrderById)}");
             var orderEntity = _orderReposotory.GetOrderById(id);
 
             if (!orderEntity.IsDeleted)
@@ -95,23 +99,28 @@ namespace DogSitterMarketplaceBll.Services
                 orderEntity.Comments = orderEntity.Comments.Where(c => !c.IsDeleted).ToList();
                 orderEntity.Appeals = orderEntity.Appeals.Where(c => !c.IsDeleted).ToList();
                 var orderResponse = _mapper.Map<OrderResponse>(orderEntity);
+                _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(GetNotDeletedOrderById)}");
 
                 return orderResponse;
             }
             else
             {
-                _logger.LogDebug($"{nameof(OrderService)} {nameof(GetNotDeletedOrderById)} {nameof(OrderEntity)} with id {id} is deleted.");
+                // _logger.LogDebug($"{nameof(OrderService)} {nameof(GetNotDeletedOrderById)} {nameof(OrderEntity)} with id {id} is deleted.");
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(GetNotDeletedOrderById)} {nameof(OrderEntity)} with id {id} is deleted.");
                 throw new NotFoundException(id, nameof(orderEntity));
             }
         }
 
         public void DeleteOrderById(int id)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(DeleteOrderById)}");
             _orderReposotory.DeleteOrderById(id);
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(DeleteOrderById)}");
         }
 
         public OrderResponse UpdateOrder(OrderUpdate orderUpdate)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(UpdateOrder)}");
             var orderEntity = _mapper.Map<OrderEntity>(orderUpdate);
             orderEntity.OrderStatus = _orderReposotory.GetOrderStatusById(orderUpdate.OrderStatusId);
 
@@ -126,6 +135,7 @@ namespace DogSitterMarketplaceBll.Services
             var updateOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
             CheckPetsInOrderIsExist(allPets, orderUpdate.Pets, updateOrderResponse);
             updateOrderResponse.Messages.AddRange(messages);
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(UpdateOrder)}");
 
             return updateOrderResponse;
 

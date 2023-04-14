@@ -15,8 +15,6 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public CommentEntity UpdateComment(CommentEntity comment);
 
-        public OrderEntity GetOrderById(int id);
-
         public UserEntity GetUserById(int id);
     }
 }

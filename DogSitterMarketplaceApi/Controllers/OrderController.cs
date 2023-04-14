@@ -9,6 +9,8 @@ using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using NLog;
+using ILogger = NLog.ILogger;
 using System.Threading.Tasks;
 
 namespace DogSitterMarketplaceApi.Controllers
@@ -17,17 +19,19 @@ namespace DogSitterMarketplaceApi.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly ILogger<OrderController> _logger;
-
         private readonly IOrderService _orderService;
 
         private readonly IMapper _mapper;
 
-        public OrderController(IOrderService orderService, IMapper mapper, ILogger<OrderController> logger)
+        // private readonly ILogger<OrderController> _logger;
+
+        private readonly ILogger _logger;
+
+        public OrderController(IOrderService orderService, IMapper mapper, ILogger nLogger)
         {
             _orderService = orderService;
             _mapper = mapper;
-            _logger = logger;
+            _logger = nLogger;
         }
 
         [HttpPost(Name = "AddOrder")]
@@ -59,7 +63,8 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllNotDeletedOrders)}");
+                // _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllNotDeletedOrders)}");
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(GetAllNotDeletedOrders)}");
                 return Problem();
             }
         }

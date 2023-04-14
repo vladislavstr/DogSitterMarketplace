@@ -6,6 +6,8 @@ using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
+using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -18,13 +20,13 @@ namespace DogSitterMarketplaceApi.Controllers
 
         private readonly IMapper _mapper;
 
-        private readonly ILogger<CommentController> _logger;
+        private readonly ILogger _logger;
 
-        public CommentController(ICommentService commentService, IMapper mapper, ILogger<CommentController> logger)
+        public CommentController(ICommentService commentService, IMapper mapper, ILogger nLogger)
         {
             _commentService = commentService;
             _mapper = mapper;
-            _logger = logger;
+            _logger = nLogger;
         }
 
         [HttpGet(Name = "GetAllNotDeletedComments")]
@@ -39,7 +41,8 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
+                // _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
+                _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
                 return Problem();
             }
         }
