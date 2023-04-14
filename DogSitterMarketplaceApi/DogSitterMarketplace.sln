@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogSitterMarketplaceBll", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogSitterMarketplaceDal", "..\DogSitterMarketplaceDal\DogSitterMarketplaceDal.csproj", "{E7FE82CC-2E3E-4400-BB07-B913D603D751}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DogSitterMarketplaceCore", "..\DogSitterMarketplaceCore\DogSitterMarketplaceCore.csproj", "{A3B82642-C281-4F44-88E5-A31B75C0E41E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogSitterMarketplaceCore", "..\DogSitterMarketplaceCore\DogSitterMarketplaceCore.csproj", "{A3B82642-C281-4F44-88E5-A31B75C0E41E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DogSitterMarketplaceBll.Tests", "..\DogSitterMarketplaceBll.Tests\DogSitterMarketplaceBll.Tests.csproj", "{7ECBF429-D1E2-4C88-804C-F1C78B12FC58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A3B82642-C281-4F44-88E5-A31B75C0E41E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3B82642-C281-4F44-88E5-A31B75C0E41E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3B82642-C281-4F44-88E5-A31B75C0E41E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ECBF429-D1E2-4C88-804C-F1C78B12FC58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ECBF429-D1E2-4C88-804C-F1C78B12FC58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ECBF429-D1E2-4C88-804C-F1C78B12FC58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ECBF429-D1E2-4C88-804C-F1C78B12FC58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
