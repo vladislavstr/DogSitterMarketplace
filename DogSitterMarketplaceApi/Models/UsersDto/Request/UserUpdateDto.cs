@@ -23,6 +23,4 @@ namespace DogSitterMarketplaceApi.Models.UsersDto.Request
 
         public ICollection<PetRequestDto>? Pets { get; set; }
     }
-    {
-    }
 }

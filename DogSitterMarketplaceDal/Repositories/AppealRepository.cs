@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
-    internal class AppealRepository
+    public class AppealRepository
     {
 
         private static AppealContext _context;
@@ -14,7 +14,7 @@ namespace DogSitterMarketplaceDal.Repositories
             _context = new AppealContext();
         }
 
-        public IEnumerable<AppealEntity> GetUser()
+        public IEnumerable<AppealEntity> GetAllAppeal()
         {
             return _context.Appeals.Where(t => !t.IsDeleted).ToList();
         }
