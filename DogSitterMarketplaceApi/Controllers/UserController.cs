@@ -9,6 +9,7 @@ using DogSitterMarketplaceApi.Models.UsersDto.Request;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceApi.Models.UsersDto.Response;
 using DogSitterMarketplaceBll.Models.Users.Request;
+using LoggerService;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -17,19 +18,21 @@ namespace DogSitterMarketplaceApi.Controllers
     public class UserController : ControllerBase
     {
         //private readonly ILogger _logger;
+        private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService, IMapper mapper)//, ILogger logger)
+        public UserController(IUserService userService, IMapper mapper, ILoggerManager logger)//, ILogger logger)
         {
-            //_logger = logger;
+            _logger = logger;
             _mapper = mapper;
             _userService = userService;
         }
 
         [HttpGet]
-        public IActionResult GrtPing()
+        public IActionResult GetPing()
         {
+            _logger.LogInfo("GetPing");
             return Ok();
         }
 

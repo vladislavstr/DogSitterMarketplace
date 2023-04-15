@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogSitterMarketplaceBll", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogSitterMarketplaceDal", "..\DogSitterMarketplaceDal\DogSitterMarketplaceDal.csproj", "{E7FE82CC-2E3E-4400-BB07-B913D603D751}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerService", "..\LoggerService\LoggerService.csproj", "{13D7E732-9EDE-4E0A-A65B-55ABBDD4C240}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{E7FE82CC-2E3E-4400-BB07-B913D603D751}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7FE82CC-2E3E-4400-BB07-B913D603D751}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7FE82CC-2E3E-4400-BB07-B913D603D751}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13D7E732-9EDE-4E0A-A65B-55ABBDD4C240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13D7E732-9EDE-4E0A-A65B-55ABBDD4C240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13D7E732-9EDE-4E0A-A65B-55ABBDD4C240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13D7E732-9EDE-4E0A-A65B-55ABBDD4C240}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

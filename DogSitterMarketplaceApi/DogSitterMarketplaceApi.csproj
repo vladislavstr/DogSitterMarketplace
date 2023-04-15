@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DogSitterMarketplaceBll\DogSitterMarketplaceBll.csproj" />
     <ProjectReference Include="..\DogSitterMarketplaceDal\DogSitterMarketplaceDal.csproj" />
+    <ProjectReference Include="..\LoggerService\LoggerService.csproj" />
   </ItemGroup>
 
 </Project>
