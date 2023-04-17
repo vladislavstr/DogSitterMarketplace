@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Principal;
 
 namespace DogSitterMarketplaceDal.Models.Works
 {
@@ -11,9 +12,9 @@ namespace DogSitterMarketplaceDal.Models.Works
         public int Id { get; set; }
 
         [Required,Column(TypeName ="nvarchar(50)")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        [Column(TypeName ="bit")]
-        public bool IsDeleted { get; set; }
+        [Required]
+        public bool? IsDeleted { get; set; }
     }
 }

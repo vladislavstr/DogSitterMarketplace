@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DogSitterMarketplaceDal.Models.Works
@@ -9,15 +10,24 @@ namespace DogSitterMarketplaceDal.Models.Works
         public int Id { get; set; }
 
         [Required, Column(TypeName = "decimal(6,2)")]
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
 
         [Required]
+        [ForeignKey(nameof(LocationId))]
+        public LocationEntity? Location { get; set; }
+
+        public int? LocationId { get; set; }
+
+        [Required]
+        public ICollection<TimingLocationWorkEntity> TimingLocationWorks { get; } = new List<TimingLocationWorkEntity>();
+
+        [Required]
+        public bool? IsNotActive { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(SitterWorkId))]
         public SitterWorkEntity SitterWork { get; set; }
 
-        [Required]
-        public LocationEntity Location { get; set; }
-
-        [Column(TypeName = "bit")]
-        public bool IsNotActive { get; set; }
+        public int? SitterWorkId { get; set; }
     }
 }

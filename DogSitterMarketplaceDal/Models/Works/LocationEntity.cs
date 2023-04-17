@@ -12,10 +12,11 @@ namespace DogSitterMarketplaceDal.Models.Works
         [Key]
         public int Id { get; set; }
 
-        [Required, Column(TypeName = "nvarchar(100)")]
-        public string Name { get; set; }
+        [Required]
+        [Column(TypeName = "nvarchar(100)")]
+        public string? Name { get; set; }
 
-        [Column(TypeName = "bit")]
-        public bool IsDeleted { get; set; }
+        [Required]
+        public bool? IsDeleted { get; set; }
     }
 }

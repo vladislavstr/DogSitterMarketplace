@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 
 namespace DogSitterMarketplaceDal.Models.Works
 {
@@ -8,9 +10,23 @@ namespace DogSitterMarketplaceDal.Models.Works
         public int Id { get; set; }
 
         [Required]
-        public DayOfWeekEntity DayOfWeek { get; set; }
+        [Column(TypeName = "time(0)")]
+        public TimeSpan Start { get; set; }
 
         [Required]
-        public WorkTimeEntity WorkTime { get; set; }
+        [Column(TypeName = "time(0)")]
+        public TimeSpan Stop { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(DayOfWeekId))]
+        public DayOfWeekEntity DayOfWeek { get; set; }
+
+        public int DayOfWeekId { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(LocationWorkId))]
+        public virtual LocationWorkEntity LocationWork { get; set; }
+
+        public int LocationWorkId { get; set; }
     }
 }

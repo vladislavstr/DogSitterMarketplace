@@ -13,14 +13,21 @@ namespace DogSitterMarketplaceDal.Models.Works
         public string? Comment { get; set; }
 
         [Required]
+        [ForeignKey(nameof(UserId))]
         public UserEntity User { get; set; }
 
+        public int? UserId { get; set; }
+
         [Required]
-        public WorkTypeEntity WorkType { get; set; }
+        [ForeignKey(nameof(WorkTypeId))]
+        public WorkTypeEntity? WorkType { get; set; }
 
-        public ICollection<TimingLocationWorkEntity> TimingLocations { get; set; }
+        public int WorkTypeId { get; set; }
 
-        [Column(TypeName = "bit")]
-        public bool IsDeleted { get; set; }
+        [Required]
+        public ICollection<LocationWorkEntity> LocationWork { get; set; } = new List<LocationWorkEntity>();
+
+        [Required]
+        public bool? IsDeleted { get; set; }
     }
 }
