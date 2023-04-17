@@ -34,18 +34,24 @@ namespace DogSitterMarketplaceBll.Services
         public OrderResponse AddOrder(OrderCreateRequest newOrder)
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(AddOrder)}");
-            var orderEntity = _mapper.Map<OrderEntity>(newOrder);
-            //orderEntity.Pets.AddRange(_petReposotory.GetPetsInOrderEntities(newOrder.Pets));
-            //var addOrderEntity = _orderReposotory.AddNewOrder(orderEntity);
-            //var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
-
-            //return addOrderResponse;
-
             var allPets = _petReposotory.GetPetsInOrderEntities(newOrder.Pets);
+            var petsNotDeleted = allPets.Where(p => !p.IsDeleted).ToList();
+
+            if (petsNotDeleted.Count <= 0)
+            {
+                throw new ArgumentException("Order does not contain existing pets");
+            }
+
+            if(!CheckAllPetsBelongToSameUser(petsNotDeleted))
+            {
+                throw new ArgumentException("Order contains pets with different Users");
+            }
+
             var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
-            orderEntity.Pets.AddRange(allPets.Where(p => !p.IsDeleted));
+            var orderEntity = _mapper.Map<OrderEntity>(newOrder);
+            orderEntity.Pets.AddRange(petsNotDeleted);
             var addOrderEntity = _orderReposotory.AddNewOrder(orderEntity);
-             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
+            var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
             CheckPetsInOrderIsExist(allPets, newOrder.Pets, addOrderResponse);
             addOrderResponse.Messages.AddRange(messages);
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(AddOrder)}");
@@ -154,6 +160,23 @@ namespace DogSitterMarketplaceBll.Services
                     }
                 }
             }
+        }
+
+        private bool CheckAllPetsBelongToSameUser(List<PetEntity> petsNotDeleted)
+        {
+            if (petsNotDeleted.Count > 1)
+            {
+                int id = petsNotDeleted[0].UserId;
+                foreach (var pet in petsNotDeleted)
+                {
+                    if (pet.UserId != id)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

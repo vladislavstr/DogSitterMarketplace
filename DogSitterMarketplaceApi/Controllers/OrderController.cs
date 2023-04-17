@@ -45,6 +45,10 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/Order", UriKind.Relative), addOrderResponseDto);
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest();
+            }
             catch (Exception ex)
             {
                 return BadRequest();
