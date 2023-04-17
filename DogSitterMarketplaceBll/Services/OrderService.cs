@@ -45,7 +45,7 @@ namespace DogSitterMarketplaceBll.Services
             var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
             orderEntity.Pets.AddRange(allPets.Where(p => !p.IsDeleted));
             var addOrderEntity = _orderReposotory.AddNewOrder(orderEntity);
-            var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
+             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
             CheckPetsInOrderIsExist(allPets, newOrder.Pets, addOrderResponse);
             addOrderResponse.Messages.AddRange(messages);
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(AddOrder)}");
