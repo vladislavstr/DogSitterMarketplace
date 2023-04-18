@@ -120,6 +120,7 @@ namespace DogSitterMarketplaceDal.Repositories
             return commentDB;
         }
 
+        // перенести в ЮзерРепозитори
         public UserEntity GetUserById(int id)
         {
             try

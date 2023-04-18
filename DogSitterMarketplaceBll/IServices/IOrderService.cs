@@ -15,5 +15,7 @@ namespace DogSitterMarketplaceBll.IServices
         public void DeleteOrderById(int id);
 
         public OrderResponse UpdateOrder(OrderUpdate orderUpdate);
+
+        public OrderResponse ChangeOrderStatusToAtWork(int orderId);
     }
 }

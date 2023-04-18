@@ -27,7 +27,7 @@ namespace DogSitterMarketplaceDal.Models.Works
         [ForeignKey(nameof(UserId))]
         public UserEntity User { get; set; }
 
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         [ForeignKey(nameof(WorkTypeId))]

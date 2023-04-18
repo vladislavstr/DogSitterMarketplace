@@ -42,7 +42,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             OrderCreateRequest newOrder = new OrderCreateRequest
             {
                 Comment = "comment",
-                OrderStatusId = 1,
+               // OrderStatusId = 1,
                 SitterWorkId = 10,
                 Summ = 100,
                 DateStart = new DateTime(2023, 04, 12),
@@ -178,7 +178,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             newOrder = new OrderCreateRequest
             {
                 Comment = "comment2",
-                OrderStatusId = 12,
+                //OrderStatusId = 12,
                 SitterWorkId = 102,
                 Summ = 1002,
                 DateStart = new DateTime(2023, 04, 14),
@@ -252,7 +252,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             orderEntity = new OrderEntity
             {
                 Comment = "comment2",
-                OrderStatusId = 12,
+              //  OrderStatusId = 12,
                 SitterWorkId = 102,
                 Summ = 1002,
                 DateStart = new DateTime(2023, 04, 14),
@@ -362,7 +362,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             newOrder = new OrderCreateRequest
             {
                 Comment = "comment23",
-                OrderStatusId = 123,
+              //  OrderStatusId = 123,
                 SitterWorkId = 1023,
                 Summ = 10023,
                 DateStart = new DateTime(2023, 04, 17),

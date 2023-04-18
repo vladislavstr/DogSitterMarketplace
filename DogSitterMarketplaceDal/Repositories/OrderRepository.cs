@@ -3,9 +3,11 @@ using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Appeals;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
+using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 using NLog;
+using System.Linq;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -44,6 +46,23 @@ namespace DogSitterMarketplaceDal.Repositories
                 _logger.Log(LogLevel.Debug, $"{ex}, {nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddNewOrder)}");
                 throw new ArgumentException();
             }
+        }
+
+        public OrderEntity ChangeOrderStatusToAtWork(int orderId)
+        {
+            var orderDB = _context.Orders.SingleOrDefault(o => o.Id == orderId);
+
+            if (orderDB == null)
+            {
+                // _logger.LogDebug($"{nameof(OrderEntity)} with id {orderUpdateEntity.Id} not found.");
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderEntity)} with id {orderId} not found.");
+                throw new NotFoundException(orderId, nameof(OrderEntity));
+            }
+
+            orderDB.OrderStatusId = 4;
+            _context.SaveChanges();
+
+            return orderDB;
         }
 
         public List<OrderEntity> GetAllOrders()
@@ -219,5 +238,83 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new NotFoundException(id, nameof(SitterWorkEntity));
             }
         }
+
+        // перенести в ЮзерРепозитори
+        public UserEntity GetUserById(int id)
+        {
+            try
+            {
+                return _context.Users.Single(u => u.Id == id && !u.IsDeleted);
+            }
+            catch (InvalidOperationException)
+            {
+                //_logger.LogDebug($"{nameof(UserEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
+                throw new NotFoundException(id, nameof(UserEntity));
+            }
+        }
+
+
+        // перенести в Сервис
+        public List<SitterWorkEntity> GetAllSitterWorksByUserId(int id)
+        {
+            //try
+            //{
+            //    return _context.SitterWork
+            //        .Include(sw => sw.WorkType)
+            //        .Include(sw => sw.User)
+            //        .Include(sw => sw.LocationWork)
+            //        .ThenInclude(lw => lw.TimingLocationWorks.Where(tl => FilterTimingLocationWork(tl, startOrder, endOrder)).ToList())
+            //        .Single(sw => sw.User.Id == id);
+            //}
+            //catch (InvalidOperationException ex)
+            //{
+            //    // logger.LogDebug($"{nameof(SitterWorkEntity)} with id {id} not found.");
+            //    _logger.Log(LogLevel.Debug, $"{nameof(SitterWorkEntity)} with id {id} not found.");
+            //    throw new NotFoundException(id, nameof(SitterWorkEntity));
+            //}
+
+            return _context.SitterWork
+                .Include(sw => sw.WorkType)
+                .Include(sw => sw.User)
+                .Include(sw => sw.LocationWork)
+                .ThenInclude(lw => lw.TimingLocationWorks)
+                .ThenInclude(tlw => tlw.DayOfWeek)
+                .Where(sw => sw.User.Id == id).ToList();
+        }
+
+        public List<OrderEntity> GetOrdersAtWorkOnDateByUserId(int sitterId, DateTime startDate)
+        {
+            try
+            {
+                return _context.Orders
+                    .Include(o => o.SitterWork)
+                    .Where(o => o.OrderStatusId == 4
+                        && o.DateStart.Date == startDate.Date         
+                        && o.SitterWork.UserId == sitterId)
+                    .ToList();
+            }
+            catch (InvalidOperationException ex)
+            {
+                // logger.LogDebug($"{nameof(SitterWorkEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $"{nameof(UserEntity)} with id {sitterId} not found.");
+                throw new NotFoundException(sitterId, nameof(UserEntity));
+            }
+        }
+
+        //private bool FilterTimingLocationWork(TimingLocationWorkEntity timing, DateTime startOrder, DateTime endOrder)
+        //{
+        //    if ((startOrder.DayOfWeek.ToString() == timing.DayOfWeek.Name
+        //           && startOrder.TimeOfDay >= timing.Start)
+        //       || (endOrder.DayOfWeek.ToString() == timing.DayOfWeek.Name
+        //            && endOrder.TimeOfDay <= timing.Stop))
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
     }
 }

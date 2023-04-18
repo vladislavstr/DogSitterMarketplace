@@ -55,6 +55,30 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
+        [HttpPatch("{id}", Name = "ChangeOrderStatusToAtWork")]
+        public ActionResult<OrderResponseDto> ChangeOrderStatusToAtWork(int id)
+        {
+            try
+            {
+                var updateOrderResponse = _orderService.ChangeOrderStatusToAtWork(id);
+                var updateOrderResponseDto = _mapper.Map<OrderResponseDto>(updateOrderResponse);
+
+                return Ok(updateOrderResponseDto);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet(Name = "GetAllNotDeletedOrders")]
         public ActionResult<List<OrderResponseDto>> GetAllNotDeletedOrders()
         {

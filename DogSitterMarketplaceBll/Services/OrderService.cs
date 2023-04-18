@@ -6,10 +6,13 @@ using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
+using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
 using DogSitterMarketplaceDal.Repositories;
+using Microsoft.Data.SqlClient;
 using NLog;
 using System.Linq;
+using System.Text;
 
 namespace DogSitterMarketplaceBll.Services
 {
@@ -39,17 +42,40 @@ namespace DogSitterMarketplaceBll.Services
 
             if (petsNotDeleted.Count <= 0)
             {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddOrder)}, Order does not contain existing pets");
                 throw new ArgumentException("Order does not contain existing pets");
             }
 
-            if(!CheckAllPetsBelongToSameUser(petsNotDeleted))
+            if (!CheckAllPetsBelongToSameUser(petsNotDeleted))
             {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddOrder)}, Order contains pets with different Users");
                 throw new ArgumentException("Order contains pets with different Users");
+            }
+
+            if (!CheckDateStartOrderEarlierThenDateEndOrder(newOrder.DateStart, newOrder.DateEnd))
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddOrder)}, Sitter does not work at dateTime which is in order");
+                throw new ArgumentException("DateStart of order should be earlier then dateEnd of order");
+            }
+
+            var sitterWork = _orderReposotory.GetSitterWorkById(newOrder.SitterWorkId);
+
+            if (!CheckSitterHasTimingToOrder(sitterWork.UserId, newOrder.DateStart, newOrder.DateEnd, newOrder.LocationId))
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddOrder)}, Sitter does not work at dateTime which is in order");
+                throw new ArgumentException("Sitter does not work at dateTime which is in order");
+            }
+
+            if (!CheckSitterIsFreeToNewOrder(sitterWork.UserId, newOrder.DateStart, newOrder.DateEnd))
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddOrder)}, Sitter already has other order at work on the same(or near) time");
+                throw new ArgumentException("Sitter already has other order at work on the same(or near) time");
             }
 
             var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
             var orderEntity = _mapper.Map<OrderEntity>(newOrder);
             orderEntity.Pets.AddRange(petsNotDeleted);
+            orderEntity.OrderStatusId = 4;
             var addOrderEntity = _orderReposotory.AddNewOrder(orderEntity);
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
             CheckPetsInOrderIsExist(allPets, newOrder.Pets, addOrderResponse);
@@ -57,6 +83,29 @@ namespace DogSitterMarketplaceBll.Services
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(AddOrder)}");
 
             return addOrderResponse;
+        }
+
+        public OrderResponse ChangeOrderStatusToAtWork(int orderId)
+        {
+            var orderEntity = _orderReposotory.GetOrderById(orderId);
+            if (orderEntity.IsDeleted)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(ChangeOrderStatusToAtWork)} {nameof(OrderEntity)} with id {orderId} is deleted.");
+                throw new NotFoundException(orderId, nameof(orderEntity));
+            }
+
+            if (orderEntity.OrderStatusId == 3 || orderEntity.OrderStatusId == 6)
+            {
+                var updateOrderEntity = _orderReposotory.ChangeOrderStatusToAtWork(orderId);
+                var orderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
+
+                return orderResponse;
+            }
+            else
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(ChangeOrderStatusToAtWork)} {nameof(OrderEntity)} Order with id {orderId} has an unsuitable status for changing the status to AtWork");
+                throw new ArgumentException($"Order with id {orderId} has an unsuitable status for changing the status to AtWork");
+            }
         }
 
         public List<OrderResponse> GetAllNotDeletedOrders()
@@ -144,7 +193,6 @@ namespace DogSitterMarketplaceBll.Services
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(UpdateOrder)}");
 
             return updateOrderResponse;
-
         }
 
         private void CheckPetsInOrderIsExist(List<PetEntity> allPets, List<int> petsId, OrderResponse orderResponse)
@@ -177,6 +225,103 @@ namespace DogSitterMarketplaceBll.Services
             }
 
             return true;
+        }
+
+        private bool CheckSitterHasTimingToOrder(int sitterId, DateTime startOrder, DateTime endOrder, int locationId)
+        {
+            try
+            {
+                var allSitterWorks = _orderReposotory.GetAllSitterWorksByUserId(sitterId);
+                if (allSitterWorks.Any())
+                {
+                    foreach (var sitterWork in allSitterWorks)
+                    {
+                        foreach (var locationWork in sitterWork.LocationWork)
+                        {
+                            if (locationWork.LocationId == locationId)
+                            {
+                                if (startOrder.Date == endOrder.Date)
+                                {
+                                    foreach (var timingsLocationsWorks in locationWork.TimingLocationWorks)
+                                    {
+                                        if (startOrder.DayOfWeek.ToString() == timingsLocationsWorks.DayOfWeek.Name
+                                            && startOrder.TimeOfDay >= timingsLocationsWorks.Start
+                                            && endOrder.TimeOfDay <= timingsLocationsWorks.Stop)
+                                        {
+                                            return true;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    bool match = false;
+                                    foreach (var timingsLocationsWorks in locationWork.TimingLocationWorks)
+                                    {
+                                        if (startOrder.DayOfWeek.ToString() == timingsLocationsWorks.DayOfWeek.Name
+                                            && startOrder.TimeOfDay >= timingsLocationsWorks.Start
+                                            && new TimeSpan(23, 59, 00) <= timingsLocationsWorks.Stop
+                                            && timingsLocationsWorks.Stop <= new TimeSpan(23, 59, 59))
+                                        {
+                                            match = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (match)
+                                    {
+                                        foreach (var timingsLocationsWorks in locationWork.TimingLocationWorks)
+                                        {
+                                            if (endOrder.DayOfWeek.ToString() == timingsLocationsWorks.DayOfWeek.Name
+                                                && endOrder.TimeOfDay <= timingsLocationsWorks.Stop
+                                                && new TimeSpan(00, 00, 00) <= timingsLocationsWorks.Start
+                                                && timingsLocationsWorks.Start <= new TimeSpan(00, 00, 59))
+                                            {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return false;
+            }
+            catch (NotFoundException)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(UserEntity)} with id {sitterId} not found.");
+                throw new NotFoundException(sitterId, nameof(UserEntity));
+            }
+        }
+
+        private bool CheckSitterIsFreeToNewOrder(int sitterId, DateTime startOrder, DateTime endOrder)
+        {
+            var allOrdersBySitter = _orderReposotory.GetOrdersAtWorkOnDateByUserId(sitterId, startOrder);
+            var notDeletedOrders = allOrdersBySitter.Where(o => !o.IsDeleted);
+            foreach (var order in notDeletedOrders)
+            {
+                if (startOrder < order.DateStart && endOrder.AddMinutes(30) > order.DateStart
+                    || startOrder < order.DateEnd.AddMinutes(30) && endOrder > order.DateEnd
+                    || startOrder > order.DateStart && endOrder < order.DateEnd
+                    || startOrder < order.DateStart && endOrder > order.DateEnd)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool CheckDateStartOrderEarlierThenDateEndOrder(DateTime startOrder, DateTime endOrder)
+        {
+            if (startOrder < endOrder)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
