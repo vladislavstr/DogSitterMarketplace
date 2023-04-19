@@ -93,7 +93,11 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 return NotFound();
             }
-            catch (Exception ex)
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
             {
                  return BadRequest();
             }

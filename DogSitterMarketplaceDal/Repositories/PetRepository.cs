@@ -174,7 +174,7 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException)
             {
-                //  _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetUserById)} {nameof(UserEntity)} with id {id} not found.");
+                //  _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetExistAndNotDeletedUserById)} {nameof(UserEntity)} with id {id} not found.");
                 _logger.Log(LogLevel.Debug, $"{nameof(PetRepository)} {nameof(GetUserById)} {nameof(UserEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(UserEntity));
             }

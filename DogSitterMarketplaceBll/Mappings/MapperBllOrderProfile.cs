@@ -22,7 +22,6 @@ namespace DogSitterMarketplaceBll.Mappings
                  .ForMember(dest => dest.Location, opt => opt.Ignore())
                  .ForMember(dest => dest.Pets, opt => opt.Ignore());
             CreateMap<OrderEntity, OrderResponse>();
-         //   CreateMap<PetEntity, PetResponse>().ReverseMap();
             CreateMap<OrderStatusEntity, OrderStatusResponse>();
             CreateMap<SitterWorkEntity, SitterWorkResponse>();
             CreateMap<WorkTypeEntity, WorkTypeResponse>();

@@ -31,7 +31,7 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public List<OrderEntity> GetOrdersAtWorkOnDateByUserId(int sitterId, DateTime startDate);
 
-        public UserEntity GetUserById(int id);
+        public UserEntity GetExistAndNotDeletedUserById(int id);
 
         public OrderEntity ChangeOrderStatusToAtWork(int orderId);
     }

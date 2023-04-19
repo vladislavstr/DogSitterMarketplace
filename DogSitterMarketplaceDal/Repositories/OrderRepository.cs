@@ -240,11 +240,13 @@ namespace DogSitterMarketplaceDal.Repositories
         }
 
         // перенести в ЮзерРепозитори
-        public UserEntity GetUserById(int id)
+        public UserEntity GetExistAndNotDeletedUserById(int id)
         {
             try
             {
-                return _context.Users.Single(u => u.Id == id && !u.IsDeleted);
+                return _context.Users
+                    .Include(u => u.Role)
+                    .Single(u => u.Id == id && !u.IsDeleted);
             }
             catch (InvalidOperationException)
             {
