@@ -8,6 +8,7 @@ using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
+using DogSitterMarketplaceDal.Models.Works;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -72,17 +73,105 @@ namespace DogSitterMarketplaceBll.Tests
 
         [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.AddOrderTestCaseSource))]
         public void AddOrderTest(List<int> petsId, List<PetEntity> allPets, List<string> messagesOfIsDeleted, OrderEntity orderEntity,
-                                OrderEntity addOrderEntity, OrderCreateRequest newOrder, OrderResponse expected)
+                                OrderEntity addOrderEntity, OrderCreateRequest newOrder, OrderResponse expected, int sitterId, SitterWorkEntity sitterWork,
+                                List<SitterWorkEntity> allSitterWorks, DateTime startDateOrder, List<OrderEntity> allOrdersBySitter, int sitterWorkId)
         {
             _mockPetRepo.Setup(p => p.GetPetsInOrderEntities(petsId)).Returns(allPets);
+            _mockOrderRepo.Setup(o => o.GetSitterWorkById(sitterWorkId)).Returns(sitterWork);
+            _mockOrderRepo.Setup(o => o.GetAllSitterWorksByUserId(sitterId)).Returns(allSitterWorks);
+            _mockOrderRepo.Setup(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder)).Returns(allOrdersBySitter);
             _mockOrderRepo.Setup(o => o.AddNewOrder(It.Is<OrderEntity>(o => method(o, orderEntity)))).Returns(addOrderEntity);
 
             OrderResponse actual = _orderService.AddOrder(newOrder);
 
             _mockPetRepo.Verify((p => p.GetPetsInOrderEntities(petsId)), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetSitterWorkById(sitterWorkId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetAllSitterWorksByUserId(sitterId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder), Times.Once);
             _mockOrderRepo.Verify(o => o.AddNewOrder(It.IsAny<OrderEntity>()), Times.Once);
 
             actual.Should().BeEquivalentTo(expected);
+        }
+
+        [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.AddOrder_WhenPetIsNotExist_ShouldArgumentException_TestCaseSource))]
+        public void AddOrderTest_WhenPetIsNotExist_ShouldArgumentException(List<int> petsId, List<PetEntity> allPets, OrderCreateRequest newOrder,
+                                                                            int sitterId, DateTime startDateOrder, int sitterWorkId)
+        {
+            _mockPetRepo.Setup(p => p.GetPetsInOrderEntities(petsId)).Returns(allPets);
+
+            Assert.Throws<ArgumentException>(() => _orderService.AddOrder(newOrder));
+
+            _mockPetRepo.Verify(p => p.GetPetsInOrderEntities(petsId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetSitterWorkById(sitterWorkId), Times.Never);
+            _mockOrderRepo.Verify(o => o.GetAllSitterWorksByUserId(sitterId), Times.Never);
+            _mockOrderRepo.Verify(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder), Times.Never);
+            _mockOrderRepo.Verify(o => o.AddNewOrder(It.IsAny<OrderEntity>()), Times.Never);
+        }
+
+        [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.AddOrder_WhenPetsBelongToDifferentUsers_ShouldArgumentException_TestCaseSource))]
+        public void AddOrderTest_WhenPetsBelongToDifferentUsers_ShouldArgumentException(List<int> petsId, List<PetEntity> allPets, OrderCreateRequest newOrder,
+                                                                            int sitterId, DateTime startDateOrder, int sitterWorkId)
+        {
+            _mockPetRepo.Setup(p => p.GetPetsInOrderEntities(petsId)).Returns(allPets);
+
+            Assert.Throws<ArgumentException>(() => _orderService.AddOrder(newOrder));
+
+            _mockPetRepo.Verify(p => p.GetPetsInOrderEntities(petsId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetSitterWorkById(sitterWorkId), Times.Never);
+            _mockOrderRepo.Verify(o => o.GetAllSitterWorksByUserId(sitterId), Times.Never);
+            _mockOrderRepo.Verify(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder), Times.Never);
+            _mockOrderRepo.Verify(o => o.AddNewOrder(It.IsAny<OrderEntity>()), Times.Never);
+        }
+
+        [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.AddOrder_WhenDateStartOrderNotEarlierThenDateEndOrder_ShouldArgumentException_TestCaseSource))]
+        public void AddOrderTest_WhenDateStartOrderNotEarlierThenDateEndOrder_ShouldArgumentException(List<int> petsId, List<PetEntity> allPets, OrderCreateRequest newOrder,
+                                                                            int sitterId, DateTime startDateOrder, int sitterWorkId)
+        {
+            _mockPetRepo.Setup(p => p.GetPetsInOrderEntities(petsId)).Returns(allPets);
+
+            Assert.Throws<ArgumentException>(() => _orderService.AddOrder(newOrder));
+
+            _mockPetRepo.Verify(p => p.GetPetsInOrderEntities(petsId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetSitterWorkById(sitterWorkId), Times.Never);
+            _mockOrderRepo.Verify(o => o.GetAllSitterWorksByUserId(sitterId), Times.Never);
+            _mockOrderRepo.Verify(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder), Times.Never);
+            _mockOrderRepo.Verify(o => o.AddNewOrder(It.IsAny<OrderEntity>()), Times.Never);
+        }
+
+        [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.AddOrder_WhenSitterHasNotTimingToOrder_ShouldArgumentException_TestCaseSource))]
+        public void AddOrderTest_WhenSitterHasNotTimingToOrder_ShouldArgumentException(List<int> petsId, List<PetEntity> allPets, OrderCreateRequest newOrder, int sitterId,
+                                                                            DateTime startDateOrder, int sitterWorkId, SitterWorkEntity sitterWork, List<SitterWorkEntity> allSitterWorks)
+        {
+            _mockPetRepo.Setup(p => p.GetPetsInOrderEntities(petsId)).Returns(allPets);
+            _mockOrderRepo.Setup(o => o.GetSitterWorkById(sitterWorkId)).Returns(sitterWork);
+            _mockOrderRepo.Setup(o => o.GetAllSitterWorksByUserId(sitterId)).Returns(allSitterWorks);
+
+            Assert.Throws<ArgumentException>(() => _orderService.AddOrder(newOrder));
+
+            _mockPetRepo.Verify(p => p.GetPetsInOrderEntities(petsId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetSitterWorkById(sitterWorkId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetAllSitterWorksByUserId(sitterId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder), Times.Never);
+            _mockOrderRepo.Verify(o => o.AddNewOrder(It.IsAny<OrderEntity>()), Times.Never);
+        }
+
+        [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.AddOrder_WhenSitterIsNotFreeToNewOrder_ShouldArgumentException_TestCaseSource))]
+        public void AddOrderTest_WhenSitterIsNotFreeToNewOrder_ShouldArgumentException(List<int> petsId, List<PetEntity> allPets, OrderCreateRequest newOrder, int sitterId,
+                                                                            DateTime startDateOrder, int sitterWorkId, SitterWorkEntity sitterWork, List<SitterWorkEntity> allSitterWorks,
+                                                                            List<OrderEntity> allOrdersBySitter)
+        {
+            _mockPetRepo.Setup(p => p.GetPetsInOrderEntities(petsId)).Returns(allPets);
+            _mockOrderRepo.Setup(o => o.GetSitterWorkById(sitterWorkId)).Returns(sitterWork);
+            _mockOrderRepo.Setup(o => o.GetAllSitterWorksByUserId(sitterId)).Returns(allSitterWorks);
+            _mockOrderRepo.Setup(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder)).Returns(allOrdersBySitter);
+
+            Assert.Throws<ArgumentException>(() => _orderService.AddOrder(newOrder));
+
+            _mockPetRepo.Verify(p => p.GetPetsInOrderEntities(petsId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetSitterWorkById(sitterWorkId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetAllSitterWorksByUserId(sitterId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder), Times.Once);
+            _mockOrderRepo.Verify(o => o.AddNewOrder(It.IsAny<OrderEntity>()), Times.Never);
         }
 
         private bool method(OrderEntity o, OrderEntity orderEntity)
@@ -90,7 +179,6 @@ namespace DogSitterMarketplaceBll.Tests
             try
             {
                 o.Should().BeEquivalentTo(orderEntity, option => option
-                //.Excluding(o => o.Pets)
                 .For(oe => oe.Pets).Exclude(p => p.User)
                 .For(oe => oe.Pets).Exclude(p => p.Type)
                 .For(oe => oe.Pets).Exclude(p => p.Orders)
