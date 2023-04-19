@@ -20,6 +20,11 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddAutoMapper(typeof(MapperApiUserProfile), typeof(MapperBllUserProfile));
 builder.Services.AddSingleton<UserContext>();
 
+builder.Services.AddScoped<IAppealService, AppealService>();
+builder.Services.AddScoped<IAppealRepository, AppealRepository>();
+builder.Services.AddAutoMapper(typeof(MapperApiAppealProfile), typeof(MapperBllAppealProfile));
+builder.Services.AddSingleton<AppealContext>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
