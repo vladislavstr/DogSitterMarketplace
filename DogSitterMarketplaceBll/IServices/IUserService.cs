@@ -5,9 +5,11 @@ namespace DogSitterMarketplaceBll.IServices
 {
     public interface IUserService
     {
-        public ICollection<UserResponse> GetAllUsers();
+        public List<UserResponse> GetAllUsers();
 
-        //public UserResponse GetUser(UserRequest user);
+        public ICollection<UserResponse> GetAllNotDeletedUsers();
+
+        public UserResponse GetUserById(int id);
 
         public UserResponse AddUser(UserRequest user);
 
