@@ -89,15 +89,32 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPost("AddAppeal", Name = "AddAppeal")]
-        public ActionResult<AppealResponseDto> AddAppeal(AppealRequestDto user)
+        public ActionResult<AppealResponseDto> AddAppeal(AppealRequestDto appeal)
         {
             try
             {
-                var appealRequst = _mapper.Map<AppealRequest>(user);
+                var appealRequst = _mapper.Map<AppealRequest>(appeal);
                 var addAppealResponse = _appealService.AddAppeal(appealRequst);
                 var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
 
                 return Created(new Uri("api/Appeal", UriKind.Relative), addAppealResponseDto);
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
+
+        [HttpPost("AddAppealStatus", Name = "AddAppealStatus")]
+        public ActionResult<AppealStatusResponseDto> AddAppealStatus(AppealStatusRequestDto appealStatus)
+        {
+            try
+            {
+                var appealStatusRequst = _mapper.Map<AppealStatusRequest>(appealStatus);
+                var addAppealStatusResponse = _appealService.AddAppealStatus(appealStatusRequst);
+                var addAppealStatusResponseDto = _mapper.Map<AppealStatusResponseDto>(addAppealStatusResponse);
+
+                return Created(new Uri("api/AppealStatus", UriKind.Relative), addAppealStatusResponseDto);
             }
             catch (Exception ex)
             {

@@ -86,6 +86,14 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Single(a => a.Id == appeal.Id);
         }
 
+        public AppealStatusEntity AddAppealStatus(AppealStatusEntity appealStatus)
+        {
+            _context.AppealsStatuses.Add(appealStatus);
+            _context.SaveChanges();
+
+            return appealStatus;
+        }
+
         public void DeleteAppealById(int id)
         {
             try

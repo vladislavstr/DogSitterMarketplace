@@ -2,6 +2,7 @@
 
 using DogSitterMarketplaceDal.Models.Appeals;
 using DogSitterMarketplaceBll.Models.Appeals.Response;
+using DogSitterMarketplaceBll.Models.Appeals.Request;
 
 namespace DogSitterMarketplaceBll.Mappings
 {
@@ -11,6 +12,7 @@ namespace DogSitterMarketplaceBll.Mappings
         {
             CreateMap<AppealEntity, AppealResponse>();
             CreateMap<AppealStatusEntity, AppealStatusResponse>();
+            //CreateMap<AppealStatusRequest, AppealStatusEntity();
             CreateMap<AppealTypeEntity, AppealTypeResponse>();
         }
     }

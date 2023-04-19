@@ -1,5 +1,6 @@
 ﻿using DogSitterMarketplaceBll.Models.Appeals.Request;
 using DogSitterMarketplaceBll.Models.Appeals.Response;
+using DogSitterMarketplaceDal.Models.Appeals;
 
 namespace DogSitterMarketplaceBll.IServices
 {
@@ -12,6 +13,8 @@ namespace DogSitterMarketplaceBll.IServices
         public AppealResponse GetAppealById(int id);
 
         public AppealResponse AddAppeal(AppealRequest appeal);
+
+        public AppealStatusResponse AddAppealStatus(AppealStatusRequest appealStatus);
 
         public void DeleteAppealById(int id);
     }
