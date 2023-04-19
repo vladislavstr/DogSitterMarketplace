@@ -20,7 +20,7 @@ namespace DogSitterMarketplaceBll.Services
     {
         private readonly IMapper _mapper;
 
-        private readonly IOrderRepository _orderReposotory;
+        private readonly IOrderRepository _orderRepository;
 
         private readonly IPetRepository _petReposotory;
 
@@ -28,7 +28,7 @@ namespace DogSitterMarketplaceBll.Services
 
         public OrderService(IOrderRepository orderReposotory, IPetRepository petReposotory, IMapper mapper, ILogger nLogger)
         {
-            _orderReposotory = orderReposotory;
+            _orderRepository = orderReposotory;
             _petReposotory = petReposotory;
             _mapper = mapper;
             _logger = nLogger;
@@ -58,7 +58,7 @@ namespace DogSitterMarketplaceBll.Services
                 throw new ArgumentException("DateStart of order should be earlier then dateEnd of order");
             }
 
-            var sitterWork = _orderReposotory.GetSitterWorkById(newOrder.SitterWorkId);
+            var sitterWork = _orderRepository.GetSitterWorkById(newOrder.SitterWorkId);
 
             if (!CheckSitterHasTimingToOrder(sitterWork.UserId, newOrder.DateStart, newOrder.DateEnd, newOrder.LocationId))
             {
@@ -76,7 +76,7 @@ namespace DogSitterMarketplaceBll.Services
             var orderEntity = _mapper.Map<OrderEntity>(newOrder);
             orderEntity.Pets.AddRange(petsNotDeleted);
             orderEntity.OrderStatusId = 4;
-            var addOrderEntity = _orderReposotory.AddNewOrder(orderEntity);
+            var addOrderEntity = _orderRepository.AddNewOrder(orderEntity);
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
             CheckPetsInOrderIsExist(allPets, newOrder.Pets, addOrderResponse);
             addOrderResponse.Messages.AddRange(messages);
@@ -85,33 +85,32 @@ namespace DogSitterMarketplaceBll.Services
             return addOrderResponse;
         }
 
-        public OrderResponse ChangeOrderStatusToAtWork(int orderId)
+        public OrderResponse ChangeOrderStatus(int orderId, int orderStatusId)
         {
-            var orderEntity = _orderReposotory.GetOrderById(orderId);
-            if (orderEntity.IsDeleted)
+            var orderResponse = CheckOrderIsExistAndIsNotDeleted(orderId);
+            var changeOrderResponse = new OrderResponse();
+
+            if (orderStatusId == 4)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(ChangeOrderStatusToAtWork)} {nameof(OrderEntity)} with id {orderId} is deleted.");
-                throw new NotFoundException(orderId, nameof(orderEntity));
+                changeOrderResponse = ChangeOrderStatusToAtWork(orderResponse, orderStatusId);
             }
-
-            if (orderEntity.OrderStatusId == 3 || orderEntity.OrderStatusId == 6)
+            else if (orderStatusId == 6)
             {
-                var updateOrderEntity = _orderReposotory.ChangeOrderStatusToAtWork(orderId);
-                var orderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
-
-                return orderResponse;
+                changeOrderResponse = ChangeOrderStatusToReject(orderResponse, orderStatusId);
             }
             else
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(ChangeOrderStatusToAtWork)} {nameof(OrderEntity)} Order with id {orderId} has an unsuitable status for changing the status to AtWork");
-                throw new ArgumentException($"Order with id {orderId} has an unsuitable status for changing the status to AtWork");
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(ChangeOrderStatus)} You can not change orderStatus to {orderStatusId}");
+                throw new ArgumentException($"You can not change orderStatus to {orderStatusId}");
             }
-        }
+
+            return changeOrderResponse;
+        } 
 
         public List<OrderResponse> GetAllNotDeletedOrders()
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(GetAllNotDeletedOrders)}");
-            var allOrdersEntity = _orderReposotory.GetAllOrders();
+            var allOrdersEntity = _orderRepository.GetAllOrders();
             var ordersEntity = allOrdersEntity
                 .Where(o => !o.IsDeleted)
                 .Select(o =>
@@ -147,7 +146,7 @@ namespace DogSitterMarketplaceBll.Services
         public OrderResponse GetNotDeletedOrderById(int id)
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(GetNotDeletedOrderById)}");
-            var orderEntity = _orderReposotory.GetOrderById(id);
+            var orderEntity = _orderRepository.GetOrderById(id);
 
             if (!orderEntity.IsDeleted)
             {
@@ -169,7 +168,7 @@ namespace DogSitterMarketplaceBll.Services
         public void DeleteOrderById(int id)
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(DeleteOrderById)}");
-            _orderReposotory.DeleteOrderById(id);
+            _orderRepository.DeleteOrderById(id);
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(DeleteOrderById)}");
         }
 
@@ -177,22 +176,35 @@ namespace DogSitterMarketplaceBll.Services
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(UpdateOrder)}");
             var orderEntity = _mapper.Map<OrderEntity>(orderUpdate);
-            orderEntity.OrderStatus = _orderReposotory.GetOrderStatusById(orderUpdate.OrderStatusId);
+            orderEntity.OrderStatus = _orderRepository.GetOrderStatusById(orderUpdate.OrderStatusId);
 
             //перенести методы-проверки в Сервис
-            orderEntity.SitterWork = _orderReposotory.GetSitterWorkById(orderUpdate.SitterWorkId);
-            orderEntity.Location = _orderReposotory.GetLocationById(orderUpdate.LocationId);
+            orderEntity.SitterWork = _orderRepository.GetSitterWorkById(orderUpdate.SitterWorkId);
+            orderEntity.Location = _orderRepository.GetLocationById(orderUpdate.LocationId);
 
             var allPets = _petReposotory.GetPetsInOrderEntities(orderUpdate.Pets);
             var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
             orderEntity.Pets.AddRange(allPets.Where(p => !p.IsDeleted));
-            var updateOrderEntity = _orderReposotory.UpdateOrder(orderEntity);
+            var updateOrderEntity = _orderRepository.UpdateOrder(orderEntity);
             var updateOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
             CheckPetsInOrderIsExist(allPets, orderUpdate.Pets, updateOrderResponse);
             updateOrderResponse.Messages.AddRange(messages);
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(UpdateOrder)}");
 
             return updateOrderResponse;
+        }
+
+        public OrderResponse CheckOrderIsExistAndIsNotDeleted(int orderId)
+        {
+            var orderEntity = _orderRepository.GetOrderById(orderId);
+            if (orderEntity.IsDeleted)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(CheckOrderIsExistAndIsNotDeleted)} {nameof(OrderEntity)} with id {orderId} is deleted.");
+                throw new NotFoundException(orderId, nameof(OrderEntity));
+            }
+            var orderResponse = _mapper.Map<OrderResponse>(orderEntity);
+
+            return orderResponse;
         }
 
         private void CheckPetsInOrderIsExist(List<PetEntity> allPets, List<int> petsId, OrderResponse orderResponse)
@@ -231,7 +243,7 @@ namespace DogSitterMarketplaceBll.Services
         {
             try
             {
-                var allSitterWorks = _orderReposotory.GetAllSitterWorksByUserId(sitterId);
+                var allSitterWorks = _orderRepository.GetAllSitterWorksByUserId(sitterId);
                 if (allSitterWorks.Any())
                 {
                     foreach (var sitterWork in allSitterWorks)
@@ -297,7 +309,7 @@ namespace DogSitterMarketplaceBll.Services
 
         private bool CheckSitterIsFreeToNewOrder(int sitterId, DateTime startOrder, DateTime endOrder)
         {
-            var allOrdersBySitter = _orderReposotory.GetOrdersAtWorkOnDateByUserId(sitterId, startOrder);
+            var allOrdersBySitter = _orderRepository.GetOrdersAtWorkOnDateByUserId(sitterId, startOrder);
             var notDeletedOrders = allOrdersBySitter.Where(o => !o.IsDeleted);
             foreach (var order in notDeletedOrders)
             {
@@ -321,6 +333,38 @@ namespace DogSitterMarketplaceBll.Services
             else
             {
                 return false;
+            }
+        }
+
+        private OrderResponse ChangeOrderStatusToAtWork(OrderResponse orderResponse, int orderStatusId)
+        {
+            if (orderResponse.OrderStatus.Id == 3 || orderResponse.OrderStatus.Id == 6)
+            {
+                var updateOrderEntity = _orderRepository.ChangeOrderStatus(orderResponse.Id, orderStatusId);
+                var changeOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
+
+                return changeOrderResponse;
+            }
+            else
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(ChangeOrderStatus)} {nameof(OrderEntity)} Order with id {orderResponse.Id} has an unsuitable status for changing the status to AtWork");
+                throw new ArgumentException($"Order with id {orderResponse.Id} has an unsuitable status for changing the status to AtWork");
+            }
+        }
+
+        private OrderResponse ChangeOrderStatusToReject(OrderResponse orderResponse, int orderStatusId)
+        {
+            if (orderResponse.OrderStatus.Id == 3)
+            {
+                var updateOrderEntity = _orderRepository.ChangeOrderStatus(orderResponse.Id, orderStatusId);
+                var changeOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
+
+                return changeOrderResponse;
+            }
+            else
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(ChangeOrderStatus)} {nameof(OrderEntity)} Order with id {orderResponse.Id} has an unsuitable status for changing the status to Reject");
+                throw new ArgumentException($"Order with id {orderResponse.Id} has an unsuitable status for changing the status to Reject");
             }
         }
     }

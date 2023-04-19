@@ -18,14 +18,17 @@ namespace DogSitterMarketplaceBll.Services
 
         private readonly IOrderRepository _orderRepository;
 
+        private readonly IOrderService _orderService;
+
         private readonly IMapper _mapper;
 
         private readonly ILogger _logger;
 
-        public CommentService(ICommentRepository commentRepository, IOrderRepository orderRepository, IMapper mapper, ILogger nLogger)
+        public CommentService(ICommentRepository commentRepository, IOrderRepository orderRepository, IOrderService orderService, IMapper mapper, ILogger nLogger)
         {
             _commentRepository = commentRepository;
             _orderRepository = orderRepository;
+            _orderService = orderService;
             _mapper = mapper;
             _logger = nLogger;
         }
@@ -34,7 +37,7 @@ namespace DogSitterMarketplaceBll.Services
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(AddComment)}");
             var userCommentFrom = CheckUserIsExistAndIsNotDeleted(addComment.CommentFromUserId);
             var userCommentTo = CheckUserIsExistAndIsNotDeleted(addComment.CommentToUserId);
-            var orderResponse = CheckOrderIsExistAndIsNotDeleted(addComment.OrderId);
+            var orderResponse = _orderService.CheckOrderIsExistAndIsNotDeleted(addComment.OrderId);
 
             if (userCommentFrom.RoleId == 3 && userCommentTo.RoleId == 4
                 || userCommentFrom.RoleId == 4 && userCommentTo.RoleId == 3)
@@ -91,20 +94,6 @@ namespace DogSitterMarketplaceBll.Services
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(DeleteCommentById)}");
         }
 
-        //public CommentOrderResponse AddComment(CommentRequest commentRequest)
-        //{
-        //    _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(AddComment)}");
-        //    var commentEntity = _mapper.Map<CommentEntity>(commentRequest);
-        //    commentRequest.OrderId = _orderRepository.GetOrderById(commentRequest.OrderId).Id;
-        //    commentRequest.CommentFromUserId = _commentRepository.GetExistAndNotDeletedUserById(commentRequest.CommentFromUserId).Id;
-        //    commentRequest.CommentToUserId = _commentRepository.GetExistAndNotDeletedUserById(commentRequest.CommentToUserId).Id;
-        //    var addCommentEntity = _commentRepository.AddComment(commentEntity);
-        //    var addCommentResponse = _mapper.Map<CommentOrderResponse>(addCommentEntity);
-        //    _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(AddComment)}");
-
-        //    return addCommentResponse;
-        //}
-
         public CommentOrderResponse UpdateComment(CommentUpdate commentUpdate)
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(UpdateComment)}");
@@ -119,6 +108,7 @@ namespace DogSitterMarketplaceBll.Services
             return commentOrderResponse;
         }
 
+        //проверку перенести в Юзерсервис
         private UserShortResponse CheckUserIsExistAndIsNotDeleted(int userId)
         {
             //метод перенести в ЮзерРепо
@@ -126,19 +116,6 @@ namespace DogSitterMarketplaceBll.Services
             var userResponse = _mapper.Map<UserShortResponse>(userEntity);
 
             return userResponse;
-        }
-
-        private OrderResponse CheckOrderIsExistAndIsNotDeleted(int orderId)
-        {
-            var orderEntity = _orderRepository.GetOrderById(orderId);
-            if (orderEntity.IsDeleted)
-            {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(CheckOrderIsExistAndIsNotDeleted)} {nameof(OrderEntity)} with id {orderId} is deleted.");
-                throw new NotFoundException(orderId, nameof(OrderEntity));
-            }
-            var orderResponse = _mapper.Map<OrderResponse>(orderEntity);
-
-            return orderResponse;
         }
     }
 }

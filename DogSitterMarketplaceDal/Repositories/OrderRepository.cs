@@ -48,7 +48,7 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public OrderEntity ChangeOrderStatusToAtWork(int orderId)
+        public OrderEntity ChangeOrderStatus(int orderId, int orderStatusId)
         {
             var orderDB = _context.Orders.SingleOrDefault(o => o.Id == orderId);
 
@@ -59,7 +59,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new NotFoundException(orderId, nameof(OrderEntity));
             }
 
-            orderDB.OrderStatusId = 4;
+            orderDB.OrderStatusId = orderStatusId;
             _context.SaveChanges();
 
             return orderDB;

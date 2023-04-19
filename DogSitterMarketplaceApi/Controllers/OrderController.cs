@@ -55,12 +55,12 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpPatch("{id}", Name = "ChangeOrderStatusToAtWork")]
-        public ActionResult<OrderResponseDto> ChangeOrderStatusToAtWork(int id)
+        [HttpPatch("{id}", Name = "ChangeOrderStatus")]
+        public ActionResult<OrderResponseDto> ChangeOrderStatus(int id, int orderStatusId)
         {
             try
             {
-                var updateOrderResponse = _orderService.ChangeOrderStatusToAtWork(id);
+                var updateOrderResponse = _orderService.ChangeOrderStatus(id, orderStatusId);
                 var updateOrderResponseDto = _mapper.Map<OrderResponseDto>(updateOrderResponse);
 
                 return Ok(updateOrderResponseDto);

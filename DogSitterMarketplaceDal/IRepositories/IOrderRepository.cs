@@ -33,6 +33,6 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public UserEntity GetExistAndNotDeletedUserById(int id);
 
-        public OrderEntity ChangeOrderStatusToAtWork(int orderId);
+        public OrderEntity ChangeOrderStatus(int orderId, int orderStatusId);
     }
 }
