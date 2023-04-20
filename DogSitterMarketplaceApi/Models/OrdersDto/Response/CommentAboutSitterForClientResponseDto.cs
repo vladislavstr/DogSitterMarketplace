@@ -1,8 +1,9 @@
 ﻿using DogSitterMarketplaceApi.Models.UsersDto.Response;
+using DogSitterMarketplaceBll.Models.Users.Response;
 
 namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
 {
-    public class CommentResponseDto
+    public class CommentAboutSitterForClientResponseDto
     {
         public int Id { get; set; }
 
@@ -10,9 +11,9 @@ namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
 
         public int Score { get; set; }
 
-      //  public double AverageScore { get; set; }
+       // public double AverageScore { get; set; }
 
-        public UserShortResponseDto CommentFromUser { get; set; }
+        public UserForCommentResponseDto CommentFromUser { get; set; }
 
         public UserShortResponseDto CommentToUser { get; set; }
     }

@@ -29,6 +29,110 @@ namespace DogSitterMarketplaceApi.Controllers
             _logger = nLogger;
         }
 
+        [HttpGet("forClientAboutSitter/{userIdToComment}", Name = "GetCommentsAndScoresForClientAboutSitter")]
+        public ActionResult<AvgScoreCommentsAboutSitterForClientResponseDto> GetCommentsAndScoresForClientAboutSitter(int userIdGetComment, int userIdToComment)
+        {
+            try
+            {
+                var avgScoreCommentResponse = _commentService.GetCommentsAndScoresForClientAboutSitter(userIdGetComment, userIdToComment);
+                var result = _mapper.Map<AvgScoreCommentsAboutSitterForClientResponseDto>(avgScoreCommentResponse);
+
+                return Ok(result);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                // _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
+                _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForClientAboutSitter)}");
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("forSitterAboutClient/{userIdToComment}", Name = "GetCommentsAndScoresForSitterAboutClient")]
+        public ActionResult<AvgScoreCommentAboutClientForSitterResponseDto> GetCommentsAndScoresForSitterAboutClient(int userIdGetComment, int userIdToComment)
+        {
+            try
+            {
+                var avgScoreCommentsResponse = _commentService.GetCommentsAndScoresForSitterAboutClient(userIdGetComment, userIdToComment);
+                var result = _mapper.Map<AvgScoreCommentAboutClientForSitterResponseDto>(avgScoreCommentsResponse);
+
+                return Ok(result);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                // _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
+                _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForSitterAboutClient)}");
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("forClientAboutHim/{userId}", Name = "GetCommentsAndScoresForClientAboutHim")]
+        public ActionResult<AvgScoreCommentResponseDto> GetCommentsAndScoresForClientAboutHim(int userId)
+        {
+            try
+            {
+                var avgScoreCommentsResponse = _commentService.GetCommentsAndScoresForClientAboutHim(userId);
+                var result = _mapper.Map<AvgScoreCommentResponseDto>(avgScoreCommentsResponse);
+
+                return Ok(result);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                // _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
+                _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForClientAboutHim)}");
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("forSitterAboutHim/{userId}", Name = "GetCommentsAndScoresForSitterAboutHim")]
+        public ActionResult<AvgScoreCommentWithoutUserResponseDto> GetCommentsAndScoresForSitterAboutHim(int userId)
+        {
+            try
+            {
+                var avgScoreCommentsResponse = _commentService.GetCommentsAndScoresForSitterAboutHim(userId);
+                var result = _mapper.Map<AvgScoreCommentWithoutUserResponseDto>(avgScoreCommentsResponse);
+
+                return Ok(result);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                // _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
+                _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForSitterAboutHim)}");
+                return BadRequest();
+            }
+        }
+
         [HttpGet(Name = "GetAllNotDeletedComments")]
         public ActionResult<List<CommentOrderResponseDto>> GetAllNotDeletedComments()
         {
@@ -99,7 +203,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception)
             {
-                 return BadRequest();
+                return BadRequest();
             }
         }
 

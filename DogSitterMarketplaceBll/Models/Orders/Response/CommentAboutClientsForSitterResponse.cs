@@ -2,7 +2,7 @@
 
 namespace DogSitterMarketplaceBll.Models.Orders.Response
 {
-    public class CommentResponse
+    public class CommentAboutClientsForSitterResponse
     {
         public int Id { get; set; }
 
@@ -10,10 +10,10 @@ namespace DogSitterMarketplaceBll.Models.Orders.Response
 
         public int Score { get; set; }
 
-       // public double AverageScore { get; set; }
+     //   public double AverageScore { get; set; }
 
-        public UserShortResponse CommentFromUser { get; set; }
+        public UserForCommentResponse CommentFromUser { get; set; }
 
-        public UserShortResponse CommentToUser { get; set; }
+        public UserForCommentResponse CommentToUser { get; set; }
     }
 }

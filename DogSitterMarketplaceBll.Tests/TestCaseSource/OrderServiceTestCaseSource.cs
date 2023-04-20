@@ -138,7 +138,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Id = 11,
                         Email = "email",
                         PhoneNumber= "1234567890",
-                        Name= "name"
+                        Name= "name",
+                        RoleId = 9
                     }
                 }
             };
@@ -366,7 +367,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                             Id = 112,
                             Email = "email2",
                             PhoneNumber= "12345678902",
-                            Name= "name2"
+                            Name= "name2",
+                            RoleId = 92
                         }
                     },
                 new PetResponse
@@ -385,7 +387,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                             Id = 112,
                             Email = "email2",
                             PhoneNumber= "12345678902",
-                            Name= "name2"
+                            Name= "name2",
+                            RoleId = 92
                         }
                     }
             };
@@ -646,7 +649,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                             Id = 1123,
                             Email = "email23",
                             PhoneNumber= "123456789023",
-                            Name= "name23"
+                            Name= "name23",
+                            RoleId = 923
                         }
                     },
             };
@@ -851,7 +855,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Id = 114,
                         Email = "email4",
                         PhoneNumber= "12345678904",
-                        Name= "name4"
+                        Name= "name4",
+                        RoleId = 94
                     }
                 }
             };
@@ -1077,7 +1082,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Id = 1145,
                         Email = "email45",
                         PhoneNumber= "123456789045",
-                        Name= "name45"
+                        Name= "name45",
+                        RoleId = 945
                     }
                 }
             };

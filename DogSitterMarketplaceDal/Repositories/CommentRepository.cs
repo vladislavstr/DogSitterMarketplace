@@ -20,6 +20,23 @@ namespace DogSitterMarketplaceDal.Repositories
             _logger = nLogger;
         }
 
+        public List<CommentEntity> GetAllCommentsAndScoresByUserId(int userIdToComment)
+        {
+            var user = _context.Users.SingleOrDefault(u => u.Id == userIdToComment);
+
+            if (user == null)
+            {
+                _logger.Log(LogLevel.Debug, $"({nameof(CommentRepository)} {nameof(GetAllCommentsAndScoresByUserId)} {nameof(CommentEntity)} with CommentUserTo with id {userIdToComment} not found)");
+                throw new NotFoundException(userIdToComment, nameof(UserEntity));
+            }
+
+            return _context.Comments
+                .Include(c => c.Order)
+                .Include(c => c.CommentFromUser)
+                .Include(c => c.CommentToUser)
+                .Where(c => c.CommentToUserId == userIdToComment).ToList();
+        }
+
         public List<CommentEntity> GetAllComments()
         {
         //    return _context.Comments
