@@ -19,5 +19,7 @@ namespace DogSitterMarketplaceBll.IServices
         public OrderResponse ChangeOrderStatus(int orderId, int orderStatusId);
 
         public OrderResponse CheckOrderIsExistAndIsNotDeleted(int orderId);
+
+        public List<OrderResponse> GetAllOrdersUnderConsiderationBySitterId(int userId);
     }
 }

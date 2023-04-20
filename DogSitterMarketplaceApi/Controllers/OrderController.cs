@@ -79,6 +79,32 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
+        [HttpGet("ordersUnderConsideration/{userId}", Name = "GetAllOrdersUnderConsiderationBySitterId")]
+        public ActionResult<List<OrderResponseDto>> GetAllOrdersUnderConsiderationBySitterId(int userId)
+        {
+            try
+            {
+                var ordersResponse = _orderService.GetAllOrdersUnderConsiderationBySitterId(userId);
+                var ordersResponseDto = _mapper.Map<List<OrderResponseDto>>(ordersResponse);
+
+                return ordersResponseDto;
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                // _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllNotDeletedOrders)}");
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(GetAllOrdersUnderConsiderationBySitterId)}");
+                return BadRequest();
+            }
+        }
+
         [HttpGet(Name = "GetAllNotDeletedOrders")]
         public ActionResult<List<OrderResponseDto>> GetAllNotDeletedOrders()
         {
@@ -107,7 +133,6 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(orderResponseDto);
             }
-
             catch (NotFoundException)
             {
                 return NotFound();

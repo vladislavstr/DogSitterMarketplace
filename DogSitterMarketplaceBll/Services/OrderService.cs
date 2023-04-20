@@ -75,7 +75,7 @@ namespace DogSitterMarketplaceBll.Services
             var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
             var orderEntity = _mapper.Map<OrderEntity>(newOrder);
             orderEntity.Pets.AddRange(petsNotDeleted);
-            orderEntity.OrderStatusId = 4;
+            orderEntity.OrderStatusId = 3;
             var addOrderEntity = _orderRepository.AddNewOrder(orderEntity);
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
             CheckPetsInOrderIsExist(allPets, newOrder.Pets, addOrderResponse);
@@ -89,23 +89,50 @@ namespace DogSitterMarketplaceBll.Services
         {
             var orderResponse = CheckOrderIsExistAndIsNotDeleted(orderId);
             var changeOrderResponse = new OrderResponse();
+            switch (orderStatusId)
+            {
+                case 4:
+                    changeOrderResponse = ChangeOrderStatusToAtWork(orderResponse, orderStatusId);
+                    break;
 
-            if (orderStatusId == 4)
-            {
-                changeOrderResponse = ChangeOrderStatusToAtWork(orderResponse, orderStatusId);
-            }
-            else if (orderStatusId == 6)
-            {
-                changeOrderResponse = ChangeOrderStatusToReject(orderResponse, orderStatusId);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(ChangeOrderStatus)} You can not change orderStatus to {orderStatusId}");
-                throw new ArgumentException($"You can not change orderStatus to {orderStatusId}");
+                case 5:
+                    changeOrderResponse = ChangeOrderStatusToComplete(orderResponse, orderStatusId);
+                    break;
+
+                case 6:
+                    changeOrderResponse = ChangeOrderStatusToReject(orderResponse, orderStatusId);
+                    break;
+
+                default:
+                    _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(ChangeOrderStatus)} You can not change orderStatus to {orderStatusId}");
+                    throw new ArgumentException($"You can not change orderStatus to {orderStatusId}");
             }
 
             return changeOrderResponse;
-        } 
+        }
+
+        public List<OrderResponse> GetAllOrdersUnderConsiderationBySitterId(int userId)
+        {
+            // запрос в другой репозиторий Или вставить Проверку
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(GetAllOrdersUnderConsiderationBySitterId)}");
+
+            var userEntity = _petReposotory.GetUserById(userId);
+            var allOrdersEntities = _orderRepository.GetAllOrdersBySitterId(userId);
+
+            if (userEntity.Role.Id == 4)
+            {
+                var ordersUnderConsiderationEntities = allOrdersEntities.Where(o => o.OrderStatusId == 3).ToList();
+                var ordersUnderConsiderationResponses = _mapper.Map<List<OrderResponse>>(ordersUnderConsiderationEntities);
+                _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(GetAllOrdersUnderConsiderationBySitterId)}");
+
+                return ordersUnderConsiderationResponses;
+            }
+            else
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(GetAllOrdersUnderConsiderationBySitterId)} User with id {userId} has not got necessary UserRole");
+                throw new ArgumentException($"User with id {userId} has not got necessary UserRole");
+            }
+        }
 
         public List<OrderResponse> GetAllNotDeletedOrders()
         {
@@ -367,5 +394,22 @@ namespace DogSitterMarketplaceBll.Services
                 throw new ArgumentException($"Order with id {orderResponse.Id} has an unsuitable status for changing the status to Reject");
             }
         }
+
+        private OrderResponse ChangeOrderStatusToComplete(OrderResponse orderResponse, int orderStatusId)
+        {
+            if (orderResponse.OrderStatus.Id == 4)
+            {
+                var updateOrderEntity = _orderRepository.ChangeOrderStatus(orderResponse.Id, orderStatusId);
+                var changeOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
+
+                return changeOrderResponse;
+            }
+            else
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(ChangeOrderStatus)} {nameof(OrderEntity)} Order with id {orderResponse.Id} has an unsuitable status for changing the status to Reject");
+                throw new ArgumentException($"Order with id {orderResponse.Id} has an unsuitable status for changing the status to Reject");
+            }
+        }
     }
 }
+

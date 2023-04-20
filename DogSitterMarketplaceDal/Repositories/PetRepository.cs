@@ -170,7 +170,9 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             try
             {
-                return _context.Users.Single(u => u.Id == id && !u.IsDeleted);
+                return _context.Users
+                    .Include(u => u.Role)
+                    .Single(u => u.Id == id && !u.IsDeleted);
             }
             catch (InvalidOperationException)
             {

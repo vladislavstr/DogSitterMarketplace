@@ -61,6 +61,9 @@ namespace DogSitterMarketplaceDal.Repositories
 
             orderDB.OrderStatusId = orderStatusId;
             _context.SaveChanges();
+            orderDB = _context.Orders
+                .Include(o => o.OrderStatus)
+                .SingleOrDefault(o => o.Id == orderId);
 
             return orderDB;
         }
@@ -93,6 +96,27 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(o => o.Appeals)
                 .Include(o => o.Pets)
                 .AsNoTracking().ToList();
+        }
+
+        public List<OrderEntity> GetAllOrdersBySitterId(int userId)
+        {
+            try
+            {
+                return _context.Orders
+                        .Include(o => o.OrderStatus)
+                        .Include(o => o.SitterWork)
+                        .ThenInclude(sw => sw.WorkType)
+                        .Include(o => o.Location)
+                        .Include(o => o.Pets)
+                        .ThenInclude(p => p.User)
+                        .Where(o => o.SitterWork.UserId == userId).ToList();
+            }
+            catch (InvalidOperationException ex)
+            {
+                //_logger.LogDebug($"{nameof(OrderEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $"{ex}, {nameof(UserEntity)} with id {userId} not found.");
+                throw new NotFoundException(userId, nameof(UserEntity));
+            }
         }
 
         public OrderEntity GetOrderById(int id)
@@ -292,7 +316,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 return _context.Orders
                     .Include(o => o.SitterWork)
                     .Where(o => o.OrderStatusId == 4
-                        && o.DateStart.Date == startDate.Date         
+                        && o.DateStart.Date == startDate.Date
                         && o.SitterWork.UserId == sitterId)
                     .ToList();
             }

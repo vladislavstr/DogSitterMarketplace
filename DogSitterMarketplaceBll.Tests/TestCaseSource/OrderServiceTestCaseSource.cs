@@ -42,7 +42,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             OrderCreateRequest newOrder = new OrderCreateRequest
             {
                 Comment = "comment",
-                // OrderStatusId = 1,
                 SitterWorkId = 10,
                 Summ = 100,
                 DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
@@ -86,7 +85,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             OrderEntity orderEntity = new OrderEntity
             {
                 Comment = "comment",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 10,
                 Summ = 100,
                 DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
@@ -98,7 +97,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Id = 1,
                 Comment = "comment",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 10,
                 Summ = 100,
                 DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
@@ -107,8 +106,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
 
                 OrderStatus = new OrderStatusEntity
                 {
-                    Id = 4,
-                    Name = "at work",
+                    Id = 3,
+                    Name = "3",
                 },
                 SitterWork = new SitterWorkEntity
                 {
@@ -150,8 +149,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 Comment = "comment",
                 OrderStatus = new OrderStatusResponse
                 {
-                    Id = 4,
-                    Name = "at work",
+                    Id = 3,
+                    Name = "3",
                 },
                 SitterWork = new SitterWorkResponse
                 {
@@ -242,7 +241,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             newOrder = new OrderCreateRequest
             {
                 Comment = "comment2",
-                //OrderStatusId = 12,
                 SitterWorkId = 102,
                 Summ = 1002,
                 DateStart = new DateTime(2023, 04, 18, 12, 30, 00),
@@ -316,7 +314,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             orderEntity = new OrderEntity
             {
                 Comment = "comment2",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 102,
                 Summ = 1002,
                 DateStart = new DateTime(2023, 04, 18, 12, 30, 00),
@@ -328,7 +326,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Id = 12,
                 Comment = "comment2",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 102,
                 Summ = 1002,
                 DateStart = new DateTime(2023, 04, 18, 12, 30, 00),
@@ -336,8 +334,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 LocationId = 10002,
                 OrderStatus = new OrderStatusEntity
                 {
-                    Id = 4,
-                    Name = "at work",
+                    Id = 3,
+                    Name = "3",
                 },
                 SitterWork = new SitterWorkEntity
                 {
@@ -399,8 +397,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 Comment = "comment2",
                 OrderStatus = new OrderStatusResponse
                 {
-                    Id = 4,
-                    Name = "at work",
+                    Id = 3,
+                    Name = "3",
                 },
                 SitterWork = new SitterWorkResponse
                 {
@@ -491,7 +489,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             newOrder = new OrderCreateRequest
             {
                 Comment = "comment23",
-                //  OrderStatusId = 123,
                 SitterWorkId = 1023,
                 Summ = 10023,
                 DateStart = new DateTime(2023, 04, 19, 14, 30, 00),
@@ -598,7 +595,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             orderEntity = new OrderEntity
             {
                 Comment = "comment23",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 1023,
                 Summ = 10023,
                 DateStart = new DateTime(2023, 04, 19, 14, 30, 00),
@@ -610,7 +607,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Id = 123,
                 Comment = "comment23",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 1023,
                 Summ = 10023,
                 DateStart = new DateTime(2023, 04, 19, 14, 30, 00),
@@ -618,8 +615,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 LocationId = 100023,
                 OrderStatus = new OrderStatusEntity
                 {
-                    Id = 4,
-                    Name = "at work",
+                    Id = 3,
+                    Name = "3",
                 },
                 SitterWork = new SitterWorkEntity
                 {
@@ -664,8 +661,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 Comment = "comment23",
                 OrderStatus = new OrderStatusResponse
                 {
-                    Id = 4,
-                    Name = "at work",
+                    Id = 3,
+                    Name = "3",
                 },
                 SitterWork = new SitterWorkResponse
                 {
@@ -759,7 +756,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             newOrder = new OrderCreateRequest
             {
                 Comment = "comment4",
-                // OrderStatusId = 1,
                 SitterWorkId = 104,
                 Summ = 1004,
                 DateStart = new DateTime(2023, 04, 20, 12, 10, 00),
@@ -803,7 +799,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             orderEntity = new OrderEntity
             {
                 Comment = "comment4",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 104,
                 Summ = 1004,
                 DateStart = new DateTime(2023, 04, 20, 12, 10, 00),
@@ -815,7 +811,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Id = 14,
                 Comment = "comment4",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 104,
                 Summ = 1004,
                 DateStart = new DateTime(2023, 04, 20, 12, 10, 00),
@@ -824,8 +820,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
 
                 OrderStatus = new OrderStatusEntity
                 {
-                    Id = 4,
-                    Name = "at work",
+                    Id = 3,
+                    Name = "3",
                 },
                 SitterWork = new SitterWorkEntity
                 {
@@ -867,8 +863,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 Comment = "comment4",
                 OrderStatus = new OrderStatusResponse
                 {
-                    Id = 4,
-                    Name = "at work",
+                    Id = 3,
+                    Name = "3",
                 },
                 SitterWork = new SitterWorkResponse
                 {
@@ -954,7 +950,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 140,
                 Comment = "comment40",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 1040,
                 Summ = 10040,
                 DateStart = new DateTime(2023, 04, 20,  08, 30, 00),
@@ -963,8 +959,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
 
                     OrderStatus = new OrderStatusEntity
                     {
-                        Id = 4,
-                        Name = "at work",
+                        Id = 3,
+                        Name = "3",
                     },
                     SitterWork = new SitterWorkEntity
                     {
@@ -986,7 +982,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             newOrder = new OrderCreateRequest
             {
                 Comment = "comment45",
-                // OrderStatusId = 1,
                 SitterWorkId = 1045,
                 Summ = 10045,
                 DateStart = new DateTime(2023, 04, 21, 23, 10, 00),
@@ -1030,7 +1025,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             orderEntity = new OrderEntity
             {
                 Comment = "comment45",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 1045,
                 Summ = 10045,
                 DateStart = new DateTime(2023, 04, 21, 23, 10, 00),
@@ -1042,7 +1037,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Id = 145,
                 Comment = "comment45",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 1045,
                 Summ = 10045,
                 DateStart = new DateTime(2023, 04, 21, 23, 10, 00),
@@ -1051,8 +1046,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
 
                 OrderStatus = new OrderStatusEntity
                 {
-                    Id = 4,
-                    Name = "at work",
+                    Id = 3,
+                    Name = "3",
                 },
                 SitterWork = new SitterWorkEntity
                 {
@@ -1094,8 +1089,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 Comment = "comment45",
                 OrderStatus = new OrderStatusResponse
                 {
-                    Id = 4,
-                    Name = "at work",
+                    Id = 3,
+                    Name = "3",
                 },
                 SitterWork = new SitterWorkResponse
                 {
@@ -1199,7 +1194,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 1405,
                 Comment = "comment405",
-                OrderStatusId = 4,
+                OrderStatusId = 3,
                 SitterWorkId = 10405,
                 Summ = 100405,
                 DateStart = new DateTime(2023, 04, 22, 02, 50, 00),
@@ -1208,8 +1203,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
 
                     OrderStatus = new OrderStatusEntity
                     {
-                        Id = 4,
-                        Name = "at work",
+                        Id = 3,
+                        Name = "3",
                     },
                     SitterWork = new SitterWorkEntity
                     {
