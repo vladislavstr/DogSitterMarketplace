@@ -34,15 +34,15 @@ namespace DogSitterMarketplaceDal.Models.Appeals
 
         //[Required]
         [ForeignKey(nameof(AppealFromUserId))]
-        public UserEntity? AppealFromUser { get; set; }
+        public UserEntity AppealFromUser { get; set; }
 
-        public int? AppealFromUserId { get; set; }
+        public int AppealFromUserId { get; set; }
 
         //[Required]
         [ForeignKey(nameof(AppealToUserId))]
-        public UserEntity AppealToUser { get; set; }
+        public UserEntity? AppealToUser { get; set; }
 
-        public int AppealToUserId { get; set; }
+        public int? AppealToUserId { get; set; }
 
         //[Required]
         public bool IsDeleted { get; set; }

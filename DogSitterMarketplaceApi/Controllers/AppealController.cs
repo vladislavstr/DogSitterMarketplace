@@ -121,5 +121,22 @@ namespace DogSitterMarketplaceApi.Controllers
                 return Ok(ex.Message);
             }
         }
+
+        [HttpPost("AddAppealType", Name = "AddAppealType")]
+        public ActionResult<AppealTypeResponseDto> AddAppealType(AppealTypeRequestDto appealType)
+        {
+            try
+            {
+                var appealTypeRequst = _mapper.Map<AppealTypeRequest>(appealType);
+                var addAppealTypeResponse = _appealService.AddAppealType(appealTypeRequst);
+                var addAppealTypeResponseDto = _mapper.Map<AppealTypeResponseDto>(addAppealTypeResponse);
+
+                return Created(new Uri("api/AppealType", UriKind.Relative), addAppealTypeResponseDto);
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
     }
 }

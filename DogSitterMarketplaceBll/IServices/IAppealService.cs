@@ -16,6 +16,8 @@ namespace DogSitterMarketplaceBll.IServices
 
         public AppealStatusResponse AddAppealStatus(AppealStatusRequest appealStatus);
 
+        public AppealTypeResponse AddAppealType(AppealTypeRequest appealType);
+
         public void DeleteAppealById(int id);
     }
 }

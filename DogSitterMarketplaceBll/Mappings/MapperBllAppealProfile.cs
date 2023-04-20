@@ -10,10 +10,15 @@ namespace DogSitterMarketplaceBll.Mappings
     {
         public MapperBllAppealProfile()
         {
+            //Appeal
             CreateMap<AppealEntity, AppealResponse>();
+            CreateMap<AppealRequest, AppealEntity>();
+            //AppealStatus
             CreateMap<AppealStatusEntity, AppealStatusResponse>();
-            //CreateMap<AppealStatusRequest, AppealStatusEntity();
+            CreateMap<AppealStatusRequest, AppealStatusEntity>();
+            //AppealType
             CreateMap<AppealTypeEntity, AppealTypeResponse>();
+            CreateMap<AppealTypeRequest, AppealTypeEntity>();
         }
     }
 }

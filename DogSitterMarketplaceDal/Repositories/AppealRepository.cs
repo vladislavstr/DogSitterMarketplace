@@ -74,6 +74,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public AppealEntity AddAppeal(AppealEntity appeal)
         {
+            appeal.IsDeleted = false;
             _context.Appeals.Add(appeal);
             _context.SaveChanges();
 
@@ -92,6 +93,14 @@ namespace DogSitterMarketplaceDal.Repositories
             _context.SaveChanges();
 
             return appealStatus;
+        }
+
+        public AppealTypeEntity AddAppealType(AppealTypeEntity appealType)
+        {
+            _context.AppealsTypes.Add(appealType);
+            _context.SaveChanges();
+
+            return appealType;
         }
 
         public void DeleteAppealById(int id)

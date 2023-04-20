@@ -14,6 +14,8 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public AppealStatusEntity AddAppealStatus(AppealStatusEntity appealStatus);
 
+        public AppealTypeEntity AddAppealType(AppealTypeEntity appealType);
+
         public void DeleteAppealById(int id);
     }
 }

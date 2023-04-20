@@ -67,6 +67,15 @@ namespace DogSitterMarketplaceBll.Services
             return addAppealStatusResponse;
         }
 
+        public AppealTypeResponse AddAppealType(AppealTypeRequest appealType)
+        {
+            var appealTypeEntity = _mapper.Map<AppealTypeEntity>(appealType);
+            var addAppealTypeEntity = _appealRepository.AddAppealType(appealTypeEntity);
+            var addAppealTypeResponse = _mapper.Map<AppealTypeResponse>(addAppealTypeEntity);
+
+            return addAppealTypeResponse;
+        }
+
         public void DeleteAppealById(int id)
         {
             _appealRepository.DeleteAppealById(id);
