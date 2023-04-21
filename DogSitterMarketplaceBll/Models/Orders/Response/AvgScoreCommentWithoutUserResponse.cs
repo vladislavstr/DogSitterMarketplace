@@ -2,7 +2,7 @@
 {
     public class AvgScoreCommentWithoutUserResponse
     {
-        public double AverageScore { get; set; }
+        public decimal AverageScore { get; set; }
 
         public List<CommentWithoutUserResponse> CommentsWithoutUser { get; set; } = new();
     }

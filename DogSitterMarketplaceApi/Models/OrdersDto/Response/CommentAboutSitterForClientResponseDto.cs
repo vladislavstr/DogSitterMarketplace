@@ -15,6 +15,6 @@ namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
 
         public UserForCommentResponseDto CommentFromUser { get; set; }
 
-        public UserShortResponseDto CommentToUser { get; set; }
+       // public UserShortResponseDto CommentToUser { get; set; }
     }
 }

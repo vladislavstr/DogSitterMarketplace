@@ -14,6 +14,6 @@ namespace DogSitterMarketplaceBll.Models.Orders.Response
 
         public UserForCommentResponse CommentFromUser { get; set; }
 
-        public UserForCommentResponse CommentToUser { get; set; }
+      //  public UserForCommentResponse CommentToUser { get; set; }
     }
 }

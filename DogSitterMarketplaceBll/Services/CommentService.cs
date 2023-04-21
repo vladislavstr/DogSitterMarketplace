@@ -229,7 +229,7 @@ namespace DogSitterMarketplaceBll.Services
             return sortDescCommentsEntities;
         }
 
-        private double GetAverageScoreForSortedDescComments(List<CommentEntity> sortedDescComments)
+        private decimal GetAverageScoreForSortedDescComments(List<CommentEntity> sortedDescComments)
         {
             var firstThirtyComments = new List<CommentEntity>();
 
@@ -246,7 +246,8 @@ namespace DogSitterMarketplaceBll.Services
                 return 0;
             }
 
-            var average = firstThirtyComments.Average(c => c.Score);
+            //decimal average = firstThirtyComments.Average(c => c.Score);
+            var average = (decimal)firstThirtyComments.Average(c => c.Score);
 
             return average;
         }

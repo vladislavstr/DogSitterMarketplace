@@ -8,6 +8,6 @@
 
         public int Score { get; set; }
 
-        public double AverageScore { get; set; }
+       // public double AverageScore { get; set; }
     }
 }

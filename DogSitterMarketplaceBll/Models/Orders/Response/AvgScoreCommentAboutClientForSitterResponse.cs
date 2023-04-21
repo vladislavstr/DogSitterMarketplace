@@ -2,7 +2,7 @@
 {
     public class AvgScoreCommentAboutClientForSitterResponse
     {
-        public double AverageScore { get; set; }
+        public decimal AverageScore { get; set; }
 
         public List<CommentAboutClientsForSitterResponse> CommentsAboutClientForSitter { get; set; } = new();
     }
