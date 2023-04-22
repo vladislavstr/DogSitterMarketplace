@@ -246,7 +246,6 @@ namespace DogSitterMarketplaceBll.Services
                 return 0;
             }
 
-            //decimal average = firstThirtyComments.Average(c => c.Score);
             var average = (decimal)firstThirtyComments.Average(c => c.Score);
 
             return average;
