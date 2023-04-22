@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using NLog.Fluent;
 using NLog.Web;
+using DogSitterMarketplaceBll.Mappings;
+using DogSitterMarketplaceDal.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,15 @@ builder.Services.AddAutoMapper(typeof(MapperApiOrderProfile), typeof(MapperBllOr
                                typeof(MapperApiCommentProfile), typeof(MapperBllCommentProfile));
 InjectLogger(builder);
 
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddAutoMapper(typeof(MapperApiUserProfile), typeof(MapperBllUserProfile), typeof(MapperApiAppealProfile), typeof(MapperBllAppealProfile));
+builder.Services.AddSingleton<UserContext>();
+
+builder.Services.AddScoped<IAppealService, AppealService>();
+builder.Services.AddScoped<IAppealRepository, AppealRepository>();
+builder.Services.AddSingleton<AppealContext>();
 
 var app = builder.Build();
 

@@ -2,8 +2,9 @@
 
 namespace DogSitterMarketplaceApi.Models.UsersDto.Request
 {
-    public class UserRequestDto
+    public class UserUpdateDto
     {
+        public int Id { get; set; }
         public string Email { get; set; }
 
         public string Password { get; set; }
@@ -14,12 +15,12 @@ namespace DogSitterMarketplaceApi.Models.UsersDto.Request
 
         public bool IsDeleted { get; set; }
 
-        public int PassportData { get; set; }
+        public UserPassportDataRequestDto PassportData { get; set; }
 
-        public int Role { get; set; }
+        public UserRoleRequestDto Role { get; set; }
 
-        public int? Status { get; set; }
+        public UserStatusRequestDto? Status { get; set; }
 
-        //public ICollection<PetRequestDto> Pets { get; set; }
+        public ICollection<PetRequestDto>? Pets { get; set; }
     }
 }

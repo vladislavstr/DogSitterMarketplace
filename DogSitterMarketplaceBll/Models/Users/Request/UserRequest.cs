@@ -14,12 +14,12 @@ namespace DogSitterMarketplaceBll.Models.Users.Request
 
         public bool IsDeleted { get; set; }
 
-        public UserPassportDataRequest PassportData { get; set; }
+        public int PassportData { get; set; }
 
-        public UserRoleRequest Role { get; set; }
+        public int Role { get; set; }
 
-        public UserStatusRequest? Status { get; set; }
+        public int Status { get; set; }
 
-        public ICollection<PetRequest>? Pets { get; set; }
+        //public ICollection<PetRequest>? Pets { get; set; }
     }
 }
