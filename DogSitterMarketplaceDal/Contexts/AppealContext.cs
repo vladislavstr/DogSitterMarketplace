@@ -2,6 +2,7 @@
 
 using DogSitterMarketplaceDal.Models.Appeals;
 using DogSitterMarketplaceDal.Models.Users;
+using DogSitterMarketplaceDal.Models.Orders;
 
 namespace DogSitterMarketplaceDal.Contexts
 {
@@ -19,7 +20,9 @@ namespace DogSitterMarketplaceDal.Contexts
 
         public DbSet<AppealTypeEntity> AppealsTypes { get; set; }
 
-        public DbSet<UserEntity> User { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
+
+        public DbSet<OrderEntity> Orders { get; set; }
     }
 }
 

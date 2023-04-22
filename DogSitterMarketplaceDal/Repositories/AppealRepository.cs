@@ -1,6 +1,7 @@
 ﻿using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Appeals;
+using DogSitterMarketplaceDal.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.Repositories
@@ -10,14 +11,13 @@ namespace DogSitterMarketplaceDal.Repositories
 
         private static AppealContext _context;
 
-        public AppealRepository()
+        public AppealRepository(AppealContext context)
         {
-            _context = new AppealContext();
+            _context = context;
         }
 
         public IEnumerable<AppealEntity> GetAllAppeals()
         {
-            //return _context.Appeals.Where(t => !t.IsDeleted).ToList();
             var result = new List<AppealEntity>();
 
             result = _context.Appeals
@@ -42,7 +42,6 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(a => a.Order)
                 .Include(a => a.AppealFromUser)
                 .Include(a => a.AppealToUser)
-                    //.Include(u => u.Pets)
                 .Single(a => a.Id == id);
             }
             catch (Exception exception)
@@ -62,7 +61,6 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(a => a.Order)
                 .Include(a => a.AppealFromUser)
                 .Include(a => a.AppealToUser)
-                //.Include(u => u.Pets)
                 .Single(a => a.Id == id);
             }
             catch (Exception exception)
