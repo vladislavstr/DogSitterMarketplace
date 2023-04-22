@@ -47,10 +47,10 @@ namespace DogSitterMarketplaceDal.Models.Users
 
         public int UserStatusId { get; set; }
 
-        //[ForeignKey(nameof(UserStatusId))]
-        //public ICollection<PetEntity>? Pets { get; set; }
+        [ForeignKey(nameof(PetsId))]
+        public ICollection<PetEntity>? Pets { get; set; }
 
-        //public int? PetsId { get; set; }
+        public int? PetsId { get; set; }
 
     }
 }

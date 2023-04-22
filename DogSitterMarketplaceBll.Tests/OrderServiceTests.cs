@@ -182,7 +182,7 @@ namespace DogSitterMarketplaceBll.Tests
                 .For(oe => oe.Pets).Exclude(p => p.User)
                 .For(oe => oe.Pets).Exclude(p => p.Type)
                 .For(oe => oe.Pets).Exclude(p => p.Orders)
-                .For(oe => oe.Pets).Exclude(p => p.User.Role)
+                .For(oe => oe.Pets).Exclude(p => p.User.UserRole)
                 );
                 return true;
             }

@@ -119,7 +119,7 @@ namespace DogSitterMarketplaceBll.Services
             var userEntity = _petReposotory.GetUserById(userId);
             var allOrdersEntities = _orderRepository.GetAllOrdersBySitterId(userId);
 
-            if (userEntity.Role.Id == 4)
+            if (userEntity.UserRole.Id == 4)
             {
                 var ordersUnderConsiderationEntities = allOrdersEntities.Where(o => o.OrderStatusId == 3).ToList();
                 var ordersUnderConsiderationResponses = _mapper.Map<List<OrderResponse>>(ordersUnderConsiderationEntities);

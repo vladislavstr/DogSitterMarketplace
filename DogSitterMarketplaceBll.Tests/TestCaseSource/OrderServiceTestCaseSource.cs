@@ -72,7 +72,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name",
                         Password = "password",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 9,
                                         Name = "9"
@@ -182,7 +182,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "name",
                     Password = "password",
                     Pets = new List<PetEntity>(),
-                    Role = new UserRoleEntity
+                    UserRole = new UserRoleEntity
                     {
                         Id = 9,
                         Name = "9"
@@ -271,7 +271,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                             Name= "name2",
                             Password = "password2",
                             Pets = new List<PetEntity>(),
-                            Role = new UserRoleEntity
+                            UserRole = new UserRoleEntity
                                         {
                                             Id = 92,
                                             Name = "92"
@@ -301,7 +301,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                             Name = "name2",
                             Password = "password2",
                             Pets = new List<PetEntity>(),
-                            Role = new UserRoleEntity
+                            UserRole = new UserRoleEntity
                             {
                                 Id = 92,
                                 Name = "92"
@@ -430,7 +430,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "name2",
                     Password = "password2",
                     Pets = new List<PetEntity>(),
-                    Role = new UserRoleEntity
+                    UserRole = new UserRoleEntity
                     {
                         Id = 92,
                         Name = "92"
@@ -519,7 +519,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                             Name= "name23",
                             Password = "password23",
                             Pets = new List<PetEntity>(),
-                            Role = new UserRoleEntity
+                            UserRole = new UserRoleEntity
                                         {
                                             Id = 923,
                                             Name = "923"
@@ -549,7 +549,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                             Name = "name23",
                             Password = "password23",
                             Pets = new List<PetEntity>(),
-                            Role = new UserRoleEntity
+                            UserRole = new UserRoleEntity
                             {
                                 Id = 923,
                                 Name = "923"
@@ -582,7 +582,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                             Name= "name23",
                             Password = "password23",
                             Pets = new List<PetEntity>(),
-                            Role = new UserRoleEntity
+                            UserRole = new UserRoleEntity
                                         {
                                             Id = 923,
                                             Name = "923"
@@ -697,7 +697,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "name23",
                     Password = "password23",
                     Pets = new List<PetEntity>(),
-                    Role = new UserRoleEntity
+                    UserRole = new UserRoleEntity
                     {
                         Id = 923,
                         Name = "923"
@@ -786,7 +786,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name4",
                         Password = "password4",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 94,
                                         Name = "94"
@@ -896,7 +896,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "name4",
                     Password = "password4",
                     Pets = new List<PetEntity>(),
-                    Role = new UserRoleEntity
+                    UserRole = new UserRoleEntity
                     {
                         Id = 94,
                         Name = "94"
@@ -1012,7 +1012,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name45",
                         Password = "password45",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 945,
                                         Name = "945"
@@ -1122,7 +1122,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "name45",
                     Password = "password45",
                     Pets = new List<PetEntity>(),
-                    Role = new UserRoleEntity
+                    UserRole = new UserRoleEntity
                     {
                         Id = 945,
                         Name = "945"
@@ -1259,7 +1259,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name6",
                         Password = "password6",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 96,
                                         Name = "96"
@@ -1314,7 +1314,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name67",
                         Password = "password67",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 967,
                                         Name = "967"
@@ -1344,7 +1344,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name678",
                         Password = "password678",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 967,
                                         Name = "967"
@@ -1399,7 +1399,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name679",
                         Password = "password679",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 9679,
                                         Name = "9679"
@@ -1454,7 +1454,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name6798",
                         Password = "password6798",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 96798,
                                         Name = "96798"
@@ -1479,7 +1479,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "name6798",
                     Password = "password6798",
                     Pets = new List<PetEntity>(),
-                    Role = new UserRoleEntity
+                    UserRole = new UserRoleEntity
                     {
                         Id = 96798,
                         Name = "96798"
@@ -1565,7 +1565,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name67987",
                         Password = "password67987",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 967987,
                                         Name = "967987"
@@ -1590,7 +1590,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "name67987",
                     Password = "password67987",
                     Pets = new List<PetEntity>(),
-                    Role = new UserRoleEntity
+                    UserRole = new UserRoleEntity
                     {
                         Id = 967987,
                         Name = "967987"
@@ -1676,7 +1676,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name679876",
                         Password = "password679876",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 9679876,
                                         Name = "9679876"
@@ -1701,7 +1701,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "name679876",
                     Password = "password679876",
                     Pets = new List<PetEntity>(),
-                    Role = new UserRoleEntity
+                    UserRole = new UserRoleEntity
                     {
                         Id = 9679876,
                         Name = "9679876"
@@ -1790,7 +1790,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name67985",
                         Password = "password67985",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 967985,
                                         Name = "967985"
@@ -1815,7 +1815,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "name67985",
                     Password = "password67985",
                     Pets = new List<PetEntity>(),
-                    Role = new UserRoleEntity
+                    UserRole = new UserRoleEntity
                     {
                         Id = 967985,
                         Name = "967985"
@@ -1929,7 +1929,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name679854",
                         Password = "password679854",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 9679854,
                                         Name = "9679854"
@@ -1954,7 +1954,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "name679854",
                     Password = "password679854",
                     Pets = new List<PetEntity>(),
-                    Role = new UserRoleEntity
+                    UserRole = new UserRoleEntity
                     {
                         Id = 9679854,
                         Name = "9679854"
@@ -2068,7 +2068,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         Name= "name6798543",
                         Password = "password6798543",
                         Pets = new List<PetEntity>(),
-                        Role = new UserRoleEntity
+                        UserRole = new UserRoleEntity
                                     {
                                         Id = 96798543,
                                         Name = "96798543"
@@ -2093,7 +2093,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "name6798543",
                     Password = "password6798543",
                     Pets = new List<PetEntity>(),
-                    Role = new UserRoleEntity
+                    UserRole = new UserRoleEntity
                     {
                         Id = 96798543,
                         Name = "96798543"
