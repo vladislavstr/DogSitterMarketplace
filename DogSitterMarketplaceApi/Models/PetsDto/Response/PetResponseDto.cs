@@ -12,6 +12,6 @@ namespace DogSitterMarketplaceApi.Models.PetsDto.Response
 
         public AnimalTypeResponseDto Type { get; set; }
 
-        public UserResponseDto User { get; set; }
+        public UserShortResponseDto User { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceBll.Models.Pets.Response;
+using DogSitterMarketplaceBll.Models.Pets.Response;
 
 namespace DogSitterMarketplaceBll.Models.Users.Response
 {
@@ -16,12 +16,13 @@ namespace DogSitterMarketplaceBll.Models.Users.Response
 
         public bool IsDeleted { get; set; }
 
-        public UserPassportDataResponse? PassportData { get; set; }
+        public UserPassportDataResponse? UserPassportData { get; set; }
 
         public UserRoleResponse UserRole { get; set; }
 
         public UserStatusResponse UserStatus { get; set; }
 
-        public ICollection<PetResponse>? Pets { get; set; }
+        //public ICollection<PetResponse>? Pets { get; set; }
+
     }
 }

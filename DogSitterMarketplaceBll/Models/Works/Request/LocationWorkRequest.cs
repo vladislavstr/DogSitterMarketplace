@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceBllProfile.Models.Works.Response;
+using DogSitterMarketplaceBllProfile.Models.Works.Response;
 
 namespace DogSitterMarketplaceBllProfile.Models.Works.Request
 {
@@ -6,7 +6,7 @@ namespace DogSitterMarketplaceBllProfile.Models.Works.Request
     {
         public int Price { get; set; }
 
-        public int SitterWorkId  { get; set; }
+        public int SitterWorkId { get; set; }
 
         public int LocationId { get; set; }
 

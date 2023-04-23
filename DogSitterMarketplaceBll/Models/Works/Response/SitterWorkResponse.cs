@@ -8,7 +8,7 @@ namespace DogSitterMarketplaceBllProfile.Models.Works.Response
 
         public string? Comment { get; set; }
 
-        public UserResponse User { get; set; }
+        public UserShortResponse User { get; set; }
 
         public WorkTypeResponse WorkType { get; set; }
 

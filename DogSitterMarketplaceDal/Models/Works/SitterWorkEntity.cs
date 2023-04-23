@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceDal.Models.Users;
+using DogSitterMarketplaceDal.Models.Users;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,7 +16,7 @@ namespace DogSitterMarketplaceDal.Models.Works
         [ForeignKey(nameof(UserId))]
         public UserEntity User { get; set; }
 
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         [ForeignKey(nameof(WorkTypeId))]

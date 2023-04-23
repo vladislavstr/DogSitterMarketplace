@@ -1,6 +1,9 @@
+using DogSitterMarketplaceApi.Models.AppealsDto.Response;
 using DogSitterMarketplaceApi.Models.PetsDto.Response;
 using DogSitterMarketplaceApi.Models.WorksDto;
 using DogSitterMarketplaceApi.Models.WorksDto.Response;
+using DogSitterMarketplaceDal.Models.Appeals;
+using DogSitterMarketplaceDal.Models.Orders;
 
 namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
 {
@@ -23,5 +26,11 @@ namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
         public LocationResponseDto Location { get; set; }
 
         public List<PetResponseDto> Pets { get; set; }
+
+        public List<CommentResponseDto>? Comments { get; set; }
+
+        public List<AppealResponseDto>? Appeals { get; set; }
+
+        public List<string> Messages { get; set; } = new();
     }
 }

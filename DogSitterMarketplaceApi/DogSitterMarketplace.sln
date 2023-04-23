@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33502.453
@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogSitterMarketplaceBll", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogSitterMarketplaceDal", "..\DogSitterMarketplaceDal\DogSitterMarketplaceDal.csproj", "{E7FE82CC-2E3E-4400-BB07-B913D603D751}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogSitterMarketplaceCore", "..\DogSitterMarketplaceCore\DogSitterMarketplaceCore.csproj", "{E0765748-6A4B-4A8E-A73D-1E74B4223ECC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogSitterMarketplaceCore", "..\DogSitterMarketplaceCore\DogSitterMarketplaceCore.csproj", "{A3B82642-C281-4F44-88E5-A31B75C0E41E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DogSitterMarketplaceBll.Tests", "..\DogSitterMarketplaceBll.Tests\DogSitterMarketplaceBll.Tests.csproj", "{7ECBF429-D1E2-4C88-804C-F1C78B12FC58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,14 @@ Global
 		{E7FE82CC-2E3E-4400-BB07-B913D603D751}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7FE82CC-2E3E-4400-BB07-B913D603D751}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7FE82CC-2E3E-4400-BB07-B913D603D751}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3B82642-C281-4F44-88E5-A31B75C0E41E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3B82642-C281-4F44-88E5-A31B75C0E41E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3B82642-C281-4F44-88E5-A31B75C0E41E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3B82642-C281-4F44-88E5-A31B75C0E41E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ECBF429-D1E2-4C88-804C-F1C78B12FC58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ECBF429-D1E2-4C88-804C-F1C78B12FC58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ECBF429-D1E2-4C88-804C-F1C78B12FC58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ECBF429-D1E2-4C88-804C-F1C78B12FC58}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E0765748-6A4B-4A8E-A73D-1E74B4223ECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E0765748-6A4B-4A8E-A73D-1E74B4223ECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0765748-6A4B-4A8E-A73D-1E74B4223ECC}.Release|Any CPU.ActiveCfg = Release|Any CPU

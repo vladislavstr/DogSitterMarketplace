@@ -1,8 +1,4 @@
-﻿using DogSitterMarketplaceBll.Models.Appeals.Response;
-using DogSitterMarketplaceBll.Models.Orders.Response;
-using DogSitterMarketplaceBll.Models.Users;
-
-namespace DogSitterMarketplaceBll.Models.Appeals.Request
+﻿namespace DogSitterMarketplaceBll.Models.Appeals.Request
 {
     public class AppealRequest
     {

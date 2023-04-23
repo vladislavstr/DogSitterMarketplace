@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceApi.Models.UsersDto.Response
+namespace DogSitterMarketplaceApi.Models.UsersDto.Response
 {
     public class UserResponseDto
     {
@@ -20,5 +20,6 @@
 
         public UserStatusResponseDto UserStatus { get; set; }
 
+        //public ICollection<PetResponseDto>? Pets { get; set; }
     }
 }

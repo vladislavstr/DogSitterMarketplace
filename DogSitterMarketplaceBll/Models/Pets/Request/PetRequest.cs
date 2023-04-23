@@ -1,7 +1,4 @@
-﻿using DogSitterMarketplaceBll.Models.Pets.Response;
-using DogSitterMarketplaceBll.Models.Users;
-
-namespace DogSitterMarketplaceBll.Models.Pets.Request
+﻿namespace DogSitterMarketplaceBll.Models.Pets.Request
 {
     public class PetRequest
     {

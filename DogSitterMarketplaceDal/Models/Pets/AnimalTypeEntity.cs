@@ -1,13 +1,23 @@
-﻿namespace DogSitterMarketplaceDal.Models.Pets
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DogSitterMarketplaceDal.Models.Pets;
+
+[Index(nameof(Name), IsUnique = true)]
+public class AnimalTypeEntity
 {
-    public class AnimalTypeEntity
-    {
-        public int Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
-        public int Name { get; set; }
+    [Required]
+    [StringLength(50, MinimumLength = 2)]
+    public string Name { get; set; }
 
-        public string Parameters { get; set; }
+    [Required]
+    [StringLength(1000, MinimumLength = 2)]
+    public string Parameters { get; set; }
 
-        public bool IsDeleted { get; set; }
-    }
+    [Required]
+    public bool IsDeleted { get; set; }
 }

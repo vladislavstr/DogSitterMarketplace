@@ -12,6 +12,6 @@ namespace DogSitterMarketplaceBll.Models.Pets.Response
 
         public AnimalTypeResponse Type { get; set; }
 
-        public UserResponse User { get; set; }
+        public UserShortResponse User { get; set; }
     }
 }

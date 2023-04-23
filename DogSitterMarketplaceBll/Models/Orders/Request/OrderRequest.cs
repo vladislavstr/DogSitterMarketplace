@@ -1,7 +1,7 @@
-using DogSitterMarketplaceBll.Models.Orders.Response;
-using DogSitterMarketplaceBll.Models.Pets;
+using DogSitterMarketplaceBll.Models.Appeals.Request;
 using DogSitterMarketplaceBll.Models.Pets.Request;
-using DogSitterMarketplaceBll.Models.Works;
+using DogSitterMarketplaceDal.Models.Appeals;
+using DogSitterMarketplaceDal.Models.Orders;
 
 namespace DogSitterMarketplaceBll.Models.Orders.Request
 {
@@ -21,6 +21,10 @@ namespace DogSitterMarketplaceBll.Models.Orders.Request
 
         public int LocationId { get; set; }
 
-        public List<PetRequest> Pets { get; set; }
+        public List<int> Pets { get; set; }
+
+        public List<int>? Comments { get; set; }
+
+        public List<int>? Appeals { get; set; }
     }
 }
