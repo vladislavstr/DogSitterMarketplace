@@ -23,6 +23,10 @@ namespace DogSitterMarketplaceDal.Contexts
         public DbSet<UserEntity> Users { get; set; }
 
         public DbSet<OrderEntity> Orders { get; set; }
+
+        public DbSet<UserRoleEntity> UserRole { get; set; }
+
+        public DbSet<UserStatusEntity> UserStatus { get; set; }
     }
 }
 

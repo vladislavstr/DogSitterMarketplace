@@ -61,12 +61,25 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetAppealById")]
-        public ActionResult GetAppealById(int id)
+        [HttpGet("{appealByUserId}", Name = "GetAppealByUserId")]
+        public ActionResult GetAppealByUserId(int appealByUserId)
         {
             try
             {
-                return Ok(_appealService.GetAppealById(id));
+                return Ok(_appealService.GetAppealByUserId(appealByUserId));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
+
+        [HttpGet("{appealToUserId}", Name = "GetAppealToUserId")]
+        public ActionResult GetAppealToUserId(int appealToUserId)
+        {
+            try
+            {
+                return Ok(_appealService.GetAppealToUserId(appealToUserId));
             }
             catch (Exception ex)
             {
@@ -93,6 +106,7 @@ namespace DogSitterMarketplaceApi.Controllers
         {
             try
             {
+                appeal.ResponseText = null;
                 var appealRequst = _mapper.Map<AppealRequest>(appeal);
                 var addAppealResponse = _appealService.AddAppeal(appealRequst);
                 var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);

@@ -31,9 +31,9 @@ namespace DogSitterMarketplaceDal.Models.Users
 
         //[Required]
         [ForeignKey(nameof(UserPassportDataId))]
-        public UserPassportDataEntity UserPassportData { get; set; }
+        public UserPassportDataEntity? UserPassportData { get; set; }
 
-        public int UserPassportDataId { get; set; }
+        public int? UserPassportDataId { get; set; }
 
         //[Required]
         [ForeignKey(nameof(UserRoleId))]

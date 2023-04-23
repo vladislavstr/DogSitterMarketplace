@@ -9,6 +9,8 @@ namespace DogSitterMarketplaceApi.Models.AppealsDto.Response
 
         public string Text { get; set; }
 
+        public string? ResponseText { get; set; }
+
         public AppealTypeResponseDto Type { get; set; }
 
         public AppealStatusResponseDto Status { get; set; }

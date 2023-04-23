@@ -9,6 +9,8 @@ namespace DogSitterMarketplaceDal.IRepositories
         public AppealEntity GetAppealById(int id);
 
         public AppealEntity GetAppealByUserId(int id);
+        
+        public AppealEntity GetAppealToUserId(int id);
 
         public AppealEntity AddAppeal(AppealEntity appeal);
 

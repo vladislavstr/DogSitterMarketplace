@@ -10,10 +10,50 @@ namespace DogSitterMarketplaceDal.Repositories
     {
 
         private static AppealContext _context;
+        private static UserContext _userContext;
 
-        public AppealRepository(AppealContext context)
+        public AppealRepository(AppealContext context, UserContext userContext)
         {
             _context = context;
+            _userContext = userContext;
+
+            AppealTypeEntity defaultAppealTypeEntity_1 = new AppealTypeEntity { Name = "жалоба" };
+            AppealTypeEntity defaultAppealTypeEntity_2 = new AppealTypeEntity { Name = "отзыв" };
+            AppealStatusEntity defaultAppealStatusEntity_1 = new AppealStatusEntity { Name = "на рассмотрении" };
+            AppealStatusEntity defaultAppealStatusEntity_2 = new AppealStatusEntity { Name = "отклонено" };
+            AppealStatusEntity defaultAppealStatusEntity_3 = new AppealStatusEntity { Name = "ответ получен" };
+            UserRoleEntity defaultUserRoleEntity_1 = new UserRoleEntity { Name = "администратор" };
+            UserRoleEntity defaultUserRoleEntity_2 = new UserRoleEntity { Name = "ситтер" };
+            UserRoleEntity defaultUserRoleEntity_3 = new UserRoleEntity { Name = "клиент" };
+            UserStatusEntity defaultUserStatusEntity_1 = new UserStatusEntity { Name = "активен" };
+            UserStatusEntity defaultUserStatusEntity_2 = new UserStatusEntity { Name = "заблокирован" };
+            UserEntity defaultUserEntity = new UserEntity
+            {
+                Email = "test@gmail.com",
+                Password = "fdfsf124!",
+                PhoneNumber = "89999999999",
+                Name = "Name",
+                IsDeleted = false,
+                UserPassportDataId = 1,
+                UserRole = defaultUserRoleEntity_2,
+                UserRoleId = 1,
+                UserStatus = defaultUserStatusEntity_1,
+                UserStatusId = 1
+            };
+
+            _context.AppealsTypes.Add(defaultAppealTypeEntity_1);
+            _context.AppealsTypes.Add(defaultAppealTypeEntity_2);
+            _context.AppealsStatuses.Add(defaultAppealStatusEntity_1);
+            _context.AppealsStatuses.Add(defaultAppealStatusEntity_2);
+            _context.AppealsStatuses.Add(defaultAppealStatusEntity_3);
+            _context.UserRole.Add(defaultUserRoleEntity_1);
+            _context.UserRole.Add(defaultUserRoleEntity_2);
+            _context.UserRole.Add(defaultUserRoleEntity_3);
+            _context.UserStatus.Add(defaultUserStatusEntity_1);
+            _context.UserStatus.Add(defaultUserStatusEntity_2);
+            _context.Users.Add(defaultUserEntity);
+
+            _context.SaveChanges();
         }
 
         public IEnumerable<AppealEntity> GetAllAppeals()
@@ -61,7 +101,26 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(a => a.Order)
                 .Include(a => a.AppealFromUser)
                 .Include(a => a.AppealToUser)
-                .Single(a => a.Id == id);
+                .Single(a => a.AppealFromUserId == id);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                throw new Exception($"Id:{id} - отсутствует");
+            }
+        }
+
+        public AppealEntity GetAppealToUserId(int id)
+        {
+            try
+            {
+                return _context.Appeals
+                .Include(a => a.Type)
+                .Include(a => a.Status)
+                .Include(a => a.Order)
+                .Include(a => a.AppealFromUser)
+                .Include(a => a.AppealToUser)
+                .Single(a => a.AppealToUserId == id);
             }
             catch (Exception exception)
             {

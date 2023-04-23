@@ -9,11 +9,13 @@ namespace DogSitterMarketplaceBll.Models.Appeals.Response
 
         public string Text { get; set; }
 
+        public string? ResponseText { get; set; }
+
         public AppealTypeResponse Type { get; set; }
 
         public AppealStatusResponse Status { get; set; }
 
-       // public OrderResponse? Order { get; set; }
+        //public OrderResponse? Order { get; set; }
 
         public UserShortResponse AppealFromUser { get; set; }
 
