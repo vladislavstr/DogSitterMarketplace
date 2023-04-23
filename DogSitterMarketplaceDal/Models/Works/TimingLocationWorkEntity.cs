@@ -28,5 +28,10 @@ namespace DogSitterMarketplaceDal.Models.Works
         public virtual LocationWorkEntity LocationWork { get; set; }
 
         public int LocationWorkId { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id: {Id} DayId: {DayOfWeekId} Interval {Start} - {Stop} ";
+        }
     }
 }

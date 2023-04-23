@@ -19,7 +19,7 @@ namespace DogSitterMarketplaceDal.Models.Works
         public int? LocationId { get; set; }
 
         [Required]
-        public ICollection<TimingLocationWorkEntity> TimingLocationWorks { get; } = new List<TimingLocationWorkEntity>();
+        public List<TimingLocationWorkEntity> TimingLocationWorks { get; } = new List<TimingLocationWorkEntity>();
 
         [Required]
         public bool? IsNotActive { get; set; }
