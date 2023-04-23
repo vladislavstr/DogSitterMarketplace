@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceBllProfile.Models.Works.Response
+﻿namespace DogSitterMarketplaceBll.Models.Works.Response
 {
     public class WorkTypeResponse
     {

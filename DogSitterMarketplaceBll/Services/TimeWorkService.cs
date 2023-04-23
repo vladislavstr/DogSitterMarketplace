@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Works.Request;
-using DogSitterMarketplaceBllProfile.Models.Works.Request;
+using DogSitterMarketplaceBll.Models.Works.Request;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Works;

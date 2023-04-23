@@ -10,11 +10,11 @@ namespace DogSitterMarketplaceDal.Models.Works
         public int Id { get; set; }
 
         [Required, Column(TypeName = "decimal(6,2)")]
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; }
 
         [Required]
         [ForeignKey(nameof(LocationId))]
-        public LocationEntity? Location { get; set; }
+        public LocationEntity Location { get; set; }
 
         public int? LocationId { get; set; }
 
@@ -22,12 +22,12 @@ namespace DogSitterMarketplaceDal.Models.Works
         public List<TimingLocationWorkEntity> TimingLocationWorks { get; } = new List<TimingLocationWorkEntity>();
 
         [Required]
-        public bool? IsNotActive { get; set; }
+        public bool IsNotActive { get; set; }
 
         [Required]
         [ForeignKey(nameof(SitterWorkId))]
         public SitterWorkEntity SitterWork { get; set; }
 
-        public int? SitterWorkId { get; set; }
+        public int SitterWorkId { get; set; }
     }
 }

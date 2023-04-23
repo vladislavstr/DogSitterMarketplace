@@ -1,6 +1,6 @@
 ﻿using DogSitterMarketplaceBll.Models.Users.Response;
 
-namespace DogSitterMarketplaceBllProfile.Models.Works.Response
+namespace DogSitterMarketplaceBll.Models.Works.Response
 {
     public class SitterWorkResponse
     {

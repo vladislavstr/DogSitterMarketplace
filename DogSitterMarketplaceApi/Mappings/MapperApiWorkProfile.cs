@@ -2,8 +2,8 @@
 using DogSitterMarketplaceApi.Models.WorksDto.Request;
 using DogSitterMarketplaceApi.Models.WorksDto.Response;
 using DogSitterMarketplaceBll.Models.Works.Request;
-using DogSitterMarketplaceBllProfile.Models.Works.Request;
-using DogSitterMarketplaceBllProfile.Models.Works.Response;
+using DogSitterMarketplaceBll.Models.Works.Request;
+using DogSitterMarketplaceBll.Models.Works.Response;
 
 namespace DogSitterMarketplaceApi.Mappings
 {

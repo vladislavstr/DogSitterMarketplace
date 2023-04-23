@@ -1,5 +1,5 @@
-﻿namespace DogSitterMarketplaceBllProfile.Models.Works.Request
-{
+﻿namespace DogSitterMarketplaceBll.Models.Works.Request
+{ 
     public class SitterWorkRequest
     {
         public string? Comment { get; set; }

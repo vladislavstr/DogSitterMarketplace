@@ -2,7 +2,7 @@
 using DogSitterMarketplaceApi.Models.WorksDto.Request;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Works.Request;
-using DogSitterMarketplaceBllProfile.Models.Works.Request;
+using DogSitterMarketplaceBll.Models.Works.Request;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using ILogger = NLog.ILogger;

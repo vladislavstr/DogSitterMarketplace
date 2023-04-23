@@ -14,9 +14,9 @@ namespace DogSitterMarketplaceDal.Models.Works
 
         [Required]
         [Column(TypeName = "nvarchar(100)")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         [Required]
-        public bool? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

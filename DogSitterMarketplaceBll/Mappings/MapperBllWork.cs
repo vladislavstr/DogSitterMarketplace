@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceBll.Models.Works.Request;
-using DogSitterMarketplaceBllProfile.Models.Works.Request;
-using DogSitterMarketplaceBllProfile.Models.Works.Response;
+using DogSitterMarketplaceBll.Models.Works.Request;
+using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceDal.Models.Works;
 
 namespace DogSitterMarketplaceBll.Mappings
