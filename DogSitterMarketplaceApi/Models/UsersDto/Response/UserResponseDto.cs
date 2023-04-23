@@ -1,6 +1,4 @@
-﻿using DogSitterMarketplaceApi.Models.PetsDto.Response;
-
-namespace DogSitterMarketplaceApi.Models.UsersDto.Response
+﻿namespace DogSitterMarketplaceApi.Models.UsersDto.Response
 {
     public class UserResponseDto
     {
@@ -16,12 +14,11 @@ namespace DogSitterMarketplaceApi.Models.UsersDto.Response
 
         public bool IsDeleted { get; set; }
 
-        public UserPassportDataResponseDto? PassportData { get; set; }
+        public UserPassportDataResponseDto? UserPassportData { get; set; }
 
-        public UserRoleResponseDto Role { get; set; }
+        public UserRoleResponseDto UserRole { get; set; }
 
-        public UserStatusResponseDto Status { get; set; }
+        public UserStatusResponseDto UserStatus { get; set; }
 
-        public ICollection<PetResponseDto>? Pets { get; set; }
     }
 }

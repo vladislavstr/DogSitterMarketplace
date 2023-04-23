@@ -18,9 +18,9 @@ namespace DogSitterMarketplaceBll.Models.Users.Response
 
         public UserPassportDataResponse? PassportData { get; set; }
 
-        public UserRoleResponse Role { get; set; }
+        public UserRoleResponse UserRole { get; set; }
 
-        public UserStatusResponse Status { get; set; }
+        public UserStatusResponse UserStatus { get; set; }
 
         public ICollection<PetResponse>? Pets { get; set; }
     }

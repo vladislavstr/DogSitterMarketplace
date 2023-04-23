@@ -18,11 +18,11 @@ namespace DogSitterMarketplaceDal.Models.Users
 
         public bool IsDeleted { get; set; }
 
-        public UserPassportDataEntity? PassportData { get; set; }
+        public UserPassportDataEntity? UserPassportData { get; set; }
 
-        public UserRoleEntity Role { get; set; }
+        public UserRoleEntity UserRole { get; set; }
 
-        public UserStatusEntity Status { get; set; }
+        public UserStatusEntity UserStatus { get; set; }
 
         public ICollection<PetEntity>? Pets { get; set; }
     }
