@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceBll.Models.Works.Request
+﻿namespace DogSitterMarketplaceBllProfile.Models.Works.Request
 {
     public class WorkTimeRequest
     {

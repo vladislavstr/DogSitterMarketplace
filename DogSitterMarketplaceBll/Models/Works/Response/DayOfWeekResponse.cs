@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceBll.Models.Works.Response
+﻿namespace DogSitterMarketplaceBllProfile.Models.Works.Response
 {
     public class DayOfWeekResponse
     {

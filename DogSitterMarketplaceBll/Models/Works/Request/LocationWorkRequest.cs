@@ -1,6 +1,6 @@
-﻿using DogSitterMarketplaceBll.Models.Works.Response;
+﻿using DogSitterMarketplaceBllProfile.Models.Works.Response;
 
-namespace DogSitterMarketplaceBll.Models.Works.Request
+namespace DogSitterMarketplaceBllProfile.Models.Works.Request
 {
     public class LocationWorkRequest
     {
