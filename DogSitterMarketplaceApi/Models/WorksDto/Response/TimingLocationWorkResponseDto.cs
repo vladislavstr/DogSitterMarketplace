@@ -1,11 +1,15 @@
-﻿namespace DogSitterMarketplaceApi.Models.WorksDto.Response
+﻿using DogSitterMarketplaceBllProfile.Models.Works.Response;
+
+namespace DogSitterMarketplaceApi.Models.WorksDto.Response
 {
     public class TimingLocationWorkResponseDto
     {
+        public int id { get; set; }
+
         public DayOfWeekResponseDto DayOfWeek { get; set; }
 
-        public LocationWorkResponseDto LocationWork { get; set; }
+        public TimeSpan? Start { get; set; }
 
-        public WorkTimeResponseDto WorkTime { get; set; }
+        public TimeSpan? Stop { get; set; }
     }
 }

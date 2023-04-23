@@ -1,9 +1,9 @@
-﻿using DogSitterMarketplaceApi.Models.WorksDto.Response;
-
-namespace DogSitterMarketplaceApi.Models.WorksDto.Request
+﻿namespace DogSitterMarketplaceApi.Models.WorksDto.Request
 {
-    public class TimingLocationWorkRequestDto
+    public class TimingLocationWorkWithIdRequesDto
     {
+        public int Id { get; set; }
+
         public int DayOfWeekId { get; set; }
 
         public int LocationWorkId { get; set; }
