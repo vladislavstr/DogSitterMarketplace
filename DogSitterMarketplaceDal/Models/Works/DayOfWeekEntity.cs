@@ -1,17 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DogSitterMarketplaceDal.Models.Works
 {
-    //public class DayOfWeekEntity
-    //{
-    //    public int Id { get; set; }
-
-    //    public string Name { get; set; }
-    //}
-
     [Index(nameof(Name), IsUnique = true)]
     public class DayOfWeekEntity
     {
@@ -20,6 +12,6 @@ namespace DogSitterMarketplaceDal.Models.Works
 
         [Required]
         [Column(TypeName = "nvarchar(30)")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
     }
 }

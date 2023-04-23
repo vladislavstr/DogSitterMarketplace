@@ -1,5 +1,3 @@
-﻿using DogSitterMarketplaceApi.Models.PetsDto.Response;
-
 namespace DogSitterMarketplaceApi.Models.UsersDto.Response
 {
     public class UserResponseDto
