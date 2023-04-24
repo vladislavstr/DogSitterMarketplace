@@ -189,5 +189,24 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new Exception($"Id:{AppealId} - отсутствует");
             }
         }
+        
+        public AppealEntity DoResponseText(AppealEntity appeal)
+        {
+            try
+            {
+                var appealDb = _context.Appeals.Single(a => a.Id == appeal.Id);
+                appealDb.ResponseText = appeal.ResponseText;
+                appealDb.StatusId = appeal.StatusId;
+                appealDb.DateOfResponse = appeal.DateOfResponse;
+                _context.SaveChanges();
+
+                return appealDb;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                throw new Exception($"Id:{appeal.Id} - отсутствует");
+            }
+        }
     }
 }

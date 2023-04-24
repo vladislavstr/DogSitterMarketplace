@@ -102,5 +102,15 @@ namespace DogSitterMarketplaceBll.Services
         {
             _appealRepository.UpdateAppealStatusById(AppealId, StatusId);
         }
+        
+        public AppealResponse DoResponseText(AppealUpdate appeal)
+        {
+            appeal.DateOfResponse = DateTime.Now;
+            var appealEntity = _mapper.Map<AppealEntity>(appeal);
+            var addAppealEntity = _appealRepository.DoResponseText(appealEntity);
+            var addAppealResponse = _mapper.Map<AppealResponse>(addAppealEntity);
+
+            return addAppealResponse;
+        }
     }
 }

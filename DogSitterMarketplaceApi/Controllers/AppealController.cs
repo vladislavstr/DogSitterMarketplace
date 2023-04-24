@@ -59,7 +59,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("GetAppealById/{id}", Name = "GetAppealById")]
+        [HttpGet("GetAppealById/{id:int}", Name = "GetAppealById")]
         public ActionResult GetAppealById(int id)
         {
             try
@@ -72,7 +72,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("GetAppealByUserIdToWhom/{id}", Name = "GetAppealByUserIdToWhom")]
+        [HttpGet("GetAppealByUserIdToWhom/{id:int}", Name = "GetAppealByUserIdToWhom")]
         public ActionResult GetAppealByUserIdToWhom(int id)
         {
             try
@@ -85,7 +85,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("GetAppealByUserIdFromWhom/{id}", Name = "GetAppealByUserIdFromWhom")]
+        [HttpGet("GetAppealByUserIdFromWhom/{id:int}", Name = "GetAppealByUserIdFromWhom")]
         public ActionResult GetAppealByUserIdFromWhom(int id)
         {
             try
@@ -154,7 +154,7 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
 
-        [HttpDelete("DeleteAppealById/{id}", Name = "DeleteAppealById")]
+        [HttpDelete("DeleteAppealById/{id:int}", Name = "DeleteAppealById")]
         public IActionResult DeleteAppealById(int id)
         {
             try
@@ -168,13 +168,30 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpPut("UpdateAppealStatusById/{AppealId}_{StatusId}", Name = "UpdateAppealStatusById")]
+        [HttpPut("UpdateAppealStatusById/{AppealId:int}_{StatusId:int}", Name = "UpdateAppealStatusById")]
         public IActionResult UpdateAppealStatusById(int AppealId, int StatusId)
         {
             try
             {
                 _appealService.UpdateAppealStatusById(AppealId, StatusId);
                 return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
+
+        [HttpPut("DoResponseText", Name = "DoResponseText")]
+        public ActionResult<AppealUpdateDto> DoResponseText(AppealUpdateDto appeal)
+        {
+            try
+            {
+                var appealUpdate = _mapper.Map<AppealUpdate>(appeal);
+                var addAppealResponse = _appealService.DoResponseText(appealUpdate);
+                var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
+
+                return Created(new Uri("api/Appeal", UriKind.Relative), appeal);
             }
             catch (Exception ex)
             {

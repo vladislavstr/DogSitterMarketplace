@@ -21,5 +21,7 @@ namespace DogSitterMarketplaceDal.IRepositories
         public void DeleteAppealById(int id);
 
         public void UpdateAppealStatusById(int AppealId, int StatusId);
+
+        public AppealEntity DoResponseText(AppealEntity appeal);
     }
 }
