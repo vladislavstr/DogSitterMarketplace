@@ -90,8 +90,26 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new Exception($"Id:{id} - отсутствует");
             }
         }
+        public AppealEntity GetAppealByUserIdToWhom(int id)
+        {
+            try
+            {
+                return _context.Appeals
+                .Include(a => a.Type)
+                .Include(a => a.Status)
+                .Include(a => a.Order)
+                .Include(a => a.AppealFromUser)
+                .Include(a => a.AppealToUser)
+                .Single(a => a.AppealToUserId == id);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                throw new Exception($"Id:{id} - отсутствует");
+            }
+        }
 
-        public AppealEntity GetAppealByUserId(int id)
+        public AppealEntity GetAppealByUserIdFromWhom(int id)
         {
             try
             {
@@ -110,24 +128,6 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public AppealEntity GetAppealToUserId(int id)
-        {
-            try
-            {
-                return _context.Appeals
-                .Include(a => a.Type)
-                .Include(a => a.Status)
-                .Include(a => a.Order)
-                .Include(a => a.AppealFromUser)
-                .Include(a => a.AppealToUser)
-                .Single(a => a.AppealToUserId == id);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{id} - отсутствует");
-            }
-        }
 
         public AppealEntity AddAppeal(AppealEntity appeal)
         {

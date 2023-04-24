@@ -10,9 +10,11 @@ namespace DogSitterMarketplaceBll.IServices
         
         public IEnumerable<AppealResponse> GetAllNotDeletedAppeals();
 
-        public AppealResponse GetAppealByUserId(int id);
+        public AppealResponse GetAppealById(int id);
 
-        public AppealResponse GetAppealToUserId(int id);
+        public AppealResponse GetAppealByUserIdToWhom(int id);
+
+        public AppealResponse GetAppealByUserIdFromWhom(int id);
 
         public AppealResponse AddAppeal(AppealRequest appeal);
 

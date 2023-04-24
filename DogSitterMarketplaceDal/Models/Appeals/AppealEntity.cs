@@ -16,8 +16,13 @@ namespace DogSitterMarketplaceDal.Models.Appeals
         public string Text { get; set; }
 
         [Required]
+        public DateTime DateOfCreate { get; set; }
+
+
         [Column(TypeName = "nvarchar(1000)"),]
         public string? ResponseText { get; set; }
+
+        public DateTime? DateOfResponse { get; set; }
 
         [Required]
         [ForeignKey(nameof(TypeId))]
@@ -31,7 +36,7 @@ namespace DogSitterMarketplaceDal.Models.Appeals
 
         public int StatusId { get; set; }
 
-        //[Required]
+        
         [ForeignKey(nameof(OrderId))]
         public OrderEntity? Order { get; set; }
 

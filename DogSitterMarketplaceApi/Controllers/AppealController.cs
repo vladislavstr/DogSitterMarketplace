@@ -38,8 +38,6 @@ namespace DogSitterMarketplaceApi.Controllers
         {
             try
             {
-                //var allAppeals = _appealService.GetAllAppeals();
-                //var allAppealsDto = _mapper.Map<IEnumerable<AppealResponseDto>>(allAppeals);
                 return Ok(_appealService.GetAllAppeals());
             }
             catch (Exception ex)
@@ -61,12 +59,12 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("{appealByUserId}", Name = "GetAppealByUserId")]
-        public ActionResult GetAppealByUserId(int appealByUserId)
+        [HttpGet("GetAppealById/{id}", Name = "GetAppealById")]
+        public ActionResult GetAppealById(int id)
         {
             try
             {
-                return Ok(_appealService.GetAppealByUserId(appealByUserId));
+                return Ok(_appealService.GetAppealById(id));
             }
             catch (Exception ex)
             {
@@ -74,12 +72,12 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("{appealToUserId}", Name = "GetAppealToUserId")]
-        public ActionResult GetAppealToUserId(int appealToUserId)
+        [HttpGet("GetAppealByUserIdToWhom/{id}", Name = "GetAppealByUserIdToWhom")]
+        public ActionResult GetAppealByUserIdToWhom(int id)
         {
             try
             {
-                return Ok(_appealService.GetAppealToUserId(appealToUserId));
+                return Ok(_appealService.GetAppealByUserIdToWhom(id));
             }
             catch (Exception ex)
             {
@@ -87,7 +85,20 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpDelete("{id}", Name = "DeleteAppealById")]
+        [HttpGet("GetAppealByUserIdFromWhom/{id}", Name = "GetAppealByUserIdFromWhom")]
+        public ActionResult GetAppealByUserIdFromWhom(int id)
+        {
+            try
+            {
+                return Ok(_appealService.GetAppealByUserIdFromWhom(id));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteAppealById/{id}", Name = "DeleteAppealById")]
         public IActionResult DeleteAppealById(int id)
         {
             try
@@ -107,6 +118,8 @@ namespace DogSitterMarketplaceApi.Controllers
             try
             {
                 appeal.ResponseText = null;
+                appeal.DateOfCreate = DateTime.Now;
+                appeal.DateOfResponse = null;
                 var appealRequst = _mapper.Map<AppealRequest>(appeal);
                 var addAppealResponse = _appealService.AddAppeal(appealRequst);
                 var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);

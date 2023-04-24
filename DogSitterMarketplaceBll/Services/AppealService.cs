@@ -41,18 +41,26 @@ namespace DogSitterMarketplaceBll.Services
             return appealResponse;
         }
 
-        public AppealResponse GetAppealByUserId(int id)
+        public AppealResponse GetAppealById(int id)
         {
-            var appealsEntitys = _appealRepository.GetAppealByUserId(id);
-            var appealResponse = _mapper.Map<AppealResponse>(appealsEntitys);
+            var appealEntitys = _appealRepository.GetAppealById(id);
+            var appealResponse = _mapper.Map<AppealResponse>(appealEntitys);
 
             return appealResponse;
         }
 
-        public AppealResponse GetAppealToUserId(int id)
+        public AppealResponse GetAppealByUserIdToWhom(int id)
         {
-            var appealsEntitys = _appealRepository.GetAppealToUserId(id);
-            var appealResponse = _mapper.Map<AppealResponse>(appealsEntitys);
+            var appealEntitys = _appealRepository.GetAppealByUserIdToWhom(id);
+            var appealResponse = _mapper.Map<AppealResponse>(appealEntitys);
+
+            return appealResponse;
+        }
+
+        public AppealResponse GetAppealByUserIdFromWhom(int id)
+        {
+            var appealEntitys = _appealRepository.GetAppealByUserIdFromWhom(id);
+            var appealResponse = _mapper.Map<AppealResponse>(appealEntitys);
 
             return appealResponse;
         }

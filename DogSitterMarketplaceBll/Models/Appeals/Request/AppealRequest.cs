@@ -4,8 +4,11 @@
     {
         public string Text { get; set; }
 
+        public DateTime DateOfCreate { get; set; }
+
         public string? ResponseText { get; set; }
 
+        public DateTime? DateOfResponse { get; set; }
 
         public int TypeId { get; set; }
 
