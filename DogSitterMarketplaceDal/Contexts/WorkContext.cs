@@ -1,5 +1,4 @@
-﻿using DogSitterMarketplaceDal.Models.Users;
-using DogSitterMarketplaceDal.Models.Works;
+﻿using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.Models.Contexts
@@ -18,13 +17,11 @@ namespace DogSitterMarketplaceDal.Models.Contexts
 
         public DbSet<WorkTypeEntity> WorkTypes { get; set; }
 
-        public DbSet<UserEntity> Users { get; set; }
+        //public DbSet<UserEntity> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder
-                .UseLazyLoadingProxies ()
-                .UseSqlServer(Environment.GetEnvironmentVariable("DogSitterSqlConnect"));
+            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSitterSqlConnect"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

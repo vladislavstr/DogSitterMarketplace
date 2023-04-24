@@ -14,7 +14,8 @@ namespace DogSitterMarketplaceDal.Models.Works
 
         [Required]
         [ForeignKey(nameof(UserId))]
-        public UserEntity User { get; set; }
+        [NotMapped]
+        public  UserEntity User { get; set; }
 
         public int UserId { get; set; }
 

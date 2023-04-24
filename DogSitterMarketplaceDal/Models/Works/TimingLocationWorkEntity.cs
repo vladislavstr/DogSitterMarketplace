@@ -1,10 +1,6 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DogSitterMarketplaceDal.Models.Works
 {
@@ -29,7 +25,7 @@ namespace DogSitterMarketplaceDal.Models.Works
 
         [Required]
         [ForeignKey(nameof(LocationWorkId))]
-        public virtual LocationWorkEntity LocationWork { get; set; }
+        public LocationWorkEntity LocationWork { get; set; }
 
         public int LocationWorkId { get; set; }
 

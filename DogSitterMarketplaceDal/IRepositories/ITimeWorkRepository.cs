@@ -10,6 +10,10 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public bool UpdateTimingLocation(TimingLocationWorkEntity timing);
 
-        public List<TimingLocationWorkEntity> GetAllTimigsByLocationWorkId(int locationWorkId);
+        public List<TimingLocationWorkEntity> GetAllTimigsOfLocationWork(int locationWorkId);
+
+        public TimingLocationWorkEntity GetTiming(int idTiming);
+
+        public bool DeleteTiming(int id);
     }
 }

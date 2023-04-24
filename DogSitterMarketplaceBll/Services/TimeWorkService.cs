@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Works.Request;
-using DogSitterMarketplaceBll.Models.Works.Request;
+using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Works;
@@ -25,6 +25,7 @@ namespace DogSitterMarketplaceBll.Services
             _workAndLocationRepository = workAndLocation;
             _logger = logger;
         }
+
 
         public bool AddNewTimeWork(int locationWorkId, List<TimingLocationWorkRequest> timing)
         {
@@ -113,7 +114,7 @@ namespace DogSitterMarketplaceBll.Services
 
             var timingUpdateDal = _mapper.Map<TimingLocationWorkEntity>(timingUpdate);
             CheckStartAndEndInterval(timingUpdateDal);
-            var oldTimings = _timeWorkRepository.GetAllTimigsByLocationWorkId(timingUpdateDal.LocationWorkId);
+            var oldTimings = _timeWorkRepository.GetAllTimigsOfLocationWork(timingUpdateDal.LocationWorkId);
 
             if (oldTimings == null)
             {
@@ -128,7 +129,7 @@ namespace DogSitterMarketplaceBll.Services
             }
             else
             {
-                oldTimings.RemoveAll(t=>t.Id == timingUpdateDal.Id);
+                oldTimings.RemoveAll(t => t.Id == timingUpdateDal.Id);
             }
 
             var dublicateTiming = GetDublicateInterval(timingUpdateDal, oldTimings);
@@ -170,6 +171,11 @@ namespace DogSitterMarketplaceBll.Services
                 _logger.Log(LogLevel.Error, $"The start of the interval is above its end {timing.ToString()}");
                 throw new InvalidWriteTimeException($"Beginnings of time intervals are greater than their ends {timing.ToString()}");
             }
+        }
+
+        public bool DeleteTiming(int id)
+        {
+            return _timeWorkRepository.DeleteTiming(id);
         }
 
         private List<TimingLocationWorkEntity> GetDublicateInterval(List<TimingLocationWorkEntity> newTimings, List<TimingLocationWorkEntity> oldTimings)
@@ -227,6 +233,22 @@ namespace DogSitterMarketplaceBll.Services
         {
             _logger.Log(LogLevel.Error, $"one or more intervals intersect with existing ones, new intervals not Add ");
             throw new InvalidWriteTimeException("one or more intervals intersect with existing ones, new intervals not Add");
+        }
+
+        public TimingLocationWorkResponse GetTiming(int id)
+        {
+            var result = _mapper.Map<TimingLocationWorkResponse>
+                (_timeWorkRepository.GetTiming(id));
+
+            return result;
+        }
+
+        public List<TimingLocationWorkResponse> GetAllTimigsOfLocationWork(int locationId)
+        {
+            var result = _mapper.Map<List<TimingLocationWorkResponse>>
+                (_timeWorkRepository.GetAllTimigsOfLocationWork(locationId));
+
+            return result;
         }
     }
 }

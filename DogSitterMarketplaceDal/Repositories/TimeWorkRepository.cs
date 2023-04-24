@@ -69,7 +69,24 @@ namespace DogSitterMarketplaceDal.Repositories
             return timingUpdate;
         }
 
-        public List<TimingLocationWorkEntity> GetAllTimigsByLocationWorkId(int locationWorkId)
+
+        public TimingLocationWorkEntity GetTiming(int idTiming)
+        {
+            var timing = _context.TimingLocationWorks
+                .Include(t => t.DayOfWeek)
+                .Include(t => t.LocationWork)
+                .SingleOrDefault(t => t.Id == idTiming);
+
+            if (timing == null)
+            {
+                _logger.Log(LogLevel.Error, $"Time interval with id {timing.Id} not found");
+                throw new FileNotFoundException($"Time interval with id {timing.Id} not found");
+            }
+
+            return timing;
+        }
+
+        public List<TimingLocationWorkEntity> GetAllTimigsOfLocationWork(int locationWorkId)
         {
             List<TimingLocationWorkEntity> oldTimings = null;
 
@@ -86,11 +103,12 @@ namespace DogSitterMarketplaceDal.Repositories
             bool isDelete = false;
 
             var deleteTiming = _context.TimingLocationWorks
-                .SingleOrDefault(t=>t.Id==id);
-            
+                .SingleOrDefault(t => t.Id == id);
+
             if (deleteTiming != null)
             {
                 _context.TimingLocationWorks.Remove(deleteTiming);
+                _context.SaveChanges();
                 _logger.Log(LogLevel.Info, $"Time interval with id {id} not found");
                 isDelete = true;
             }
@@ -99,7 +117,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 _logger.Log(LogLevel.Error, $"Time interval with id {id} not found");
                 throw new FileNotFoundException($"Time interval with id {id} not found");
             }
-            
+
             return isDelete;
         }
     }

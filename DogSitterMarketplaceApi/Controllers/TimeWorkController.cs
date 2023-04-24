@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceApi.Models.WorksDto.Request;
+using DogSitterMarketplaceApi.Models.WorksDto.Response;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Works.Request;
 using DogSitterMarketplaceBll.Models.Works.Request;
@@ -136,6 +137,7 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 var timingUpdateBll = _mapper.Map<TimingLocationWorkWithIdRequest>(timingUpdate);
                 isUpdate = _timeWorkService.UpdateTimeWork(timingUpdateBll);
+                _logger.Log(LogLevel.Info, $"Timing is update");
                 return Ok(isUpdate);
             }
             catch (InvalidWriteTimeException ex)
@@ -155,5 +157,59 @@ namespace DogSitterMarketplaceApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("DeleteTiming/timingId",Name = "DeleteTiming")]
+        public ActionResult<bool> DeleteTiming(int timingId)
+        {
+            try
+            {
+                bool isUpdate = _timeWorkService.DeleteTiming(timingId);
+                _logger.Log(LogLevel.Info, "Timing is delete");
+                return Ok(isUpdate);
+            }
+            catch (FileNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetOneTiming/id",Name = "GetTiming")]
+        public ActionResult<TimingLocationWorkResponseDto> GetOneTiming(int timingId)
+        {
+            try
+            {
+                var timing = _mapper.Map<TimingLocationWorkResponseDto>
+                    (_timeWorkService.GetTiming(timingId));
+                return Ok(timing);
+            }
+            catch(FileNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetAllTimingOfLocationWork/id", Name = "GetAllTimingOfLocationWork")]
+        public ActionResult<List<TimingLocationWorkResponseDto>> GetAllTimingOfLocationWork(int timingId)
+        {
+            try
+            {
+                var timings  = _mapper.Map<List<TimingLocationWorkResponseDto>>
+                    (_timeWorkService.GetAllTimigsOfLocationWork(timingId));
+                return Ok(timings);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

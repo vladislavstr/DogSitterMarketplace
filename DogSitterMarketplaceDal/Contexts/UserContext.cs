@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-
+﻿using DogSitterMarketplaceDal.Models.Contexts;
 using DogSitterMarketplaceDal.Models.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.Contexts
 {
@@ -10,8 +10,7 @@ namespace DogSitterMarketplaceDal.Contexts
         {
             //optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-TO5LEQA\SQLEXPRESS;Initial Catalog = DogSitterMarketplace; TrustServerCertificate=True;Integrated Security=SSPI", builder => builder.EnableRetryOnFailure());
             //optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-TO5LEQA\SQLEXPRESS;Initial Catalog = DogSitt; Integrated Security = True; Persist Security Info = False; Pooling = False; MultipleActiveResultSets = False; Connect Timeout = 60; Encrypt = False; TrustServerCertificate = False");
-            optionsBuilder.UseLazyLoadingProxies()
-                .UseSqlServer(Environment.GetEnvironmentVariable("DogSitterSqlConnect"));
+            optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("DogSitterSqlConnect"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

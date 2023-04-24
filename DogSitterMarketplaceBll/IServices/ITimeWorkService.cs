@@ -1,5 +1,5 @@
 ﻿using DogSitterMarketplaceBll.Models.Works.Request;
-using DogSitterMarketplaceBll.Models.Works.Request;
+using DogSitterMarketplaceBll.Models.Works.Response;
 
 namespace DogSitterMarketplaceBll.IServices
 {
@@ -10,5 +10,11 @@ namespace DogSitterMarketplaceBll.IServices
         public bool AddNewTimeWork(TimingLocationWorkRequest timing);
 
         public bool UpdateTimeWork(TimingLocationWorkWithIdRequest timingUpdate);
+
+        public bool DeleteTiming(int id);
+
+        public TimingLocationWorkResponse GetTiming(int id);
+
+        public List<TimingLocationWorkResponse> GetAllTimigsOfLocationWork(int locationId);
     }
 }
