@@ -5,7 +5,7 @@ using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 
-namespace DogSitterMarketplaceDal
+namespace DogSitterMarketplaceDal.Contexts
 {
     public class OrdersAndPetsAndCommentsContext : DbContext
     {
