@@ -22,7 +22,9 @@ namespace DogSitterMarketplaceDal.Models.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSitterSqlConnect"));
+            builder
+                .UseLazyLoadingProxies ()
+                .UseSqlServer(Environment.GetEnvironmentVariable("DogSitterSqlConnect"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

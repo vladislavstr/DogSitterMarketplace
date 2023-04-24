@@ -34,7 +34,9 @@ namespace DogSitterMarketplaceDal
         {
             //builder.UseSqlServer("sqlConnectionString");
             //builder.UseInMemoryDatabase("Db");
-            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=DogSitt;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
+            //builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=DogSitt;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
+            builder.UseLazyLoadingProxies()
+                .UseSqlServer(Environment.GetEnvironmentVariable("DogSitterSqlConnect"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
