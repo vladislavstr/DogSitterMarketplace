@@ -174,5 +174,20 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new Exception($"Id:{id} - отсутствует");
             }
         }
+
+        public void UpdateAppealStatusById(int AppealId, int StatusId )
+        {
+            try
+            {
+                var appeal = _context.Appeals.Single(a => a.Id == AppealId);
+                appeal.StatusId = StatusId;
+                _context.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                throw new Exception($"Id:{AppealId} - отсутствует");
+            }
+        }
     }
 }

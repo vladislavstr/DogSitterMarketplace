@@ -96,5 +96,11 @@ namespace DogSitterMarketplaceBll.Services
         {
             _appealRepository.DeleteAppealById(id);
         }
+
+
+        public void UpdateAppealStatusById(int AppealId, int StatusId)
+        {
+            _appealRepository.UpdateAppealStatusById(AppealId, StatusId);
+        }
     }
 }
