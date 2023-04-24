@@ -2,7 +2,7 @@
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 
-namespace DogSitterMarketplaceDal.Models.Contexts
+namespace DogSitterMarketplaceDal.Contexts
 {
     public class WorkContext : DbContext
     {
