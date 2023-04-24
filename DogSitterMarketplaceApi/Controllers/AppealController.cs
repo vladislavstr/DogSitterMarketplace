@@ -168,7 +168,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpPut("UpdateAppealStatusById/{AppealId}", Name = "UpdateAppealStatusById")]
+        [HttpPut("UpdateAppealStatusById/{AppealId}_{StatusId}", Name = "UpdateAppealStatusById")]
         public IActionResult UpdateAppealStatusById(int AppealId, int StatusId)
         {
             try
