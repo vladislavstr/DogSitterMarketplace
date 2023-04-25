@@ -1,4 +1,6 @@
-﻿using DogSitterMarketplaceDal.Contexts;
+﻿using DogSitterMarketplaceCore;
+using DogSitterMarketplaceCore.Exceptions;
+using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Users;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +18,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public List<UserEntity> GetAllUsers()
         {
-            
+
             var result = new List<UserEntity>();
 
             result = _context.Users
@@ -111,5 +113,16 @@ namespace DogSitterMarketplaceDal.Repositories
         //    }
         //}
 
+        public UserRoleEntity GetUserRoleById(int id)
+        {
+            try
+            {
+                return _context.UsersRoles.SingleOrDefault(ur => ur.Id == id);
+            }
+            catch (NotFoundException)
+            {
+                throw new NotFoundException(id, nameof(UserRole));
+            }
+        }
     }
 }

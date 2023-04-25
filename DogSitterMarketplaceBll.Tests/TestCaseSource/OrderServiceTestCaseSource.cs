@@ -231,9 +231,16 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                                      });
             DateTime startDateOrder = new DateTime(2023, 04, 17, 12, 00, 00);
             List<OrderEntity> allOrdersBySitter = new List<OrderEntity>();
+            OrderStatusEntity orderStatusUnderConsideration = new OrderStatusEntity
+            {
+                Id = 3,
+                Name = "under consideration",
+                IsDeleted = false
+            };
 
             yield return new object[] {  petsId, allPets, messagesOfIsDeleted, orderEntity, addOrderEntity, newOrder,
-                                     expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId};
+                                     expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId,
+                                     orderStatusUnderConsideration};
 
             //2. Внутри ордера передано 2 корректных, не удаленных пета; ордер попадает в расписание и других заказов в работе в этот день нет
 
@@ -479,9 +486,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                                      });
             startDateOrder = new DateTime(2023, 04, 18, 12, 30, 00);
             allOrdersBySitter = new List<OrderEntity>();
+            orderStatusUnderConsideration = new OrderStatusEntity
+            {
+                Id = 3,
+                Name = "under consideration",
+                IsDeleted = false
+            };
 
             yield return new object[] {  petsId, allPets, messagesOfIsDeleted, orderEntity, addOrderEntity, newOrder,
-                                     expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId};
+                                     expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId, orderStatusUnderConsideration};
 
             //3. Внутри Ордера передан 1 корректный, неудаленный пет и 2 -удаленный (он не добавился, вывелось сообщение); ордер попадает в расписание и других заказов в работе в этот день нет
 
@@ -746,9 +759,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                                      });
             startDateOrder = new DateTime(2023, 04, 19, 14, 30, 00);
             allOrdersBySitter = new List<OrderEntity>();
+            orderStatusUnderConsideration = new OrderStatusEntity
+            {
+                Id = 3,
+                Name = "under consideration",
+                IsDeleted = false
+            };
 
             yield return new object[] {  petsId, allPets, messagesOfIsDeleted, orderEntity, addOrderEntity, newOrder,
-                                     expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId};
+                                     expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId, orderStatusUnderConsideration};
 
             //4. Внутри Ордера передан корректный, неудаленный пет; ордер попадает в расписание и есть другой заказ в этот день(но они не пересекаются)
 
@@ -972,9 +991,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     }
                 }
             };
+            orderStatusUnderConsideration = new OrderStatusEntity
+            {
+                Id = 3,
+                Name = "under consideration",
+                IsDeleted = false
+            };
 
             yield return new object[] {  petsId, allPets, messagesOfIsDeleted, orderEntity, addOrderEntity, newOrder,
-                                     expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId};
+                                     expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId, orderStatusUnderConsideration};
 
             //5. Внутри Ордера передан корректный, неудаленный пет; Ордер захватывает два дня(вечер пт-ночь сб), ордер попадает в расписание и есть другой заказ в 2 день(но они не пересекаются)
 
@@ -1216,9 +1241,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     }
                 }
             };
+            orderStatusUnderConsideration = new OrderStatusEntity
+            {
+                Id = 3,
+                Name = "under consideration",
+                IsDeleted = false
+            };
 
             yield return new object[] {  petsId, allPets, messagesOfIsDeleted, orderEntity, addOrderEntity, newOrder,
-                                     expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId};
+                                     expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId, orderStatusUnderConsideration};
         }
 
         public static IEnumerable AddOrder_WhenPetIsNotExist_ShouldArgumentException_TestCaseSource()

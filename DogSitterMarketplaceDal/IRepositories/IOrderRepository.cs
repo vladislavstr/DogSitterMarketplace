@@ -35,7 +35,8 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public OrderEntity ChangeOrderStatus(int orderId, int orderStatusId);
 
-
         public List<OrderEntity> GetAllOrdersBySitterId(int userId);
+
+        public OrderStatusEntity GetOrderStatusByName(string name);
     }
 }

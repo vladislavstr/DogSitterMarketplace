@@ -17,8 +17,6 @@ namespace DogSitterMarketplaceDal.Contexts
 
         public DbSet<AppealEntity> Appeals { get; set; }
 
-      //  public DbSet<PetsInOrderEntity> PetsInOrders { get; set; }
-
         public DbSet<SitterWorkEntity> SitterWork { get; set; }
 
         public DbSet<LocationEntity> Location { get; set; }
@@ -34,7 +32,7 @@ namespace DogSitterMarketplaceDal.Contexts
         {
             //builder.UseSqlServer("sqlConnectionString");
             //builder.UseInMemoryDatabase("Db");
-            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=DogSitt;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
+            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=qqq;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

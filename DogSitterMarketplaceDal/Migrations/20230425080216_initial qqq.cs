@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DogSitterMarketplaceDal.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initialqqq : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,9 +17,9 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Parameters = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Parameters = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -32,7 +32,7 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(20)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,11 +45,24 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(20)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AppealTypeEntity", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DayOfWeekEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(30)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DayOfWeekEntity", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,8 +71,8 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -72,8 +85,9 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -86,7 +100,7 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PassportNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PassportNumber = table.Column<string>(type: "nvarchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -99,7 +113,7 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -112,8 +126,8 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(500)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -126,8 +140,8 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -140,31 +154,31 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    PassportDataId = table.Column<int>(type: "int", nullable: true),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    UserPassportDataId = table.Column<int>(type: "int", nullable: false),
+                    UserRoleId = table.Column<int>(type: "int", nullable: false),
+                    UserStatusId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_UserPassportDataEntity_PassportDataId",
-                        column: x => x.PassportDataId,
+                        name: "FK_Users_UserPassportDataEntity_UserPassportDataId",
+                        column: x => x.UserPassportDataId,
                         principalTable: "UserPassportDataEntity",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Users_UserRoleEntity_RoleId",
-                        column: x => x.RoleId,
+                        name: "FK_Users_UserRoleEntity_UserRoleId",
+                        column: x => x.UserRoleId,
                         principalTable: "UserRoleEntity",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Users_UserStatusEntity_StatusId",
-                        column: x => x.StatusId,
+                        name: "FK_Users_UserStatusEntity_UserStatusId",
+                        column: x => x.UserStatusId,
                         principalTable: "UserStatusEntity",
                         principalColumn: "Id");
                 });
@@ -175,11 +189,11 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Characteristics = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Characteristics = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     TypeId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -202,10 +216,10 @@ namespace DogSitterMarketplaceDal.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Comment = table.Column<string>(type: "nvarchar(500)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     WorkTypeId = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -223,19 +237,45 @@ namespace DogSitterMarketplaceDal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LocationWorkEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Price = table.Column<decimal>(type: "decimal(6,2)", nullable: false),
+                    LocationId = table.Column<int>(type: "int", nullable: false),
+                    IsNotActive = table.Column<bool>(type: "bit", nullable: false),
+                    SitterWorkId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocationWorkEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LocationWorkEntity_Location_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Location",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_LocationWorkEntity_SitterWork_SitterWorkId",
+                        column: x => x.SitterWorkId,
+                        principalTable: "SitterWork",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     OrderStatusId = table.Column<int>(type: "int", nullable: false),
                     SitterWorkId = table.Column<int>(type: "int", nullable: false),
-                    Summ = table.Column<int>(type: "int", nullable: false),
+                    Summ = table.Column<decimal>(type: "decimal(6,2)", nullable: false),
                     DateStart = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LocationId = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -258,44 +298,70 @@ namespace DogSitterMarketplaceDal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AppealEntity",
+                name: "TimingLocationWorkEntity",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Start = table.Column<TimeSpan>(type: "time(0)", nullable: false),
+                    Stop = table.Column<TimeSpan>(type: "time(0)", nullable: false),
+                    DayOfWeekId = table.Column<int>(type: "int", nullable: false),
+                    LocationWorkId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimingLocationWorkEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TimingLocationWorkEntity_DayOfWeekEntity_DayOfWeekId",
+                        column: x => x.DayOfWeekId,
+                        principalTable: "DayOfWeekEntity",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TimingLocationWorkEntity_LocationWorkEntity_LocationWorkId",
+                        column: x => x.LocationWorkId,
+                        principalTable: "LocationWorkEntity",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Appeals",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(1000)", nullable: false),
                     TypeId = table.Column<int>(type: "int", nullable: false),
                     StatusId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: true),
                     AppealFromUserId = table.Column<int>(type: "int", nullable: false),
                     AppealToUserId = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppealEntity", x => x.Id);
+                    table.PrimaryKey("PK_Appeals", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AppealEntity_AppealStatusEntity_StatusId",
+                        name: "FK_Appeals_AppealStatusEntity_StatusId",
                         column: x => x.StatusId,
                         principalTable: "AppealStatusEntity",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_AppealEntity_AppealTypeEntity_TypeId",
+                        name: "FK_Appeals_AppealTypeEntity_TypeId",
                         column: x => x.TypeId,
                         principalTable: "AppealTypeEntity",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_AppealEntity_Orders_OrderId",
+                        name: "FK_Appeals_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_AppealEntity_Users_AppealFromUserId",
+                        name: "FK_Appeals_Users_AppealFromUserId",
                         column: x => x.AppealFromUserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_AppealEntity_Users_AppealToUserId",
+                        name: "FK_Appeals_Users_AppealToUserId",
                         column: x => x.AppealToUserId,
                         principalTable: "Users",
                         principalColumn: "Id");
@@ -312,7 +378,7 @@ namespace DogSitterMarketplaceDal.Migrations
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     CommentFromUserId = table.Column<int>(type: "int", nullable: false),
                     CommentToUserId = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -335,53 +401,57 @@ namespace DogSitterMarketplaceDal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PetsInOrders",
+                name: "OrderEntityPetEntity",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderId = table.Column<int>(type: "int", nullable: false),
-                    PetId = table.Column<int>(type: "int", nullable: false)
+                    OrdersId = table.Column<int>(type: "int", nullable: false),
+                    PetsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PetsInOrders", x => x.Id);
+                    table.PrimaryKey("PK_OrderEntityPetEntity", x => new { x.OrdersId, x.PetsId });
                     table.ForeignKey(
-                        name: "FK_PetsInOrders_Orders_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_OrderEntityPetEntity_Orders_OrdersId",
+                        column: x => x.OrdersId,
                         principalTable: "Orders",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_PetsInOrders_Pets_PetId",
-                        column: x => x.PetId,
+                        name: "FK_OrderEntityPetEntity_Pets_PetsId",
+                        column: x => x.PetsId,
                         principalTable: "Pets",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppealEntity_AppealFromUserId",
-                table: "AppealEntity",
+                name: "IX_AnimalsTypes_Name",
+                table: "AnimalsTypes",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appeals_AppealFromUserId",
+                table: "Appeals",
                 column: "AppealFromUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppealEntity_AppealToUserId",
-                table: "AppealEntity",
+                name: "IX_Appeals_AppealToUserId",
+                table: "Appeals",
                 column: "AppealToUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppealEntity_OrderId",
-                table: "AppealEntity",
+                name: "IX_Appeals_OrderId",
+                table: "Appeals",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppealEntity_StatusId",
-                table: "AppealEntity",
+                name: "IX_Appeals_StatusId",
+                table: "Appeals",
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppealEntity_TypeId",
-                table: "AppealEntity",
-                column: "AnimalTypeId");
+                name: "IX_Appeals_TypeId",
+                table: "Appeals",
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_CommentFromUserId",
@@ -397,6 +467,33 @@ namespace DogSitterMarketplaceDal.Migrations
                 name: "IX_Comments_OrderId",
                 table: "Comments",
                 column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DayOfWeekEntity_Name",
+                table: "DayOfWeekEntity",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Location_Name",
+                table: "Location",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationWorkEntity_LocationId",
+                table: "LocationWorkEntity",
+                column: "LocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationWorkEntity_SitterWorkId",
+                table: "LocationWorkEntity",
+                column: "SitterWorkId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderEntityPetEntity_PetsId",
+                table: "OrderEntityPetEntity",
+                column: "PetsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_LocationId",
@@ -416,22 +513,12 @@ namespace DogSitterMarketplaceDal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Pets_TypeId",
                 table: "Pets",
-                column: "AnimalTypeId");
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pets_UserId",
                 table: "Pets",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PetsInOrders_OrderId",
-                table: "PetsInOrders",
-                column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PetsInOrders_PetId",
-                table: "PetsInOrders",
-                column: "PetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SitterWork_UserId",
@@ -444,32 +531,51 @@ namespace DogSitterMarketplaceDal.Migrations
                 column: "WorkTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_PassportDataId",
-                table: "Users",
-                column: "PassportDataId");
+                name: "IX_TimingLocationWorkEntity_DayOfWeekId",
+                table: "TimingLocationWorkEntity",
+                column: "DayOfWeekId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_RoleId",
-                table: "Users",
-                column: "RoleId");
+                name: "IX_TimingLocationWorkEntity_LocationWorkId",
+                table: "TimingLocationWorkEntity",
+                column: "LocationWorkId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_StatusId",
+                name: "IX_Users_UserPassportDataId",
                 table: "Users",
-                column: "StatusId");
+                column: "UserPassportDataId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_UserRoleId",
+                table: "Users",
+                column: "UserRoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_UserStatusId",
+                table: "Users",
+                column: "UserStatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkTypeEntity_Name",
+                table: "WorkTypeEntity",
+                column: "Name",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AppealEntity");
+                name: "Appeals");
 
             migrationBuilder.DropTable(
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "PetsInOrders");
+                name: "OrderEntityPetEntity");
+
+            migrationBuilder.DropTable(
+                name: "TimingLocationWorkEntity");
 
             migrationBuilder.DropTable(
                 name: "AppealStatusEntity");
@@ -484,16 +590,22 @@ namespace DogSitterMarketplaceDal.Migrations
                 name: "Pets");
 
             migrationBuilder.DropTable(
-                name: "Location");
+                name: "DayOfWeekEntity");
+
+            migrationBuilder.DropTable(
+                name: "LocationWorkEntity");
 
             migrationBuilder.DropTable(
                 name: "OrderStatuses");
 
             migrationBuilder.DropTable(
-                name: "SitterWork");
+                name: "AnimalsTypes");
 
             migrationBuilder.DropTable(
-                name: "AnimalsTypes");
+                name: "Location");
+
+            migrationBuilder.DropTable(
+                name: "SitterWork");
 
             migrationBuilder.DropTable(
                 name: "Users");

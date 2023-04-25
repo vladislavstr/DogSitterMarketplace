@@ -1,4 +1,5 @@
-﻿using DogSitterMarketplaceCore.Exceptions;
+﻿using DogSitterMarketplaceCore;
+using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Appeals;
@@ -52,12 +53,19 @@ namespace DogSitterMarketplaceDal.Repositories
         public OrderEntity ChangeOrderStatus(int orderId, int orderStatusId)
         {
             var orderDB = _context.Orders.SingleOrDefault(o => o.Id == orderId);
-
             if (orderDB == null)
             {
                 // _logger.LogDebug($"{nameof(OrderEntity)} with id {orderUpdateEntity.Id} not found.");
                 _logger.Log(LogLevel.Debug, $"{nameof(OrderEntity)} with id {orderId} not found.");
                 throw new NotFoundException(orderId, nameof(OrderEntity));
+            }
+
+            var orderStatusDB = _context.OrderStatuses.SingleOrDefault(os => os.Id == orderStatusId);
+            if (orderStatusDB == null)
+            {
+                // _logger.LogDebug($"{nameof(OrderEntity)} with id {orderUpdateEntity.Id} not found.");
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderStatusEntity)} with id {orderStatusId} not found.");
+                throw new NotFoundException(orderStatusId, nameof(OrderStatusEntity));
             }
 
             orderDB.OrderStatusId = orderStatusId;
@@ -239,7 +247,7 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             try
             {
-                return _context.OrderStatuses.Single(o => o.Id == id); //&& !o.IsDeleted);
+                return _context.OrderStatuses.Single(o => o.Id == id); ;
             }
             catch (InvalidOperationException ex)
             {
@@ -316,7 +324,8 @@ namespace DogSitterMarketplaceDal.Repositories
             {
                 return _context.Orders
                     .Include(o => o.SitterWork)
-                    .Where(o => o.OrderStatusId == 4
+                    .Include(o => o.OrderStatus)
+                    .Where(o => o.OrderStatus.Name == OrderStatus.AtWork
                         && o.DateStart.Date == startDate.Date
                         && o.SitterWork.UserId == sitterId)
                     .ToList();
@@ -329,19 +338,18 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        //private bool FilterTimingLocationWork(TimingLocationWorkEntity timing, DateTime startOrder, DateTime endOrder)
-        //{
-        //    if ((startOrder.DayOfWeek.ToString() == timing.DayOfWeek.Name
-        //           && startOrder.TimeOfDay >= timing.Start)
-        //       || (endOrder.DayOfWeek.ToString() == timing.DayOfWeek.Name
-        //            && endOrder.TimeOfDay <= timing.Stop))
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
+        public OrderStatusEntity GetOrderStatusByName(string name)
+        {
+            try
+            {
+                return _context.OrderStatuses.Single(os => os.Name == name);
+            }
+            catch (ArgumentException)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderStatus)} with name {name} not found.");
+                throw new ArgumentException($"{nameof(OrderStatus)} with name {name} not found.");
+            }
+        }
+
     }
 }

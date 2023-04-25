@@ -29,6 +29,8 @@ namespace DogSitterMarketplaceBll.Tests
 
         private Mock<IPetRepository> _mockPetRepo;
 
+        private Mock<IUserRepository> _mockUserRepo;
+
         private IMapper _mapper;
 
         [SetUp]
@@ -42,9 +44,11 @@ namespace DogSitterMarketplaceBll.Tests
             var logger = LogManager.Setup().GetCurrentClassLogger();
             _mockOrderRepo = new Mock<IOrderRepository>();
             _mockPetRepo = new Mock<IPetRepository>();
+            _mockUserRepo = new Mock<IUserRepository>();
             _orderService = new OrderService(
                                             _mockOrderRepo.Object,
                                             _mockPetRepo.Object,
+                                            _mockUserRepo.Object,
                                             _mapper,
                                             logger);
         }
@@ -74,12 +78,14 @@ namespace DogSitterMarketplaceBll.Tests
         [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.AddOrderTestCaseSource))]
         public void AddOrderTest(List<int> petsId, List<PetEntity> allPets, List<string> messagesOfIsDeleted, OrderEntity orderEntity,
                                 OrderEntity addOrderEntity, OrderCreateRequest newOrder, OrderResponse expected, int sitterId, SitterWorkEntity sitterWork,
-                                List<SitterWorkEntity> allSitterWorks, DateTime startDateOrder, List<OrderEntity> allOrdersBySitter, int sitterWorkId)
+                                List<SitterWorkEntity> allSitterWorks, DateTime startDateOrder, List<OrderEntity> allOrdersBySitter, int sitterWorkId,
+                                OrderStatusEntity orderStatusUnderConsideration)
         {
             _mockPetRepo.Setup(p => p.GetPetsInOrderEntities(petsId)).Returns(allPets);
             _mockOrderRepo.Setup(o => o.GetSitterWorkById(sitterWorkId)).Returns(sitterWork);
             _mockOrderRepo.Setup(o => o.GetAllSitterWorksByUserId(sitterId)).Returns(allSitterWorks);
             _mockOrderRepo.Setup(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder)).Returns(allOrdersBySitter);
+            _mockOrderRepo.Setup(o => o.GetOrderStatusByName("under consideration")).Returns(orderStatusUnderConsideration);
             _mockOrderRepo.Setup(o => o.AddNewOrder(It.Is<OrderEntity>(o => method(o, orderEntity)))).Returns(addOrderEntity);
 
             OrderResponse actual = _orderService.AddOrder(newOrder);
@@ -88,6 +94,7 @@ namespace DogSitterMarketplaceBll.Tests
             _mockOrderRepo.Verify(o => o.GetSitterWorkById(sitterWorkId), Times.Once);
             _mockOrderRepo.Verify(o => o.GetAllSitterWorksByUserId(sitterId), Times.Once);
             _mockOrderRepo.Verify(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetOrderStatusByName("under consideration"), Times.Once);
             _mockOrderRepo.Verify(o => o.AddNewOrder(It.IsAny<OrderEntity>()), Times.Once);
 
             actual.Should().BeEquivalentTo(expected);
