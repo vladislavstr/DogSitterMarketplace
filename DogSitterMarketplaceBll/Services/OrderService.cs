@@ -374,7 +374,7 @@ namespace DogSitterMarketplaceBll.Services
 
         private OrderResponse ChangeOrderStatusToAtWork(OrderResponse orderResponse, int orderStatusId)
         {
-            if (orderResponse.OrderStatus.Id == 3 || orderResponse.OrderStatus.Id == 6)
+            if (orderResponse.OrderStatus.Name == OrderStatus.UnderConsideration || orderResponse.OrderStatus.Name == OrderStatus.Rejected)
             {
                 var updateOrderEntity = _orderRepository.ChangeOrderStatus(orderResponse.Id, orderStatusId);
                 var changeOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
@@ -390,7 +390,7 @@ namespace DogSitterMarketplaceBll.Services
 
         private OrderResponse ChangeOrderStatusToReject(OrderResponse orderResponse, int orderStatusId)
         {
-            if (orderResponse.OrderStatus.Id == 3)
+            if (orderResponse.OrderStatus.Name == OrderStatus.UnderConsideration)
             {
                 var updateOrderEntity = _orderRepository.ChangeOrderStatus(orderResponse.Id, orderStatusId);
                 var changeOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
@@ -406,7 +406,7 @@ namespace DogSitterMarketplaceBll.Services
 
         private OrderResponse ChangeOrderStatusToComplete(OrderResponse orderResponse, int orderStatusId)
         {
-            if (orderResponse.OrderStatus.Id == 4)
+            if (orderResponse.OrderStatus.Name == OrderStatus.AtWork)
             {
                 var updateOrderEntity = _orderRepository.ChangeOrderStatus(orderResponse.Id, orderStatusId);
                 var changeOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);

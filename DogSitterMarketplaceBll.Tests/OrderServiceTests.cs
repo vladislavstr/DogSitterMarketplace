@@ -181,6 +181,51 @@ namespace DogSitterMarketplaceBll.Tests
             _mockOrderRepo.Verify(o => o.AddNewOrder(It.IsAny<OrderEntity>()), Times.Never);
         }
 
+        [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.ChangeOrderStatusTestCaseSource))]
+        public void ChangeOrderStatusTest(int orderId, OrderEntity orderEntity, int orderStatusId, OrderStatusEntity orderStatus,
+                                          OrderEntity updateOrderEntity, OrderResponse expected)
+        {
+            _mockOrderRepo.Setup(o => o.GetOrderById(orderId)).Returns(orderEntity);
+            _mockOrderRepo.Setup(o => o.GetOrderStatusById(orderStatusId)).Returns(orderStatus);
+            _mockOrderRepo.Setup(o => o.ChangeOrderStatus(orderId, orderStatusId)).Returns(updateOrderEntity);
+
+            OrderResponse actual = _orderService.ChangeOrderStatus(orderId, orderStatusId);
+
+            _mockOrderRepo.Verify(o => o.GetOrderById(orderId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetOrderStatusById(orderStatusId), Times.Once);
+            _mockOrderRepo.Verify(o => o.ChangeOrderStatus(orderId, orderStatusId), Times.Once);
+
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.ChangeOrderStatus_WhenNewOrderStatusIsNotExist_ShouldBeArgumentException_TestCaseSource))]
+        public void ChangeOrderStatusTest_WhenNewOrderStatusIsNotExist_ShouldBeArgumentException(int orderId, OrderEntity orderEntity, int orderStatusId, OrderStatusEntity orderStatus)
+        {
+            _mockOrderRepo.Setup(o => o.GetOrderById(orderId)).Returns(orderEntity);
+            _mockOrderRepo.Setup(o => o.GetOrderStatusById(orderStatusId)).Returns(orderStatus);
+
+            Assert.Throws<ArgumentException>(() => _orderService.ChangeOrderStatus(orderId, orderStatusId)); ;
+
+            _mockOrderRepo.Verify(o => o.GetOrderById(orderId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetOrderStatusById(orderStatusId), Times.Once);
+            _mockOrderRepo.Verify(o => o.ChangeOrderStatus(orderId, orderStatusId), Times.Never);
+        }
+
+        [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.ChangeOrderStatus_WhenCanNotChangeToAtWork_ShouldBeArgumentException_TestCaseSource))]
+        public void ChangeOrderStatusTest_WhenCanNotChangeToAtWork_ShouldBeArgumentException(int orderId, OrderEntity orderEntity, int orderStatusId, OrderStatusEntity orderStatus,
+                                                                                            OrderEntity updateOrderEntity)
+        {
+            _mockOrderRepo.Setup(o => o.GetOrderById(orderId)).Returns(orderEntity);
+            _mockOrderRepo.Setup(o => o.GetOrderStatusById(orderStatusId)).Returns(orderStatus);
+            _mockOrderRepo.Setup(o => o.ChangeOrderStatus(orderId, orderStatusId)).Returns(updateOrderEntity);
+
+            Assert.Throws<ArgumentException>(() => _orderService.ChangeOrderStatus(orderId, orderStatusId)); ;
+
+            _mockOrderRepo.Verify(o => o.GetOrderById(orderId), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetOrderStatusById(orderStatusId), Times.Once);
+            _mockOrderRepo.Verify(o => o.ChangeOrderStatus(orderId, orderStatusId), Times.Never);
+        }
+
         private bool method(OrderEntity o, OrderEntity orderEntity)
         {
             try

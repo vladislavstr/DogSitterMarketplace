@@ -1,4 +1,5 @@
-﻿using DogSitterMarketplaceBll.Models.Appeals.Response;
+﻿using Azure.Core;
+using DogSitterMarketplaceBll.Models.Appeals.Response;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets.Response;
@@ -1304,7 +1305,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             int sitterWorkId = 106;
             DateTime startDateOrder = new DateTime(2023, 04, 17, 12, 00, 00);
 
-            yield return new object[] {petsId, allPets, newOrder, sitterId, startDateOrder, sitterWorkId};
+            yield return new object[] { petsId, allPets, newOrder, sitterId, startDateOrder, sitterWorkId };
         }
 
         public static IEnumerable AddOrder_WhenPetsBelongToDifferentUsers_ShouldArgumentException_TestCaseSource()
@@ -1396,7 +1397,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
         {
             // Внутри Ордера передан корректный пет, но дата окончания заказа раньше даты начала заказа
 
-            List<int> petsId = new List<int> { 1679};
+            List<int> petsId = new List<int> { 1679 };
             OrderCreateRequest newOrder = new OrderCreateRequest
             {
                 Comment = "comment679",
@@ -2220,6 +2221,469 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
 
             yield return new object[] { petsId, allPets, newOrder, sitterId, startDateOrder, sitterWorkId, sitterWork, allSitterWorks, allOrdersBySitter };
         }
+
+        public static IEnumerable ChangeOrderStatusTestCaseSource()
+        {
+            //1. Случай, когда меняем с "Отклонено" в "Работе" - первый case
+
+            int orderId = 12;
+            OrderEntity orderEntity = new OrderEntity
+            {
+                Id = 12,
+                Comment = "comment12",
+                OrderStatusId = 6,
+                SitterWorkId = 12,
+                Summ = 1002,
+                DateStart = new DateTime(2023, 04, 17, 12, 20, 00),
+                DateEnd = new DateTime(2023, 04, 17, 13, 20, 00),
+                LocationId = 12,
+
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 6,
+                    Name = "rejected",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 12
+                },
+                Location = new LocationEntity
+                {
+                    Id = 12
+                }
+            };
+            orderEntity.Pets.AddRange(new List<PetEntity>());
+            int orderStatusId = 4;
+            OrderStatusEntity orderStatus = new OrderStatusEntity
+            {
+                Id = 4,
+                Name = "at work",
+                Comment = "at work",
+                IsDeleted = false
+            };
+            OrderEntity updateOrderEntity = new OrderEntity
+            {
+                Id = 12,
+                Comment = "comment12",
+                OrderStatusId = 4,
+                SitterWorkId = 12,
+                Summ = 1002,
+                DateStart = new DateTime(2023, 04, 17, 12, 20, 00),
+                DateEnd = new DateTime(2023, 04, 17, 13, 20, 00),
+                LocationId = 1,
+
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 4,
+                    Name = "at work",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 12
+                },
+                Location = new LocationEntity
+                {
+                    Id = 12
+                }
+            };
+            updateOrderEntity.Pets.AddRange(new List<PetEntity>());
+            OrderResponse expected = new OrderResponse
+            {
+                Id = 12,
+                Comment = "comment12",
+                Summ = 1002,
+                DateStart = new DateTime(2023, 04, 17, 12, 20, 00),
+                DateEnd = new DateTime(2023, 04, 17, 13, 20, 00),
+                OrderStatus = new OrderStatusResponse
+                {
+                    Id = 4,
+                    Name = "at work",
+                },
+                SitterWork = new SitterWorkResponse
+                {
+                    Id = 12
+                },
+                Location = new LocationResponse
+                {
+                    Id = 12
+                },
+                Pets = new List<PetResponse>()
+            };
+
+            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus, updateOrderEntity, expected };
+
+            //2. Случай, когда меняем с "На рассмотрении" в "Работе" - первый case
+
+            orderId = 1;
+            orderEntity = new OrderEntity
+            {
+                Id = 1,
+                Comment = "comment1",
+                OrderStatusId = 3,
+                SitterWorkId = 1,
+                Summ = 100,
+                DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
+                DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
+                LocationId = 1,
+
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 3,
+                    Name = "under consideration",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 1
+                },
+                Location = new LocationEntity
+                {
+                    Id = 1
+                }
+            };
+            orderEntity.Pets.AddRange(new List<PetEntity>());
+            orderStatusId = 4;
+            orderStatus = new OrderStatusEntity
+            {
+                Id = 4,
+                Name = "at work",
+                Comment = "at work",
+                IsDeleted = false
+            };
+            updateOrderEntity = new OrderEntity
+            {
+                Id = 1,
+                Comment = "comment1",
+                OrderStatusId = 4,
+                SitterWorkId = 1,
+                Summ = 100,
+                DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
+                DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
+                LocationId = 1,
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 4,
+                    Name = "at work",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 1
+                },
+                Location = new LocationEntity
+                {
+                    Id = 1
+                }
+            };
+            updateOrderEntity.Pets.AddRange(new List<PetEntity>());
+            expected = new OrderResponse
+            {
+                Id = 1,
+                Comment = "comment1",
+                Summ = 100,
+                DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
+                DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
+                OrderStatus = new OrderStatusResponse
+                {
+                    Id = 4,
+                    Name = "at work",
+                },
+                SitterWork = new SitterWorkResponse
+                {
+                    Id = 1
+                },
+                Location = new LocationResponse
+                {
+                    Id = 1
+                },
+                Pets = new List<PetResponse>()
+            };
+
+            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus, updateOrderEntity, expected};
+
+            //3. Случай, когда меняем с "Работе" на "Завершено" - второй case
+
+            orderId = 13;
+            orderEntity = new OrderEntity
+            {
+                Id = 13,
+                Comment = "comment13",
+                OrderStatusId = 4,
+                SitterWorkId = 13,
+                Summ = 1003,
+                DateStart = new DateTime(2023, 04, 17, 12, 00, 30),
+                DateEnd = new DateTime(2023, 04, 17, 13, 00, 30),
+                LocationId = 3,
+
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 4,
+                    Name = "at work",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 13
+                },
+                Location = new LocationEntity
+                {
+                    Id = 13
+                }
+            };
+            orderEntity.Pets.AddRange(new List<PetEntity>());
+            orderStatusId = 5;
+            orderStatus = new OrderStatusEntity
+            {
+                Id = 5,
+                Name = "completed",
+                Comment = "completed",
+                IsDeleted = false
+            };
+            updateOrderEntity = new OrderEntity
+            {
+                Id = 13,
+                Comment = "comment13",
+                OrderStatusId = 5,
+                SitterWorkId = 13,
+                Summ = 1003,
+                DateStart = new DateTime(2023, 04, 17, 12, 00, 30),
+                DateEnd = new DateTime(2023, 04, 17, 13, 00, 30),
+                LocationId = 13,
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 5,
+                    Name = "completed",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 13
+                },
+                Location = new LocationEntity
+                {
+                    Id = 13
+                }
+            };
+            updateOrderEntity.Pets.AddRange(new List<PetEntity>());
+            expected = new OrderResponse
+            {
+                Id = 13,
+                Comment = "comment13",
+                Summ = 1003,
+                DateStart = new DateTime(2023, 04, 17, 12, 00, 30),
+                DateEnd = new DateTime(2023, 04, 17, 13, 00, 30),
+                OrderStatus = new OrderStatusResponse
+                {
+                    Id = 5,
+                    Name = "completed",
+                },
+                SitterWork = new SitterWorkResponse
+                {
+                    Id =13
+                },
+                Location = new LocationResponse
+                {
+                    Id = 13
+                },
+                Pets = new List<PetResponse>()
+            };
+
+            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus, updateOrderEntity, expected };
+
+            //4. Случай, когда меняем с "На рассмотрении" на "Отклонено" - третий case
+
+            orderId = 134;
+            orderEntity = new OrderEntity
+            {
+                Id = 134,
+                Comment = "comment134",
+                OrderStatusId = 3,
+                SitterWorkId = 134,
+                Summ = 10034,
+                DateStart = new DateTime(2023, 04, 17, 12, 40, 30),
+                DateEnd = new DateTime(2023, 04, 17, 13, 00, 40),
+                LocationId = 34,
+
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 3,
+                    Name = "under consideration",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 34
+                },
+                Location = new LocationEntity
+                {
+                    Id = 34
+                }
+            };
+            orderEntity.Pets.AddRange(new List<PetEntity>());
+            orderStatusId = 6;
+            orderStatus = new OrderStatusEntity
+            {
+                Id = 6,
+                Name = "rejected",
+                Comment = "rejected",
+                IsDeleted = false
+            };
+            updateOrderEntity = new OrderEntity
+            {
+                Id = 134,
+                Comment = "comment134",
+                OrderStatusId = 6,
+                SitterWorkId = 134,
+                Summ = 10034,
+                DateStart = new DateTime(2023, 04, 17, 12, 40, 30),
+                DateEnd = new DateTime(2023, 04, 17, 13, 00, 40),
+                LocationId = 134,
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 6,
+                    Name = "rejected",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 134
+                },
+                Location = new LocationEntity
+                {
+                    Id = 134
+                }
+            };
+            updateOrderEntity.Pets.AddRange(new List<PetEntity>());
+            expected = new OrderResponse
+            {
+                Id = 134,
+                Comment = "comment134",
+                Summ = 10034,
+                DateStart = new DateTime(2023, 04, 17, 12, 40, 30),
+                DateEnd = new DateTime(2023, 04, 17, 13, 00, 40),
+                OrderStatus = new OrderStatusResponse
+                {
+                    Id = 6,
+                    Name = "rejected",
+                },
+                SitterWork = new SitterWorkResponse
+                {
+                    Id = 134
+                },
+                Location = new LocationResponse
+                {
+                    Id = 134
+                },
+                Pets = new List<PetResponse>()
+            };
+
+            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus, updateOrderEntity, expected };
+        }
+
+        public static IEnumerable ChangeOrderStatus_WhenNewOrderStatusIsNotExist_ShouldBeArgumentException_TestCaseSource()
+        {
+            // Случай, когда в аргументы передали статус, которого нет в свитче
+
+            int orderId = 125;
+            OrderEntity orderEntity = new OrderEntity
+            {
+                Id = 125,
+                Comment = "comment125",
+                OrderStatusId = 65,
+                SitterWorkId = 125,
+                Summ = 10025,
+                DateStart = new DateTime(2023, 04, 15, 12, 20, 00),
+                DateEnd = new DateTime(2023, 04, 17, 15, 20, 00),
+                LocationId = 125,
+
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 65,
+                    Name = "in progress",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 125
+                },
+                Location = new LocationEntity
+                {
+                    Id = 125
+                }
+            };
+            orderEntity.Pets.AddRange(new List<PetEntity>());
+            int orderStatusId = 45;
+            OrderStatusEntity orderStatus = new OrderStatusEntity
+            {
+                Id = 45,
+                Name = "done",
+                Comment = "not exist status",
+                IsDeleted = false
+            };
+            
+            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus};
+        }
+
+        public static IEnumerable ChangeOrderStatus_WhenCanNotChangeToAtWork_ShouldBeArgumentException_TestCaseSource()
+        {
+            // Случай, когда меняем на статус "Работе" - первый case, но со статуса "Сделано"(из которого нельзя поменять на статус "В работе")
+
+            int orderId = 126;
+            OrderEntity orderEntity = new OrderEntity
+            {
+                Id = 126,
+                Comment = "comment126",
+                OrderStatusId = 66,
+                SitterWorkId = 126,
+                Summ = 10026,
+                DateStart = new DateTime(2023, 04, 16, 12, 20, 00),
+                DateEnd = new DateTime(2023, 04, 17, 16, 20, 00),
+                LocationId = 126,
+
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 66,
+                    Name = "done",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 126
+                },
+                Location = new LocationEntity
+                {
+                    Id = 126
+                }
+            };
+            orderEntity.Pets.AddRange(new List<PetEntity>());
+            int orderStatusId = 46;
+            OrderStatusEntity orderStatus = new OrderStatusEntity
+            {
+                Id = 46,
+                Name = "at work",
+                Comment = "at work",
+                IsDeleted = false
+            };
+            OrderEntity updateOrderEntity = new OrderEntity
+            {
+                Id = 126,
+                Comment = "comment126",
+                OrderStatusId = 46,
+                SitterWorkId = 126,
+                Summ = 10026,
+                DateStart = new DateTime(2023, 04, 16, 12, 20, 00),
+                DateEnd = new DateTime(2023, 04, 17, 16, 20, 00),
+                LocationId = 16,
+
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 46,
+                    Name = "at work",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 126
+                },
+                Location = new LocationEntity
+                {
+                    Id = 126
+                }
+            };
+            updateOrderEntity.Pets.AddRange(new List<PetEntity>());
+
+            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus, updateOrderEntity};
+        }
     }
 }
-
