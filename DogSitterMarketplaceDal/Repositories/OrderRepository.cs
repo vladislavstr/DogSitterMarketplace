@@ -79,32 +79,16 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public List<OrderEntity> GetAllOrders()
         {
-            //return _context.Orders
-            //    .Include(o => o.OrderStatus)
-            //    .Include(o => o.SitterWork)
-            //    .Include(o => o.Location)
-            //    .Include(o => o.SitterWork.User)
-            //    .Include(o => o.SitterWork.WorkType)
-            //    .Include(o => o.Comments.Where(c => !c.IsDeleted))
-            //    .Include(o => o.Appeals.Where(a => !a.IsDeleted))
-            //    .Include(o => o.Pets)
-            //    .Where(o => !o.IsDeleted
-            //           && !o.OrderStatus.IsDeleted
-            //           && !o.SitterWork.IsDeleted
-            //           && !o.SitterWork.User.IsDeleted
-            //           && !o.SitterWork.WorkType.IsDeleted
-            //    ).AsNoTracking().ToList();
-
             return _context.Orders
-                .Include(o => o.OrderStatus)
-                .Include(o => o.SitterWork)
-                .Include(o => o.Location)
-                .Include(o => o.SitterWork.User)
-                .Include(o => o.SitterWork.WorkType)
-                .Include(o => o.Comments)
-                .Include(o => o.Appeals)
-                .Include(o => o.Pets)
-                .AsNoTracking().ToList();
+    .Include(o => o.OrderStatus)
+    .Include(o => o.SitterWork)
+    .Include(o => o.Location)
+    .Include(o => o.SitterWork.User)
+    .Include(o => o.SitterWork.WorkType)
+    .Include(o => o.Comments)
+    .Include(o => o.Appeals)
+    .Include(o => o.Pets)
+    .AsNoTracking().ToList();
         }
 
         public List<OrderEntity> GetAllOrdersBySitterId(int userId)
@@ -132,27 +116,6 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             try
             {
-                //return _context.Orders
-                //    .Include(o => o.OrderStatus)
-                //    .Include(o => o.SitterWork)
-                //    .Include(o => o.Location)
-                //    .Include(o => o.SitterWork.User)
-                //    .Include(o => o.SitterWork.WorkType)
-                //    .Include(o => o.Comments)
-                //    .ThenInclude(o => o.CommentToUser)
-                //    .Include(o => o.Comments)
-                //    .ThenInclude(o => o.CommentFromUser)
-                //    .Include(o => o.Appeals)
-                //    .ThenInclude(o => o.AppealFromUser)
-                //    .Include(o => o.Appeals)
-                //    .ThenInclude(o => o.AppealToUser)
-                //    .Include(o => o.Pets)
-                //    .Single(o => o.Id == id && !o.IsDeleted
-                //     && !o.OrderStatus.IsDeleted
-                //     && !o.SitterWork.IsDeleted
-                //     && !o.SitterWork.User.IsDeleted
-                //     && !o.SitterWork.WorkType.IsDeleted);
-
                 return _context.Orders
                     .Include(o => o.OrderStatus)
                     .Include(o => o.SitterWork)
@@ -200,10 +163,6 @@ namespace DogSitterMarketplaceDal.Repositories
             orderDB.DateStart = orderUpdateEntity.DateStart;
             orderDB.DateEnd = orderUpdateEntity.DateEnd;
             orderDB.LocationId = orderUpdateEntity.LocationId;
-            //orderDB.IsDeleted = orderUpdateEntity.IsDeleted;
-            //orderDB.Comments = orderUpdateEntity.Comments;
-            //orderDB.Appeals = orderUpdateEntity.Appeals;
-            //orderDB.Pets.
             orderDB.Pets.Clear();
             orderDB.Pets.AddRange(orderUpdateEntity.Pets);
 
@@ -293,22 +252,6 @@ namespace DogSitterMarketplaceDal.Repositories
         // перенести в Сервис
         public List<SitterWorkEntity> GetAllSitterWorksByUserId(int id)
         {
-            //try
-            //{
-            //    return _context.SitterWork
-            //        .Include(sw => sw.WorkType)
-            //        .Include(sw => sw.User)
-            //        .Include(sw => sw.LocationWork)
-            //        .ThenInclude(lw => lw.TimingLocationWorks.Where(tl => FilterTimingLocationWork(tl, startOrder, endOrder)).ToList())
-            //        .Single(sw => sw.User.Id == id);
-            //}
-            //catch (InvalidOperationException ex)
-            //{
-            //    // logger.LogDebug($"{nameof(SitterWorkEntity)} with id {id} not found.");
-            //    _logger.Log(LogLevel.Debug, $"{nameof(SitterWorkEntity)} with id {id} not found.");
-            //    throw new NotFoundException(id, nameof(SitterWorkEntity));
-            //}
-
             return _context.SitterWork
                 .Include(sw => sw.WorkType)
                 .Include(sw => sw.User)

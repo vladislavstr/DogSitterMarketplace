@@ -33,7 +33,7 @@ namespace DogSitterMarketplaceBll.Services
         {
             _orderRepository = orderReposotory;
             _petRepository = petReposotory;
-            _userRepository = _userRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
             _logger = nLogger;
         }

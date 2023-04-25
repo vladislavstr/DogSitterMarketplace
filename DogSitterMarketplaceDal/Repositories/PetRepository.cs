@@ -25,14 +25,6 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public List<PetEntity> GetAllPets()
         {
-            //return _context.Pets
-            //    .Include(p => p.Type)
-            //    .Include(p => p.User)
-            //    .Where(p => !p.IsDeleted
-            //    && !p.Type.IsDeleted
-            //    && !p.User.IsDeleted)
-            //    .ToList();
-
             return _context.Pets
                 .Include(p => p.Type)
                 .Include(p => p.User)
@@ -44,13 +36,6 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             try
             {
-                //return _context.Pets
-                //        .Include(p => p.Type)
-                //        .Include(p => p.User)
-                //        .Single(p => !p.IsDeleted && p.Id == id
-                //         && !p.Type.IsDeleted
-                //         && !p.User.IsDeleted);
-
                 return _context.Pets
                         .Include(p => p.Type)
                         .Include(p => p.User)
@@ -137,14 +122,6 @@ namespace DogSitterMarketplaceDal.Repositories
             {
                 return new List<PetEntity>();
             }
-
-            //return _context.Pets
-            //                .Include(p => p.Type)
-            //                .Include(p => p.User)
-            //                .Where(p => !p.IsDeleted && pets.Contains(p.Id)
-            //                       && !p.Type.IsDeleted
-            //                       && !p.User.IsDeleted)
-            //                .ToList();
 
             return _context.Pets
                             .Include(p => p.Type)
