@@ -15,36 +15,45 @@ namespace DogSitterMarketplaceDal.Models.Appeals
         [Column(TypeName = "nvarchar(1000)"),]
         public string Text { get; set; }
 
-        //[Required]
+        [Required]
+        public DateTime DateOfCreate { get; set; }
+
+
+        [Column(TypeName = "nvarchar(1000)"),]
+        public string? ResponseText { get; set; }
+
+        public DateTime? DateOfResponse { get; set; }
+
+        [Required]
         [ForeignKey(nameof(TypeId))]
         public AppealTypeEntity Type { get; set; }
 
         public int TypeId { get; set; }
 
-        //[Required]
+        [Required]
         [ForeignKey(nameof(StatusId))]
         public AppealStatusEntity Status { get; set; }
 
         public int StatusId { get; set; }
 
-        //[Required]
+
         [ForeignKey(nameof(OrderId))]
         public OrderEntity? Order { get; set; }
+
         public int? OrderId { get; set; }
 
-        //[Required]
+        [Required]
         [ForeignKey(nameof(AppealFromUserId))]
         public UserEntity AppealFromUser { get; set; }
 
         public int AppealFromUserId { get; set; }
 
-        //[Required]
         [ForeignKey(nameof(AppealToUserId))]
         public UserEntity? AppealToUser { get; set; }
 
         public int? AppealToUserId { get; set; }
 
-        //[Required]
-        public bool IsDeleted { get; set; }
+        [NotMapped]
+        public bool IsDeleted { get; set; } 
     }
 }
