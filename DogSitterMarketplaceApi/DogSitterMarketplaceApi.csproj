@@ -21,8 +21,4 @@
     <ProjectReference Include="..\DogSitterMarketplaceDal\DogSitterMarketplaceDal.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Validations\" />
-  </ItemGroup>
-
 </Project>

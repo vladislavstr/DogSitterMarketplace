@@ -212,12 +212,10 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.ChangeOrderStatus_WhenCanNotChangeToAtWork_ShouldBeArgumentException_TestCaseSource))]
-        public void ChangeOrderStatusTest_WhenCanNotChangeToAtWork_ShouldBeArgumentException(int orderId, OrderEntity orderEntity, int orderStatusId, OrderStatusEntity orderStatus,
-                                                                                            OrderEntity updateOrderEntity)
+        public void ChangeOrderStatusTest_WhenCanNotChangeToAtWork_ShouldBeArgumentException(int orderId, OrderEntity orderEntity, int orderStatusId, OrderStatusEntity orderStatus)
         {
             _mockOrderRepo.Setup(o => o.GetOrderById(orderId)).Returns(orderEntity);
             _mockOrderRepo.Setup(o => o.GetOrderStatusById(orderStatusId)).Returns(orderStatus);
-            _mockOrderRepo.Setup(o => o.ChangeOrderStatus(orderId, orderStatusId)).Returns(updateOrderEntity);
 
             Assert.Throws<ArgumentException>(() => _orderService.ChangeOrderStatus(orderId, orderStatusId)); ;
 

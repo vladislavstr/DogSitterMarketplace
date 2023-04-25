@@ -2656,34 +2656,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 Comment = "at work",
                 IsDeleted = false
             };
-            OrderEntity updateOrderEntity = new OrderEntity
-            {
-                Id = 126,
-                Comment = "comment126",
-                OrderStatusId = 46,
-                SitterWorkId = 126,
-                Summ = 10026,
-                DateStart = new DateTime(2023, 04, 16, 12, 20, 00),
-                DateEnd = new DateTime(2023, 04, 17, 16, 20, 00),
-                LocationId = 16,
 
-                OrderStatus = new OrderStatusEntity
-                {
-                    Id = 46,
-                    Name = "at work",
-                },
-                SitterWork = new SitterWorkEntity
-                {
-                    Id = 126
-                },
-                Location = new LocationEntity
-                {
-                    Id = 126
-                }
-            };
-            updateOrderEntity.Pets.AddRange(new List<PetEntity>());
-
-            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus, updateOrderEntity};
+            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus};
         }
     }
 }

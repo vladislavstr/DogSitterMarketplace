@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceApi.Models.OrdersDto.Request;
 using DogSitterMarketplaceApi.Models.OrdersDto.Response;
+using DogSitterMarketplaceApi.Validations;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceCore.Exceptions;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 using ILogger = NLog.ILogger;
@@ -18,6 +20,10 @@ namespace DogSitterMarketplaceApi.Controllers
     {
         private readonly ICommentService _commentService;
 
+        private readonly ScoreValidator _scoreValidator;
+
+        private readonly ScoreUpdateValidator _scoreUpdateValidator;
+
         private readonly IMapper _mapper;
 
         private readonly ILogger _logger;
@@ -25,6 +31,8 @@ namespace DogSitterMarketplaceApi.Controllers
         public CommentController(ICommentService commentService, IMapper mapper, ILogger nLogger)
         {
             _commentService = commentService;
+            _scoreValidator = new ScoreValidator();
+            _scoreUpdateValidator = new ScoreUpdateValidator();
             _mapper = mapper;
             _logger = nLogger;
         }
@@ -185,6 +193,13 @@ namespace DogSitterMarketplaceApi.Controllers
         [HttpPost(Name = "AddComment")]
         public ActionResult<CommentOrderResponseDto> AddComment(CommentRequestDto addCommentRequestDto)
         {
+            var validationResult = _scoreValidator.Validate(addCommentRequestDto);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
             try
             {
                 var commentRequest = _mapper.Map<CommentRequest>(addCommentRequestDto);
@@ -210,6 +225,13 @@ namespace DogSitterMarketplaceApi.Controllers
         [HttpPut("{id}", Name = "UpdateComment")]
         public ActionResult<CommentOrderResponseDto> UpdateComment(CommentUpdateDto commentUpdatetDto)
         {
+            var validationResult = _scoreUpdateValidator.Validate(commentUpdatetDto);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
             try
             {
                 var commentUpdate = _mapper.Map<CommentUpdate>(commentUpdatetDto);
