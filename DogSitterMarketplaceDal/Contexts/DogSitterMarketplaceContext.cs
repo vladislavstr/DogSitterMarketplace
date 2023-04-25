@@ -38,10 +38,6 @@ namespace DogSitterMarketplaceDal.Contexts
 
         public DbSet<CommentEntity> Comments { get; set; }
 
-        public DbSet<SitterWorkEntity> SitterWork { get; set; }
-
-        public DbSet<LocationEntity> Location { get; set; }
-
         public DbSet<PetEntity> Pets { get; set; }
 
         public DbSet<AnimalTypeEntity> AnimalsTypes { get; set; }
