@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DogSitterMarketplaceDal.Models.Pets;
 using System.ComponentModel.DataAnnotations;
+using DogSitterMarketplaceDal.Models.Works;
 
 namespace DogSitterMarketplaceDal.Models.Users
 {
@@ -48,6 +49,10 @@ namespace DogSitterMarketplaceDal.Models.Users
 
         public int UserStatusId { get; set; }
 
-       public ICollection<PetEntity>? Pets { get; set; }
+        public ICollection<PetEntity>? Pets { get; set; }
+
+        public List<SitterWorkEntity> SitterWorks { get; set; } = new List<SitterWorkEntity>();
+
+
     }
 }

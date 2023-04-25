@@ -27,31 +27,9 @@ namespace DogSitterMarketplaceDal.Contexts
 
         public DbSet<UserEntity> Users { get; set; }
 
-
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            //builder.UseSqlServer("sqlConnectionString");
-            //builder.UseInMemoryDatabase("Db");
-            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=qqq;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-            {
-                foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
-            }
-
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                var isDeletedProp = entityType.FindProperty("IsDeleted");
-                if(isDeletedProp != null)
-                {
-                    isDeletedProp.SetDefaultValue(false);
-                }
-            }
+            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSItterMarketplaseDBConnect"));
         }
     }
 }
