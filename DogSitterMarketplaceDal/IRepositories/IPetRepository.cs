@@ -19,6 +19,6 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public AnimalTypeEntity GetAnimalTypeById(int id);
 
-        public UserEntity GetUserById(int id);
+     //   public UserEntity GetUserById(int id);
     }
 }

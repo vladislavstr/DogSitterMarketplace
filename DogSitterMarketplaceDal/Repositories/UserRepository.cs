@@ -49,6 +49,23 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
+        //2 логгер оставить
+        public UserEntity GetUserWithRoleById(int id)
+        {
+            try
+            {
+                return _context.Users
+                    .Include(u => u.UserRole)
+                    .Single(u => u.Id == id && !u.IsDeleted);
+            }
+            catch (InvalidOperationException)
+            {
+                //  _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetExistAndNotDeletedUserById)} {nameof(UserEntity)} with id {id} not found.");
+                //_logger.Log(LogLevel.Debug, $"{nameof(PetRepository)} {nameof(GetUserById)} {nameof(UserEntity)} with id {id} not found.");
+                throw new NotFoundException(id, nameof(UserEntity));
+            }
+        }
+
         public UserEntity AddUser(UserEntity user)
         {
             try
@@ -117,11 +134,28 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             try
             {
-                return _context.UsersRoles.SingleOrDefault(ur => ur.Id == id);
+                return _context.UsersRoles.Single(ur => ur.Id == id);
             }
             catch (NotFoundException)
             {
                 throw new NotFoundException(id, nameof(UserRole));
+            }
+        }
+
+        //2 логгер прописать
+        public UserEntity GetExistAndNotDeletedUserById(int id)
+        {
+            try
+            {
+                return _context.Users
+                    .Include(u => u.UserRole)
+                    .Single(u => u.Id == id && !u.IsDeleted);
+            }
+            catch (InvalidOperationException)
+            {
+                //_logger.LogDebug($"{nameof(UserEntity)} with id {id} not found.");
+               // _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
+                throw new NotFoundException(id, nameof(UserEntity));
             }
         }
     }

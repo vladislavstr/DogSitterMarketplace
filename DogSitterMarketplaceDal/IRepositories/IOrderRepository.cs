@@ -19,24 +19,24 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public void DeleteOrderById(int id);
 
-        public LocationEntity GetLocationById(int id);
+       // public LocationEntity GetLocationById(int id);
 
         public OrderStatusEntity GetOrderStatusById(int id);
 
-        public SitterWorkEntity GetSitterWorkById(int id);
+       // public SitterWorkEntity GetSitterWorkById(int id);
 
-        //public List<PetEntity> GetPetsInOrderEntities(List<int> pets);
-
-        public List<SitterWorkEntity> GetAllSitterWorksByUserId(int id);
+       // public List<SitterWorkEntity> GetAllSitterWorksByUserId(int id);
 
         public List<OrderEntity> GetOrdersAtWorkOnDateByUserId(int sitterId, DateTime startDate);
 
-        public UserEntity GetExistAndNotDeletedUserById(int id);
+    //    public UserEntity GetExistAndNotDeletedUserById(int id);
 
         public OrderEntity ChangeOrderStatus(int orderId, int orderStatusId);
 
         public List<OrderEntity> GetAllOrdersBySitterId(int userId);
 
         public OrderStatusEntity GetOrderStatusByName(string name);
+
+        public List<OrderEntity> GetOrdersBySitterIdAndClientId(int sitterId, int clientId);
     }
 }
