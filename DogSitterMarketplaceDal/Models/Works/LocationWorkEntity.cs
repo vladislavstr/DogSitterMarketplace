@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -26,8 +25,13 @@ namespace DogSitterMarketplaceDal.Models.Works
 
         [Required]
         [ForeignKey(nameof(SitterWorkId))]
-        public  SitterWorkEntity SitterWork { get; set; }
+        public SitterWorkEntity SitterWork { get; set; }
 
         public int SitterWorkId { get; set; }
+
+        public override string ToString()
+        {
+            return $"Location for work id:{Id} Price {Price} Location {LocationId}";
+        }
     }
 }
