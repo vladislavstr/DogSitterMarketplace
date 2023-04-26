@@ -9,20 +9,20 @@ namespace DogSitterMarketplaceDal.Repositories
 {
     public class TimeWorkRepository : ITimeWorkRepository
     {
-        private static WorkContext _context;
+        private static WorkContext _workContext;
         private static ILogger _logger;
 
-        public TimeWorkRepository(ILogger logger)
+        public TimeWorkRepository(ILogger logger,WorkContext context)
         {
-            _context = new WorkContext();
+            _workContext = context;
             _logger = logger;
         }
 
 
         public bool AddNewTimingsLocation(List<TimingLocationWorkEntity> timing)
         {
-            _context.TimingLocationWorks.AddRange(timing);
-            _context.SaveChanges();
+            _workContext.TimingLocationWorks.AddRange(timing);
+            _workContext.SaveChanges();
 
             foreach (var t in timing)
             {
@@ -34,8 +34,8 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public bool AddNewTimingLocation(TimingLocationWorkEntity timing)
         {
-            _context.TimingLocationWorks.Add(timing);
-            _context.SaveChanges();
+            _workContext.TimingLocationWorks.Add(timing);
+            _workContext.SaveChanges();
             _logger.Log(LogLevel.Info, $"Add new timings {timing.ToString()}");
 
             return true;
@@ -45,7 +45,7 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             bool timingUpdate = false;
 
-            var updateTiming = _context.TimingLocationWorks
+            var updateTiming = _workContext.TimingLocationWorks
                 .Include(tl => tl.DayOfWeek)
                 .Include(tl => tl.LocationWork)
                 .SingleOrDefault(tl => tl.Id == timing.Id);
@@ -56,7 +56,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 updateTiming.Stop = timing.Stop;
                 updateTiming.DayOfWeekId = timing.DayOfWeekId;
                 updateTiming.LocationWorkId = timing.LocationWorkId;
-                _context.SaveChanges();
+                _workContext.SaveChanges();
                 timingUpdate = true;
                 _logger.Log(LogLevel.Info, $"Update timings {updateTiming.ToString()}");
             }
@@ -72,7 +72,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public TimingLocationWorkEntity GetTiming(int idTiming)
         {
-            var timing = _context.TimingLocationWorks
+            var timing = _workContext.TimingLocationWorks
                 .Include(t => t.DayOfWeek)
                 .Include(t => t.LocationWork)
                 .SingleOrDefault(t => t.Id == idTiming);
@@ -90,7 +90,7 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             List<TimingLocationWorkEntity> oldTimings = null;
 
-            oldTimings = _context.TimingLocationWorks
+            oldTimings = _workContext.TimingLocationWorks
                 .Include(t => t.LocationWork)
                 .Include(t => t.DayOfWeek)
                 .Where(t => t.LocationWorkId == locationWorkId).ToList();
@@ -102,13 +102,13 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             bool isDelete = false;
 
-            var deleteTiming = _context.TimingLocationWorks
+            var deleteTiming = _workContext.TimingLocationWorks
                 .SingleOrDefault(t => t.Id == id);
 
             if (deleteTiming != null)
             {
-                _context.TimingLocationWorks.Remove(deleteTiming);
-                _context.SaveChanges();
+                _workContext.TimingLocationWorks.Remove(deleteTiming);
+                _workContext.SaveChanges();
                 _logger.Log(LogLevel.Info, $"Time interval with id {id} not found");
                 isDelete = true;
             }
