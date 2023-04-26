@@ -123,12 +123,8 @@ namespace DogSitterMarketplaceBll.Services
         public List<OrderResponse> GetAllOrdersUnderConsiderationBySitterId(int userId)
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(GetAllOrdersUnderConsiderationBySitterId)}");
-
-            // запрос в другой репозиторий Или вставить Проверку
             var userEntity = _userRepository.GetUserWithRoleById(userId);
             var allOrdersEntities = _orderRepository.GetAllOrdersBySitterId(userId);
-
-            // !!! из-за разных контекстов, сейчас эти  метод не работают. ПОТОМ ПРОВЕРИТЬ!
             var userRole = _userRepository.GetUserRoleById(userEntity.UserRoleId);
 
             if (userRole.Name == UserRole.Sitter)
