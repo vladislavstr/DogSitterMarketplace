@@ -18,5 +18,7 @@ namespace DogSitterMarketplaceDal.IRepositories
         public UserEntity GetUserWithRoleById(int id);
 
         public UserEntity GetExistAndNotDeletedUserById(int id);
+
+        public List<UserEntity> GetAllSittersByLocationId(int locationId);
     }
 }
