@@ -134,7 +134,6 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-
         public AppealEntity AddAppeal(AppealEntity appeal)
         {
             _context.Appeals.Add(appeal);
@@ -164,21 +163,6 @@ namespace DogSitterMarketplaceDal.Repositories
 
             return appealType;
         }
-
-        //public void DeleteAppealById(int id)
-        //{
-        //    try
-        //    {
-        //        var appeal = _context.Appeals.Single(a => !a.IsDeleted && a.Id == id);
-        //        appeal.IsDeleted = true;
-        //        _context.SaveChanges();
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        Console.WriteLine(exception.Message);
-        //        throw new Exception($"Id:{id} - отсутствует");
-        //    }
-        //}
 
         public void UpdateAppealStatusById(int AppealId, int StatusId)
         {

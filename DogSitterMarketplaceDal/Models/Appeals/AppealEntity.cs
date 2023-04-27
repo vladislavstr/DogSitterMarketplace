@@ -52,8 +52,5 @@ namespace DogSitterMarketplaceDal.Models.Appeals
         public UserEntity? AppealToUser { get; set; }
 
         public int? AppealToUserId { get; set; }
-
-        //[Required]
-        //public bool IsAnswered { get; set; }
     }
 }

@@ -93,12 +93,6 @@ namespace DogSitterMarketplaceBll.Services
             return addAppealTypeResponse;
         }
 
-        //public void DeleteAppealById(int id)
-        //{
-        //    _appealRepository.DeleteAppealById(id);
-        //}
-
-
         public void UpdateAppealStatusById(int AppealId, int StatusId)
         {
             _appealRepository.UpdateAppealStatusById(AppealId, StatusId);
@@ -112,7 +106,7 @@ namespace DogSitterMarketplaceBll.Services
             {
 
                 appeal.DateOfResponse = DateTime.Now;
-                appeal.ResponseText=text;
+                appeal.ResponseText = text;
                 appeal.StatusId = statusId;
                 var appealEntity = _mapper.Map<AppealEntity>(appeal);
                 var addAppealEntity = _appealRepository.DoResponseTextByAppeal(appealEntity);

@@ -146,20 +146,6 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
 
-        //[HttpDelete("DeleteAppealById/{id:int}", Name = "DeleteAppealById")]
-        //public IActionResult DeleteAppealById(int id)
-        //{
-        //    try
-        //    {
-        //        _appealService.DeleteAppealById(id);
-        //        return NoContent();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Ok(ex.Message);
-        //    }
-        //}
-
         [HttpPut("UpdateAppealStatusById/{AppealId:int}_{StatusId:int}", Name = "UpdateAppealStatusById")]
         public IActionResult UpdateAppealStatusById(int AppealId, int StatusId)
         {
@@ -173,23 +159,6 @@ namespace DogSitterMarketplaceApi.Controllers
                 return Ok(ex.Message);
             }
         }
-
-        //[HttpPut("DoResponseText", Name = "DoResponseText")]
-        //public ActionResult<AppealUpdateDto> DoResponseText(AppealUpdateDto appeal)
-        //{
-        //    try
-        //    {
-        //        var appealUpdate = _mapper.Map<AppealUpdate>(appeal);
-        //        var addAppealResponse = _appealService.DoResponseText(appealUpdate);
-        //        var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
-
-        //        return Created(new Uri("api/Appeal", UriKind.Relative), appeal);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Ok(ex.Message);
-        //    }
-        //}
 
         [HttpPut("DoResponseTextById/{id:int}", Name = "DoResponseTextById")]
         public ActionResult<AppealUpdateDto> DoResponseTextByAppealId(int id, string text, int statusId)
