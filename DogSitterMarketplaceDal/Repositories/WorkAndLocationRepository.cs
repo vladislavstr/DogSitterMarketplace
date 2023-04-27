@@ -78,12 +78,20 @@ namespace DogSitterMarketplaceDal.Repositories
 
             return result;
         }
+
         public List<LocationWorkEntity> GetAllLocationWork()
         {
             var sitterWorks = _workContext.LocationWorks
                 .Include(sw => sw.Location)
                 .Include(sw => sw.TimingLocationWorks)
                 .ThenInclude(sw => sw.DayOfWeek).ToList();
+
+            if (sitterWorks == null)
+            {
+                _logger.Log(LogLevel.Warn, $"Time interval not found");
+            }
+
+            _logger.Log(LogLevel.Info, $"Загружаемые локации по запросу {nameof(GetAllLocationWork)}");
 
             return sitterWorks;
         }
@@ -99,15 +107,16 @@ namespace DogSitterMarketplaceDal.Repositories
 
             if (location == null)
             {
-                _logger.Log(LogLevel.Error, $"Time interval with id {id} not found");
+                _logger.Log(LogLevel.Warn, $"Time interval with id {id} not found");
+                throw new FileNotFoundException($"Time interval with id {id} not found");
             }
 
             return location;
         }
 
-        public List<LocationWorkEntity> GetAllLocationWorkBySitterWork(int sitterWorkId)
+        public List<LocationWorkEntity> GetAllLocationsWorkBySitterWork(int sitterWorkId)
         {
-            if (_workContext.SitterWorks.SingleOrDefault(sw => sw.Id == sitterWorkId)==null)
+            if (_workContext.SitterWorks.SingleOrDefault(sw => sw.Id == sitterWorkId) == null)
             {
                 _logger.Log(LogLevel.Warn, $"Sitter Work  for id {sitterWorkId} not found");
                 throw new FileNotFoundException($"Sitter Work  for id {sitterWorkId} not found");
@@ -118,6 +127,28 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(sw => sw.TimingLocationWorks)
                 .ThenInclude(sw => sw.DayOfWeek)
                 .Where(sw => sw.SitterWorkId == sitterWorkId).ToList();
+
+            if (sitterWorks == null)
+            {
+                _logger.Log(LogLevel.Warn, $"No Time interval for sitter work {sitterWorkId} ");
+            }
+
+            return sitterWorks;
+        }
+
+        public List<LocationWorkEntity> GetLocationsWorkBySitterWorkAndStatus(int sitterWorkId, bool isNotActive = false)
+        {
+            if (_workContext.SitterWorks.SingleOrDefault(sw => sw.Id == sitterWorkId) == null)
+            {
+                _logger.Log(LogLevel.Warn, $"Sitter Work  for id {sitterWorkId} not found");
+                throw new FileNotFoundException($"Sitter Work  for id {sitterWorkId} not found");
+            }
+
+            var sitterWorks = _workContext.LocationWorks
+                .Include(sw => sw.Location)
+                .Include(sw => sw.TimingLocationWorks)
+                .ThenInclude(sw => sw.DayOfWeek)
+                .Where(sw => sw.SitterWorkId == sitterWorkId && sw.IsNotActive == isNotActive).ToList();
 
             if (sitterWorks == null)
             {
@@ -140,7 +171,30 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(sw => sw.TimingLocationWorks)
                 .ThenInclude(sw => sw.DayOfWeek)
                 .Include(sw => sw.SitterWork)
-                .Where(sw=>sw.LocationId==locationId).ToList();
+                .Where(sw => sw.LocationId == locationId).ToList();
+
+            if (sitter == null)
+            {
+                _logger.Log(LogLevel.Warn, $"Location work by location {locationId} not found");
+            }
+
+            return sitter;
+        }
+
+        public List<LocationWorkEntity> GetAllLocationsWorkByLocationAndStatus(int locationId, bool isNotActive = false)
+        {
+            if (_workContext.LocationWorks.SingleOrDefault(sw => sw.Id == locationId) == null)
+            {
+                _logger.Log(LogLevel.Warn, $"Location by id {locationId} not found");
+                throw new FileNotFoundException($"Location by id {locationId} not found");
+            }
+
+            var sitter = _workContext.LocationWorks
+                .Include(sw => sw.Location)
+                .Include(sw => sw.TimingLocationWorks)
+                .ThenInclude(sw => sw.DayOfWeek)
+                .Include(sw => sw.SitterWork)
+                .Where(sw => sw.LocationId == locationId && sw.IsNotActive == isNotActive).ToList();
 
             if (sitter == null)
             {
@@ -150,5 +204,17 @@ namespace DogSitterMarketplaceDal.Repositories
 
             return sitter;
         }
+
+        public List<LocationWorkEntity> GetAllLocationWorkbyActiveStatus(bool isNotActive = false)
+        {
+            var sitterWorks = _workContext.LocationWorks
+                .Include(sw => sw.Location)
+                .Include(sw => sw.TimingLocationWorks)
+                .ThenInclude(sw => sw.DayOfWeek)
+                .Where(sw => sw.IsNotActive == isNotActive).ToList();
+
+            return sitterWorks;
+        }
+
     }
 }

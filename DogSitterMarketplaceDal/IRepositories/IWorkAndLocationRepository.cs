@@ -1,5 +1,4 @@
-﻿using DogSitterMarketplaceDal.Models.Contexts;
-using DogSitterMarketplaceDal.Models.Works;
+﻿using DogSitterMarketplaceDal.Models.Works;
 
 namespace DogSitterMarketplaceDal.IRepositories
 {
@@ -15,9 +14,14 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public LocationWorkEntity GetLocationWorkByid(int id);
 
-        public List<LocationWorkEntity> GetAllLocationWorkBySitterWork(int sitterWorkId);
+        public List<LocationWorkEntity> GetAllLocationsWorkBySitterWork(int sitterWorkId);
+
+        public List<LocationWorkEntity> GetLocationsWorkBySitterWorkAndStatus(int sitterWorkId, bool isNotActive = false);
 
         public List<LocationWorkEntity> GetAllLocationWorkByLocation(int locationId);
 
+        public List<LocationWorkEntity> GetAllLocationsWorkByLocationAndStatus(int locationId, bool isNotActive = false);
+
+        public List<LocationWorkEntity> GetAllLocationWorkbyActiveStatus(bool isNotActive = false);
     }
 }

@@ -22,13 +22,14 @@ namespace DogSitterMarketplaceApi.Mappings
             CreateMap<TimingLocationWorkResponse, TimingLocationWorkResponseDto>();
             CreateMap<DayOfWeekResponse, DayOfWeekResponseDto>();
             CreateMap<DayOfWeekRequestDto, DayOfWeekRequest>();
-            CreateMap<LocationWorkRequestDto,LocationWorkRequest>();
+            CreateMap<LocationWorkRequestDto, LocationWorkRequest>();
             CreateMap<UpdateLocationWorkRequesDto, UpdateLocationWorkRequest>();
             CreateMap<LocationWorkResponse, LocationWorkResponseDto>();
             CreateMap<LocationRequestDto, LocationRequest>();
             CreateMap<LocationResponse, LocationResponseDto>();
             CreateMap<SitterWorkRequestDto, SitterWorkRequest>();
             CreateMap<SitterWorkResponse, SitterWorkResponseDto>();
+            CreateMap<TimingLocationWorkResponse, TimingLocationWorkResponseDto>();
         }
 
         private TimeSpan ConvertToTimeSpan(int hour, int minut)

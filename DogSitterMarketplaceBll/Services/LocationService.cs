@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Works.Request;
+using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Works;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +40,7 @@ namespace DogSitterMarketplaceBll.Services
                 throw new ExcepsionOfWorkOnLocation($"service price cannot be less than 0 ");
             }
 
-            var oldLocationWork = _workAndLocationRepo.GetAllLocationWorkBySitterWork(location.SitterWorkId);
+            var oldLocationWork = _workAndLocationRepo.GetAllLocationsWorkBySitterWork(location.SitterWorkId);
             var newLocationWornBll = _mapper.Map<LocationWorkEntity>(location);
 
             if (oldLocationWork != null)
@@ -69,7 +71,7 @@ namespace DogSitterMarketplaceBll.Services
             }
 
             var updateLocation = _mapper.Map<LocationWorkEntity>(location);
-            var oldLocationWork = _workAndLocationRepo.GetAllLocationWorkBySitterWork(updateLocation.SitterWorkId);
+            var oldLocationWork = _workAndLocationRepo.GetAllLocationsWorkBySitterWork(updateLocation.SitterWorkId);
 
             if (oldLocationWork.Exists(lw => lw.LocationId == updateLocation.LocationId && lw.IsNotActive == false && lw.Id!=updateLocation.Id))
             {
@@ -85,5 +87,44 @@ namespace DogSitterMarketplaceBll.Services
             return result;
         }
 
+        public bool DeleteLocationWork(int locationWorkId)
+        {
+            return _workAndLocationRepo.DeleteLocationWork(locationWorkId);
+        }
+
+        public List<LocationWorkResponse> GetAllLocationWork()
+        {
+            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetAllLocationWork());
+        }
+
+        public LocationWorkResponse GetLocationWorkByid(int id)
+        {
+            return _mapper.Map<LocationWorkResponse>(_workAndLocationRepo.GetLocationWorkByid(id));
+        }
+
+        public List<LocationWorkResponse> GetAllLocationWorkbyActiveStatus(bool isNotActive = false)
+        {
+            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetAllLocationWorkbyActiveStatus(isNotActive));
+        }
+
+        public List<LocationWorkResponse> GetLocationsWorkBySitterWorkAndStatus(int sitterWorkId, bool isNotActive = false)
+        {
+            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetLocationsWorkBySitterWorkAndStatus(sitterWorkId, isNotActive));
+        }
+
+        public List<LocationWorkResponse> GetAllLocationWorkBySitterWork(int sitterWorkId)
+        {
+            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetAllLocationsWorkBySitterWork(sitterWorkId));
+        }
+
+        public List<LocationWorkResponse> GetAllLocationWorkByLocation(int locationId)
+        {
+            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetAllLocationWorkByLocation(locationId));
+        }
+
+        public List<LocationWorkResponse> GetAllLocationWorkByLocationAndStatus(int locationId, bool isNotActive = false)
+        {
+            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetAllLocationsWorkByLocationAndStatus(locationId, isNotActive));
+        }
     }
 }
