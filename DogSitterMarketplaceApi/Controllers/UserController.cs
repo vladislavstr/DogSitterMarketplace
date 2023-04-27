@@ -5,6 +5,9 @@ using DogSitterMarketplaceApi.Models.UsersDto.Request;
 using DogSitterMarketplaceApi.Models.UsersDto.Response;
 using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceBll.IServices;
+using DogSitterMarketplaceApi.Models.OrdersDto.Response;
+using DogSitterMarketplaceBll.Services;
+using DogSitterMarketplaceCore.Exceptions;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -99,6 +102,32 @@ namespace DogSitterMarketplaceApi.Controllers
             catch (Exception ex)
             {
                 return Ok(ex.Message);
+            }
+        }
+
+        [HttpGet("allSittersByLocation/{clientId}", Name = "GetAllSittersForClientByLocationId")]
+        public ActionResult<List<UserShortResponseDto>> GetAllSittersForClientByLocationId(int locationId, int clientId)
+        {
+            try
+            {
+                var allSittersResponse = _userService.GetAllSittersForClientByLocationId(locationId, clientId);
+                var allSittersResponseDto = _mapper.Map<List<UserShortResponseDto>>(allSittersResponse);
+
+                return Ok(allSittersResponseDto);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                // _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllNotDeletedOrders)}");
+                //_logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(GetAllSittersForClientByLocationId)}");
+                return BadRequest();
             }
         }
     }

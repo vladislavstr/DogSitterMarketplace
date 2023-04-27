@@ -1,6 +1,10 @@
-﻿using DogSitterMarketplaceDal.Contexts;
+﻿using DogSitterMarketplaceCore;
+using DogSitterMarketplaceCore.Exceptions;
+using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
+using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Users;
+using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.Repositories
@@ -9,14 +13,17 @@ namespace DogSitterMarketplaceDal.Repositories
     {
         private static UserContext _context;
 
-        public UserRepository(UserContext context)
+        private static WorkContext _contextWork;
+
+        public UserRepository(UserContext context, WorkContext contextWork)
         {
             _context = context;
+            _contextWork = contextWork;
         }
 
         public List<UserEntity> GetAllUsers()
         {
-            
+
             var result = new List<UserEntity>();
 
             result = _context.Users
@@ -44,6 +51,23 @@ namespace DogSitterMarketplaceDal.Repositories
             {
                 Console.WriteLine(exception.Message);
                 throw new Exception($"Id:{id} - отсутствует");
+            }
+        }
+
+        //2 логгер оставить
+        public UserEntity GetUserWithRoleById(int id)
+        {
+            try
+            {
+                return _context.Users
+                    .Include(u => u.UserRole)
+                    .Single(u => u.Id == id && !u.IsDeleted);
+            }
+            catch (InvalidOperationException)
+            {
+                //  _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetExistAndNotDeletedUserById)} {nameof(UserEntity)} with id {id} not found.");
+                //_logger.Log(LogLevel.Debug, $"{nameof(PetRepository)} {nameof(GetUserById)} {nameof(UserEntity)} with id {id} not found.");
+                throw new NotFoundException(id, nameof(UserEntity));
             }
         }
 
@@ -111,5 +135,64 @@ namespace DogSitterMarketplaceDal.Repositories
         //    }
         //}
 
+        //2 логгер прописать
+        public UserRoleEntity GetUserRoleById(int id)
+        {
+            try
+            {
+                return _context.UsersRoles.Single(ur => ur.Id == id);
+            }
+            catch (InvalidOperationException)
+            {
+                // _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
+                throw new NotFoundException(id, nameof(UserRole));
+            }
+        }
+
+        //2 логгер прописать
+        public UserEntity GetExistAndNotDeletedUserById(int id)
+        {
+            try
+            {
+                return _context.Users
+                    .Include(u => u.UserRole)
+                    .Single(u => u.Id == id && !u.IsDeleted);
+            }
+            catch (InvalidOperationException)
+            {
+                //_logger.LogDebug($"{nameof(UserEntity)} with id {id} not found.");
+               // _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
+                throw new NotFoundException(id, nameof(UserEntity));
+            }
+        }
+
+        //2 логгер прописать
+        public List<UserEntity> GetAllSittersByLocationId(int locationId)
+        {
+            try
+            {
+                var location = _contextWork.Locations.SingleOrDefault(l => l.Id == locationId);
+
+                if (location == null)
+                {
+                    // _logger.Log(LogLevel.Debug, $" {(nameof(LocationEntity))} with id {locationId} not found");
+                    throw new NotFoundException(locationId, nameof(LocationEntity));
+                }
+
+                return _context.Users
+                    .Include(u => u.UserRole)
+                    .Include(u => u.SitterWorks)
+                    .ThenInclude(sw => sw.LocationWork)
+                    .Where(u => u.UserRole.Name == UserRole.Sitter
+                           && u.SitterWorks.Any(sw => sw.LocationWork.Any(l => l.LocationId == locationId)))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogDebug($"{ex}, {nameof(CommentRepository)} {nameof(CommentEntity)} {nameof(AddComment)}");
+                //_logger.Log(LogLevel.Debug, $"({ex}, {nameof(UserRepository)} {nameof(GetAllSittersByLocationId)} ");
+                throw new ArgumentException();
+            }
+        }
     }
 }

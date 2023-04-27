@@ -1,11 +1,11 @@
-﻿using DogSitterMarketplaceDal.Models.Appeals;
+using DogSitterMarketplaceDal.Models.Appeals;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 
-namespace DogSitterMarketplaceDal
+namespace DogSitterMarketplaceDal.Contexts
 {
     public class OrdersAndPetsAndCommentsContext : DbContext
     {
@@ -17,11 +17,9 @@ namespace DogSitterMarketplaceDal
 
         public DbSet<AppealEntity> Appeals { get; set; }
 
-      //  public DbSet<PetsInOrderEntity> PetsInOrders { get; set; }
+        public DbSet<SitterWorkEntity> SitterWorks { get; set; }
 
-        public DbSet<SitterWorkEntity> SitterWork { get; set; }
-
-        public DbSet<LocationEntity> Location { get; set; }
+        public DbSet<LocationEntity> Locations { get; set; }
 
         public DbSet<PetEntity> Pets { get; set; }
 
@@ -29,32 +27,11 @@ namespace DogSitterMarketplaceDal
 
         public DbSet<UserEntity> Users { get; set; }
 
+        public DbSet<WorkTypeEntity> WorkTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            //builder.UseSqlServer("sqlConnectionString");
-            //builder.UseInMemoryDatabase("Db");
-            //builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=DogSitt;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
-            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSitterSqlConnect"));
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-            {
-                foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
-            }
-
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                var isDeletedProp = entityType.FindProperty("IsDeleted");
-                if(isDeletedProp != null)
-                {
-                    isDeletedProp.SetDefaultValue(false);
-                }
-            }
+            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSItterMarketplaseDBConnect"));
         }
     }
 }

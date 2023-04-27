@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceDal.Models.Works;
+using DogSitterMarketplaceDal.Models.Works;
 
 namespace DogSitterMarketplaceDal.IRepositories
 {
@@ -13,6 +13,12 @@ namespace DogSitterMarketplaceDal.IRepositories
         public List<LocationWorkEntity> GetAllLocationWork();
 
         public LocationWorkEntity GetLocationWorkByid(int id);
+
+        public SitterWorkEntity GetNotDeletedSitterWorkById(int id);
+
+        public List<SitterWorkEntity> GetAllSitterWorksByUserId(int id);
+
+        public LocationEntity GetLocationById(int id);
 
         public List<LocationWorkEntity> GetAllLocationsWorkBySitterWork(int sitterWorkId);
 

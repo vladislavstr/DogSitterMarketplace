@@ -1,9 +1,10 @@
-﻿using DogSitterMarketplaceDal.IRepositories;
-using DogSitterMarketplaceDal.Models.Contexts;
+using DogSitterMarketplaceDal.IRepositories;
+using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 using ILogger = NLog.ILogger;
 using LogLevel = NLog.LogLevel;
+using DogSitterMarketplaceCore.Exceptions;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -136,6 +137,20 @@ namespace DogSitterMarketplaceDal.Repositories
             return sitterWorks;
         }
 
+        //прописать 2й логгер
+        public SitterWorkEntity GetNotDeletedSitterWorkById(int id)
+        {
+            try
+            {
+                return _context.SitterWorks.Single(o => o.Id == id && !o.IsDeleted);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // logger.LogDebug($"{nameof(SitterWorkEntity)} with id {id} not found.");
+              //  _logger.Log(LogLevel.Debug, $"{nameof(SitterWorkEntity)} with id {id} not found.");
+                throw new NotFoundException(id, nameof(SitterWorkEntity));
+            }
+        }
         public List<LocationWorkEntity> GetLocationsWorkBySitterWorkAndStatus(int sitterWorkId, bool isNotActive = false)
         {
             if (_workContext.SitterWorks.SingleOrDefault(sw => sw.Id == sitterWorkId) == null)
@@ -143,6 +158,17 @@ namespace DogSitterMarketplaceDal.Repositories
                 _logger.Log(LogLevel.Warn, $"Sitter Work  for id {sitterWorkId} not found");
                 throw new FileNotFoundException($"Sitter Work  for id {sitterWorkId} not found");
             }
+
+        public List<SitterWorkEntity> GetAllSitterWorksByUserId(int id)
+        {
+            return _context.SitterWorks
+                .Include(sw => sw.WorkType)
+                .Include(sw => sw.User)
+                .Include(sw => sw.LocationWork)
+                .ThenInclude(lw => lw.TimingLocationWorks)
+                .ThenInclude(tlw => tlw.DayOfWeek)
+                .Where(sw => sw.User.Id == id).ToList();
+        }
 
             var sitterWorks = _workContext.LocationWorks
                 .Include(sw => sw.Location)
@@ -179,6 +205,21 @@ namespace DogSitterMarketplaceDal.Repositories
             }
 
             return sitter;
+        }
+
+        // 2й логгер прописать
+        public LocationEntity GetLocationById(int id)
+        {
+            try
+            {
+                return _context.Locations.Single(o => o.Id == id && !o.IsDeleted);
+            }
+            catch (InvalidOperationException ex)
+            {
+                //_logger.LogDebug($"{nameof(LocationEntity)} with id {id} not found.");
+               // _logger.Log(LogLevel.Debug, $"{nameof(LocationEntity)} with id {id} not found.");
+                throw new NotFoundException(id, nameof(LocationEntity));
+            }
         }
 
         public List<LocationWorkEntity> GetAllLocationsWorkByLocationAndStatus(int locationId, bool isNotActive = false)

@@ -1,5 +1,5 @@
 ﻿using DogSitterMarketplaceDal.IRepositories;
-using DogSitterMarketplaceDal.Models.Contexts;
+using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 using ILogger = NLog.ILogger;

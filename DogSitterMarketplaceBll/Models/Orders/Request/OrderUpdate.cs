@@ -13,11 +13,11 @@ namespace DogSitterMarketplaceBll.Models.Orders.Request
 
         public string? Comment { get; set; }
 
-        public int OrderStatusId { get; set; }
+       // public int OrderStatusId { get; set; }
 
         public int SitterWorkId { get; set; }
 
-        public int Summ { get; set; }
+        public decimal Summ { get; set; }
 
         public DateTime DateStart { get; set; }
 

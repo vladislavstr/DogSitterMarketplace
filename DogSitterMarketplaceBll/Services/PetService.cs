@@ -8,6 +8,7 @@ using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using NLog;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using DogSitterMarketplaceDal.Repositories;
 
 namespace DogSitterMarketplaceBll.Services
 {
@@ -17,11 +18,14 @@ namespace DogSitterMarketplaceBll.Services
 
         private readonly IPetRepository _petRepository;
 
+        private readonly IUserRepository _userRepository;
+
         private readonly ILogger _logger;
 
-        public PetService(IPetRepository petRepository, IMapper mapper, ILogger nLogger)
+        public PetService(IPetRepository petRepository, IUserRepository userRepository, IMapper mapper, ILogger nLogger)
         {
             _petRepository = petRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
             _logger = nLogger;
         }
@@ -30,8 +34,7 @@ namespace DogSitterMarketplaceBll.Services
         {
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} start {nameof(GetAllNotDeletedPets)}");
             var allpetsEntitys = _petRepository.GetAllPets();
-            var petsEntitys = allpetsEntitys
-                                            .Where(p => !p.IsDeleted && !p.User.IsDeleted);
+            var petsEntitys = allpetsEntitys.Where(p => !p.IsDeleted && !p.User.IsDeleted);
             var petsResponse = _mapper.Map<List<PetResponse>>(petsEntitys);
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} end {nameof(GetAllNotDeletedPets)}");
 
@@ -80,7 +83,7 @@ namespace DogSitterMarketplaceBll.Services
         {
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} start {nameof(UpdatePet)}");
             var petEntity = _mapper.Map<PetEntity>(petUpdate);
-            petUpdate.UserId = _petRepository.GetUserById(petUpdate.UserId).Id;
+            petUpdate.UserId = _userRepository.GetUserWithRoleById(petUpdate.UserId).Id;
             var updatePetEntity = _petRepository.UpdatePet(petEntity);
             var updatePetResponse = _mapper.Map<PetResponse>(updatePetEntity);
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} end {nameof(UpdatePet)}");

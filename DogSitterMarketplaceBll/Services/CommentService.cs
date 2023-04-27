@@ -3,6 +3,7 @@ using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Users.Response;
+using DogSitterMarketplaceCore;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Orders;
@@ -19,16 +20,19 @@ namespace DogSitterMarketplaceBll.Services
 
         private readonly IOrderRepository _orderRepository;
 
+        private readonly IUserRepository _userRepository;
+
         private readonly IOrderService _orderService;
 
         private readonly IMapper _mapper;
 
         private readonly ILogger _logger;
 
-        public CommentService(ICommentRepository commentRepository, IOrderRepository orderRepository, IOrderService orderService, IMapper mapper, ILogger nLogger)
+        public CommentService(ICommentRepository commentRepository, IOrderRepository orderRepository, IUserRepository userRepository, IOrderService orderService, IMapper mapper, ILogger nLogger)
         {
             _commentRepository = commentRepository;
             _orderRepository = orderRepository;
+            _userRepository = userRepository;
             _orderService = orderService;
             _mapper = mapper;
             _logger = nLogger;
@@ -39,9 +43,24 @@ namespace DogSitterMarketplaceBll.Services
             var userCommentFrom = CheckUserIsExistAndIsNotDeleted(addComment.CommentFromUserId);
             var userCommentTo = CheckUserIsExistAndIsNotDeleted(addComment.CommentToUserId);
             var orderResponse = _orderService.CheckOrderIsExistAndIsNotDeleted(addComment.OrderId);
+            var userRoleCommentFrom = _userRepository.GetUserRoleById(userCommentFrom.RoleId);
+            var userRoleCommentTo = _userRepository.GetUserRoleById(userCommentTo.RoleId);
 
-            if (userCommentFrom.RoleId == 3 && userCommentTo.RoleId == 4
-                || userCommentFrom.RoleId == 4 && userCommentTo.RoleId == 3)
+            if (userRoleCommentFrom.Name == UserRole.Sitter && userRoleCommentTo.Name == UserRole.Client
+                && !CheckOrderBetweenSitterAndClient(userCommentFrom.Id, userCommentTo.Id, orderResponse.Id))
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(AddComment)} Order between users with id {userRoleCommentFrom.Id} and id {userRoleCommentTo.Id} not found");
+                throw new ArgumentException("Order between users with id {userRoleCommentFrom.Id} and id {userRoleCommentTo.Id} not found");
+            }
+            else if (userRoleCommentFrom.Name == UserRole.Client && userRoleCommentTo.Name == UserRole.Sitter
+                && !CheckOrderBetweenSitterAndClient(userCommentTo.Id, userCommentFrom.Id, orderResponse.Id))
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(AddComment)} Order between users with id {userRoleCommentFrom.Id} and id {userRoleCommentTo.Id} not found");
+                throw new ArgumentException("Order between users with id {userRoleCommentFrom.Id} and id {userRoleCommentTo.Id} not found");
+            }
+
+            if (userRoleCommentFrom.Name == UserRole.Sitter && userRoleCommentTo.Name == UserRole.Client
+                || userRoleCommentFrom.Name == UserRole.Client && userRoleCommentTo.Name == UserRole.Sitter)
             {
                 var commentEntity = _mapper.Map<CommentEntity>(addComment);
                 var addCommentEntity = _commentRepository.AddComment(commentEntity);
@@ -63,8 +82,10 @@ namespace DogSitterMarketplaceBll.Services
             var commentUserToResponse = CheckUserIsExistAndIsNotDeleted(userIdToComment);
             var userWhoGetCommentResponse = CheckUserIsExistAndIsNotDeleted(userIdGetComment);
             var sortDescCommentsEntities = SortDescComments(userIdToComment);
+            var userRoleWhoGetComment = _userRepository.GetUserRoleById(userWhoGetCommentResponse.RoleId);
+            var userRoleCommentTo = _userRepository.GetUserRoleById(commentUserToResponse.RoleId);
 
-            if (userWhoGetCommentResponse.RoleId == 3 && commentUserToResponse.RoleId == 4)
+            if (userRoleWhoGetComment.Name == UserRole.Client && userRoleCommentTo.Name == UserRole.Sitter)
             {
                 var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
                 var resultComments = _mapper.Map<List<CommentAboutSitterForClientResponse>>(sortDescCommentsEntities);
@@ -89,8 +110,10 @@ namespace DogSitterMarketplaceBll.Services
             var commentUserToResponse = CheckUserIsExistAndIsNotDeleted(userIdToComment);
             var userWhoGetCommentResponse = CheckUserIsExistAndIsNotDeleted(userIdGetComment);
             var sortDescCommentsEntities = SortDescComments(userIdToComment);
+            var userRoleWhoGetComment = _userRepository.GetUserRoleById(userWhoGetCommentResponse.RoleId);
+            var userRoleCommentTo = _userRepository.GetUserRoleById(commentUserToResponse.RoleId);
 
-            if (userWhoGetCommentResponse.RoleId == 4 && commentUserToResponse.RoleId == 3)
+            if (userRoleWhoGetComment.Name == UserRole.Sitter && userRoleCommentTo.Name == UserRole.Client)
             {
                 var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
                 var resultComments = _mapper.Map<List<CommentAboutClientsForSitterResponse>>(sortDescCommentsEntities);
@@ -114,8 +137,9 @@ namespace DogSitterMarketplaceBll.Services
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForClientAboutHim)}");
             var user = CheckUserIsExistAndIsNotDeleted(userId);
             var sortDescCommentsEntities = SortDescComments(userId);
+            var userRole = _userRepository.GetUserRoleById(user.RoleId);
 
-            if (user.RoleId == 3)
+            if (userRole.Name == UserRole.Client)
             {
                 var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
                 var resultComments = _mapper.Map<List<CommentResponse>>(sortDescCommentsEntities);
@@ -139,8 +163,9 @@ namespace DogSitterMarketplaceBll.Services
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForSitterAboutHim)}");
             var user = CheckUserIsExistAndIsNotDeleted(userId);
             var sortDescCommentsEntities = SortDescComments(userId);
+            var userRole = _userRepository.GetUserRoleById(user.RoleId);
 
-            if (user.RoleId == 4)
+            if (userRole.Name == UserRole.Sitter)
             {
                 var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
                 var resultComments = _mapper.Map<List<CommentWithoutUserResponse>>(sortDescCommentsEntities);
@@ -202,8 +227,8 @@ namespace DogSitterMarketplaceBll.Services
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(UpdateComment)}");
             var commentEntity = _mapper.Map<CommentEntity>(commentUpdate);
             commentUpdate.OrderId = _orderRepository.GetOrderById(commentUpdate.OrderId).Id;
-            commentUpdate.CommentFromUserId = _commentRepository.GetUserById(commentUpdate.CommentFromUserId).Id;
-            commentUpdate.CommentToUserId = _commentRepository.GetUserById(commentUpdate.CommentToUserId).Id;
+            commentUpdate.CommentFromUserId = _userRepository.GetUserWithRoleById(commentUpdate.CommentFromUserId).Id;
+            commentUpdate.CommentToUserId = _userRepository.GetUserWithRoleById(commentUpdate.CommentToUserId).Id;
             var updateCommentEntity = _commentRepository.UpdateComment(commentEntity);
             var commentOrderResponse = _mapper.Map<CommentOrderResponse>(updateCommentEntity);
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(UpdateComment)}");
@@ -211,11 +236,9 @@ namespace DogSitterMarketplaceBll.Services
             return commentOrderResponse;
         }
 
-        //проверку перенести в Юзерсервис
         private UserShortResponse CheckUserIsExistAndIsNotDeleted(int userId)
         {
-            //метод перенести в ЮзерРепо
-            var userEntity = _orderRepository.GetExistAndNotDeletedUserById(userId);
+            var userEntity = _userRepository.GetExistAndNotDeletedUserById(userId);
             var userResponse = _mapper.Map<UserShortResponse>(userEntity);
 
             return userResponse;
@@ -249,6 +272,13 @@ namespace DogSitterMarketplaceBll.Services
             var average = (decimal)firstThirtyComments.Average(c => c.Score);
 
             return average;
+        }
+
+        private bool CheckOrderBetweenSitterAndClient(int sitterId, int clientId, int orderId)
+        {
+            var allOrders = _orderRepository.GetOrdersBySitterIdAndClientId(sitterId, clientId);
+
+            return allOrders.Any(o => o.Id == orderId);
         }
     }
 }

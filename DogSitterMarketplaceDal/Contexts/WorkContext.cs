@@ -1,7 +1,7 @@
 ﻿using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 
-namespace DogSitterMarketplaceDal.Models.Contexts
+namespace DogSitterMarketplaceDal.Contexts
 {
     public class WorkContext : DbContext
     {
@@ -21,22 +21,7 @@ namespace DogSitterMarketplaceDal.Models.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSitterSqlConnect"));
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(m => m.GetForeignKeys()))
-            {
-                foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
-            }
-
-            modelBuilder.Entity<LocationEntity>().Property(l => l.IsDeleted).HasDefaultValue(false);
-            modelBuilder.Entity<LocationWorkEntity>().Property(lw => lw.IsNotActive).HasDefaultValue(false);
-            modelBuilder.Entity<SitterWorkEntity>().Property(sw => sw.IsDeleted).HasDefaultValue(false);
-            modelBuilder.Entity<WorkTypeEntity>().Property(wt => wt.IsDeleted).HasDefaultValue(false);
+            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSItterMarketplaseDBConnect"));
         }
     }
 }
