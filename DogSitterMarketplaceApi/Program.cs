@@ -60,6 +60,7 @@ builder.Services.AddSingleton<AppealContext>();
 
 var nlog = LogManager.Setup().GetCurrentClassLogger();
 builder.Services.AddSingleton<ILogger>(nlog);
+builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IWorkAndLocationRepository, WorkAndLocationRepository>();
 builder.Services.AddScoped<ITimeWorkRepository, TimeWorkRepository>();
 builder.Services.AddScoped<ITimeWorkService, TimeWorkService>();
