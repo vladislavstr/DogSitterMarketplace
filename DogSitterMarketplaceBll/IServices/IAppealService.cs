@@ -8,7 +8,7 @@ namespace DogSitterMarketplaceBll.IServices
     {
         public IEnumerable<AppealResponse> GetAllAppeals();
         
-        public IEnumerable<AppealResponse> GetAllNotDeletedAppeals();
+        public IEnumerable<AppealResponse> GetAllNotAnsweredAppeals();
 
         public AppealResponse GetAppealById(int id);
 
@@ -22,10 +22,10 @@ namespace DogSitterMarketplaceBll.IServices
 
         public AppealTypeResponse AddAppealType(AppealTypeRequest appealType);
 
-        public void DeleteAppealById(int id);
+        //public void DeleteAppealById(int id);
 
         public void UpdateAppealStatusById(int AppealId, int StatusId);
-        
-        public AppealResponse DoResponseText(AppealUpdate appeal);
+
+        public AppealResponse DoResponseTextByAppeal(int id, string text, int statusId);
     }
 }

@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-
-using DogSitterMarketplaceBll.IServices;
-using DogSitterMarketplaceApi.Models.AppealsDto.Response;
-using DogSitterMarketplaceApi.Models.UsersDto.Response;
-using DogSitterMarketplaceApi.Models.UsersDto.Request;
-using DogSitterMarketplaceBll.Models.Users.Request;
-using DogSitterMarketplaceBll.Services;
-using DogSitterMarketplaceBll.Models.Appeals.Request;
 using DogSitterMarketplaceApi.Models.AppealsDto.Request;
+using DogSitterMarketplaceApi.Models.AppealsDto.Response;
+using DogSitterMarketplaceBll.IServices;
+using DogSitterMarketplaceBll.Models.Appeals.Request;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -46,12 +41,12 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("GetAllNotDeletedAppeals", Name = "GetAllNotDeletedAppeals")]
-        public ActionResult GetAllNotDeletedAppeals()
+        [HttpGet("GetAllNotAnsweredAppeals", Name = "GetAllNotAnsweredAppeals")]
+        public ActionResult GetAllNotAnsweredAppeals()
         {
             try
             {
-                return Ok(_appealService.GetAllNotDeletedAppeals());
+                return Ok(_appealService.GetAllNotAnsweredAppeals());
             }
             catch (Exception ex)
             {
@@ -104,9 +99,6 @@ namespace DogSitterMarketplaceApi.Controllers
         {
             try
             {
-                appeal.ResponseText = null;
-                appeal.DateOfCreate = DateTime.Now;
-                appeal.DateOfResponse = null;
                 var appealRequst = _mapper.Map<AppealRequest>(appeal);
                 var addAppealResponse = _appealService.AddAppeal(appealRequst);
                 var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
@@ -154,19 +146,19 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
 
-        [HttpDelete("DeleteAppealById/{id:int}", Name = "DeleteAppealById")]
-        public IActionResult DeleteAppealById(int id)
-        {
-            try
-            {
-                _appealService.DeleteAppealById(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return Ok(ex.Message);
-            }
-        }
+        //[HttpDelete("DeleteAppealById/{id:int}", Name = "DeleteAppealById")]
+        //public IActionResult DeleteAppealById(int id)
+        //{
+        //    try
+        //    {
+        //        _appealService.DeleteAppealById(id);
+        //        return NoContent();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Ok(ex.Message);
+        //    }
+        //}
 
         [HttpPut("UpdateAppealStatusById/{AppealId:int}_{StatusId:int}", Name = "UpdateAppealStatusById")]
         public IActionResult UpdateAppealStatusById(int AppealId, int StatusId)
@@ -182,21 +174,54 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpPut("DoResponseText", Name = "DoResponseText")]
-        public ActionResult<AppealUpdateDto> DoResponseText(AppealUpdateDto appeal)
+        //[HttpPut("DoResponseText", Name = "DoResponseText")]
+        //public ActionResult<AppealUpdateDto> DoResponseText(AppealUpdateDto appeal)
+        //{
+        //    try
+        //    {
+        //        var appealUpdate = _mapper.Map<AppealUpdate>(appeal);
+        //        var addAppealResponse = _appealService.DoResponseText(appealUpdate);
+        //        var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
+
+        //        return Created(new Uri("api/Appeal", UriKind.Relative), appeal);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Ok(ex.Message);
+        //    }
+        //}
+
+        [HttpPut("DoResponseTextById/{id:int}", Name = "DoResponseTextById")]
+        public ActionResult<AppealUpdateDto> DoResponseTextByAppealId(int id, string text, int statusId)
         {
             try
             {
-                var appealUpdate = _mapper.Map<AppealUpdate>(appeal);
-                var addAppealResponse = _appealService.DoResponseText(appealUpdate);
-                var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
+                if (statusId != 1)
+                {
+                    if(text is not null)
+                    {
 
-                return Created(new Uri("api/Appeal", UriKind.Relative), appeal);
+                    var addAppealResponse = _appealService.DoResponseTextByAppeal(id,text,statusId);
+                    var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
+
+                    return Created(new Uri("api/Appeal", UriKind.Relative), addAppealResponseDto);
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Appeal text of response must be filled in");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException($"Appeal with stsrus id {statusId} can't exist");
+                }
             }
             catch (Exception ex)
             {
                 return Ok(ex.Message);
             }
+
         }
     }
 }
+

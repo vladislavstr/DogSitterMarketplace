@@ -53,7 +53,7 @@ namespace DogSitterMarketplaceDal.Models.Appeals
 
         public int? AppealToUserId { get; set; }
 
-        [Required]
-        public bool IsDeleted { get; set; }
+        //[Required]
+        //public bool IsAnswered { get; set; }
     }
 }

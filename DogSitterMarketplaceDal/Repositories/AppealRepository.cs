@@ -3,6 +3,7 @@ using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Appeals;
 using DogSitterMarketplaceDal.Models.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -11,6 +12,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
         private static AppealContext _context;
         private static UserContext _userContext;
+        private const string consideration = "на рассмотрении";
 
         public AppealRepository(AppealContext context, UserContext userContext)
         {
@@ -18,10 +20,12 @@ namespace DogSitterMarketplaceDal.Repositories
             _userContext = userContext;
 
             AppealTypeEntity defaultAppealTypeEntity_1 = new AppealTypeEntity { Name = "жалоба" };
-            AppealTypeEntity defaultAppealTypeEntity_2 = new AppealTypeEntity { Name = "отзыв" };
-            AppealStatusEntity defaultAppealStatusEntity_1 = new AppealStatusEntity { Name = "на рассмотрении" };
+            AppealTypeEntity defaultAppealTypeEntity_2 = new AppealTypeEntity { Name = "рекомендации" };
+            AppealTypeEntity defaultAppealTypeEntity_3 = new AppealTypeEntity { Name = "просьба" };
+            AppealStatusEntity defaultAppealStatusEntity_1 = new AppealStatusEntity { Name = consideration };
             AppealStatusEntity defaultAppealStatusEntity_2 = new AppealStatusEntity { Name = "отклонено" };
             AppealStatusEntity defaultAppealStatusEntity_3 = new AppealStatusEntity { Name = "ответ получен" };
+            AppealStatusEntity defaultAppealStatusEntity_4 = new AppealStatusEntity { Name = "удален" };
             UserRoleEntity defaultUserRoleEntity_1 = new UserRoleEntity { Name = "администратор" };
             UserRoleEntity defaultUserRoleEntity_2 = new UserRoleEntity { Name = "ситтер" };
             UserRoleEntity defaultUserRoleEntity_3 = new UserRoleEntity { Name = "клиент" };
@@ -43,9 +47,11 @@ namespace DogSitterMarketplaceDal.Repositories
 
             _context.AppealsTypes.Add(defaultAppealTypeEntity_1);
             _context.AppealsTypes.Add(defaultAppealTypeEntity_2);
+            _context.AppealsTypes.Add(defaultAppealTypeEntity_3);
             _context.AppealsStatuses.Add(defaultAppealStatusEntity_1);
             _context.AppealsStatuses.Add(defaultAppealStatusEntity_2);
             _context.AppealsStatuses.Add(defaultAppealStatusEntity_3);
+            _context.AppealsStatuses.Add(defaultAppealStatusEntity_4);
             _context.UserRole.Add(defaultUserRoleEntity_1);
             _context.UserRole.Add(defaultUserRoleEntity_2);
             _context.UserRole.Add(defaultUserRoleEntity_3);
@@ -131,7 +137,6 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public AppealEntity AddAppeal(AppealEntity appeal)
         {
-            appeal.IsDeleted = false;
             _context.Appeals.Add(appeal);
             _context.SaveChanges();
 
@@ -160,22 +165,22 @@ namespace DogSitterMarketplaceDal.Repositories
             return appealType;
         }
 
-        public void DeleteAppealById(int id)
-        {
-            try
-            {
-                var appeal = _context.Appeals.Single(a => !a.IsDeleted && a.Id == id);
-                appeal.IsDeleted = true;
-                _context.SaveChanges();
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{id} - отсутствует");
-            }
-        }
+        //public void DeleteAppealById(int id)
+        //{
+        //    try
+        //    {
+        //        var appeal = _context.Appeals.Single(a => !a.IsDeleted && a.Id == id);
+        //        appeal.IsDeleted = true;
+        //        _context.SaveChanges();
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        Console.WriteLine(exception.Message);
+        //        throw new Exception($"Id:{id} - отсутствует");
+        //    }
+        //}
 
-        public void UpdateAppealStatusById(int AppealId, int StatusId )
+        public void UpdateAppealStatusById(int AppealId, int StatusId)
         {
             try
             {
@@ -189,8 +194,8 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new Exception($"Id:{AppealId} - отсутствует");
             }
         }
-        
-        public AppealEntity DoResponseText(AppealEntity appeal)
+
+        public AppealEntity DoResponseTextByAppeal(AppealEntity appeal)
         {
             try
             {

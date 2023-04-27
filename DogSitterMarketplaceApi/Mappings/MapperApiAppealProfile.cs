@@ -24,6 +24,8 @@ namespace DogSitterMarketplaceApi.Mappings
             //CreateMap<AppealResponse, AppealUpdateDto>().ReverseMap();
             //CreateMap<AppealUpdate, AppealUpdateDto>().ReverseMap();
             CreateMap<AppealUpdateDto, AppealUpdate>();
+            CreateMap<AppealResponse, AppealUpdate>();
+
         }
     }
 }
