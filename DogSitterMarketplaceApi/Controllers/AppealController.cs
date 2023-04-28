@@ -93,7 +93,6 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-
         [HttpPost("AddAppeal", Name = "AddAppeal")]
         public ActionResult<AppealResponseDto> AddAppeal(AppealRequestDto appeal)
         {
@@ -145,7 +144,6 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-
         [HttpPut("UpdateAppealStatusById/{AppealId:int}_{StatusId:int}", Name = "UpdateAppealStatusById")]
         public IActionResult UpdateAppealStatusById(int AppealId, int StatusId)
         {
@@ -189,7 +187,6 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 return Ok(ex.Message);
             }
-
         }
     }
 }
