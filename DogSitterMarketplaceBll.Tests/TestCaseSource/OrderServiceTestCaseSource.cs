@@ -2397,7 +2397,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 Pets = new List<PetResponse>()
             };
 
-            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus, updateOrderEntity, expected};
+            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus, updateOrderEntity, expected };
 
             //3. Случай, когда меняем с "Работе" на "Завершено" - второй case
 
@@ -2475,7 +2475,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 },
                 SitterWork = new SitterWorkResponse
                 {
-                    Id =13
+                    Id = 13
                 },
                 Location = new LocationResponse
                 {
@@ -2613,8 +2613,8 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 Comment = "not exist status",
                 IsDeleted = false
             };
-            
-            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus};
+
+            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus };
         }
 
         public static IEnumerable ChangeOrderStatus_WhenCanNotChangeToAtWork_ShouldBeArgumentException_TestCaseSource()
@@ -2657,7 +2657,123 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 IsDeleted = false
             };
 
-            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus};
+            yield return new object[] { orderId, orderEntity, orderStatusId, orderStatus };
+        }
+
+        public static IEnumerable GetAllOrdersUnderConsiderationBySitterIdTestCaseSource()
+        {
+            //1. Случай, когда у ситтера один заказ на рассмотрении(только он и вернется), другой - завершен
+
+            int userId = 1;
+            UserEntity userEntity = new UserEntity
+            {
+                Id = 1,
+                UserRoleId = 11,
+                IsDeleted = false,
+            };
+            List<OrderEntity> allOrdersEntities = new List<OrderEntity>
+            {
+                new OrderEntity
+                {
+                    Id = 1,
+                    OrderStatus = new OrderStatusEntity {Name = "under consideration"},
+                    IsDeleted= false,
+                },
+                new OrderEntity
+                {
+                    Id = 2,
+                    OrderStatus = new OrderStatusEntity {Name = "completed"},
+                    IsDeleted= false,
+                }
+            };
+            int userRoleId = 11;
+            UserRoleEntity userRoleEntity = new UserRoleEntity
+            {
+                Id = 11,
+                Name = "Sitter"
+            };
+            List<OrderResponse> expected = new List<OrderResponse>
+            {
+                new OrderResponse
+                {
+                    Id = 1,
+                    OrderStatus = new OrderStatusResponse {Name = "under consideration"},
+                    Pets = new List<PetResponse>()
+                }
+            };
+
+            yield return new object[] { userId, userEntity, allOrdersEntities, userRoleId, userRoleEntity, expected };
+
+            //2. Случай, когда у ситтера два заказа: один - в работе, другой - завершен; вернется пустой лист
+
+            userId = 12;
+            userEntity = new UserEntity
+            {
+                Id = 12,
+                UserRoleId = 112,
+                IsDeleted = false,
+            };
+            allOrdersEntities = new List<OrderEntity>
+            {
+                new OrderEntity
+                {
+                    Id = 12,
+                    OrderStatus = new OrderStatusEntity {Name = "at work"},
+                    IsDeleted= false,
+                },
+                new OrderEntity
+                {
+                    Id = 22,
+                    OrderStatus = new OrderStatusEntity {Name = "completed"},
+                    IsDeleted= false,
+                }
+            };
+            userRoleId = 112;
+            userRoleEntity = new UserRoleEntity
+            {
+                Id = 112,
+                Name = "Sitter"
+            };
+            expected = new List<OrderResponse>();
+
+            yield return new object[] { userId, userEntity, allOrdersEntities, userRoleId, userRoleEntity, expected };
+        }
+
+        public static IEnumerable GetAllOrdersUnderConsiderationBySitterId_WhenUserIsNotExist_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userId = 12;
+            int userRoleId = 3;
+
+            yield return new object[] { userId, userRoleId };
+        }
+
+        public static IEnumerable GetAllOrdersUnderConsiderationBySitterId_WhenUserRoleIsNotSitter_ShouldBeArgumentException_TestCaseSource()
+        {
+            int userId = 14;
+            UserEntity userEntity = new UserEntity
+            {
+                Id = 14,
+                UserRoleId = 114,
+                IsDeleted = false,
+            };
+            List<OrderEntity> allOrdersEntities = new List<OrderEntity>
+            {
+                new OrderEntity
+                {
+                    Id = 14,
+                    OrderStatus = new OrderStatusEntity {Name = "under consideration"},
+                    IsDeleted= false,
+                }
+            };
+            int userRoleId = 114;
+            UserRoleEntity userRoleEntity = new UserRoleEntity
+            {
+                Id = 114,
+                Name = "Client"
+            };
+
+            yield return new object[] { userId, userEntity, allOrdersEntities, userRoleId, userRoleEntity };
         }
     }
 }
+

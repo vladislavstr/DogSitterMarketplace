@@ -14,5 +14,11 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         //public void UpdateUserById(UserEntity user);
         public UserRoleEntity GetUserRoleById(int id);
+
+        public UserEntity GetUserWithRoleById(int id);
+
+        public UserEntity GetExistAndNotDeletedUserById(int id);
+
+        public List<UserEntity> GetAllSittersByLocationId(int locationId);
     }
 }

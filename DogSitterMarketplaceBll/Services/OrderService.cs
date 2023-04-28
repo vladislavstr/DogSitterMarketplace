@@ -27,13 +27,16 @@ namespace DogSitterMarketplaceBll.Services
 
         private readonly IUserRepository _userRepository;
 
+        private readonly IWorkAndLocationRepository _workAndLocationRepository;
+
         private readonly ILogger _logger;
 
-        public OrderService(IOrderRepository orderReposotory, IPetRepository petReposotory, IUserRepository userRepository, IMapper mapper, ILogger nLogger)
+        public OrderService(IOrderRepository orderReposotory, IPetRepository petReposotory, IUserRepository userRepository, IWorkAndLocationRepository workAndLocationRepository, IMapper mapper, ILogger nLogger)
         {
             _orderRepository = orderReposotory;
             _petRepository = petReposotory;
             _userRepository = userRepository;
+            _workAndLocationRepository = workAndLocationRepository;
             _mapper = mapper;
             _logger = nLogger;
         }
@@ -62,7 +65,7 @@ namespace DogSitterMarketplaceBll.Services
                 throw new ArgumentException("DateStart of order should be earlier then dateEnd of order");
             }
 
-            var sitterWork = _orderRepository.GetSitterWorkById(newOrder.SitterWorkId);
+            var sitterWork = _workAndLocationRepository.GetNotDeletedSitterWorkById(newOrder.SitterWorkId);
 
             if (!CheckSitterHasTimingToOrder(sitterWork.UserId, newOrder.DateStart, newOrder.DateEnd, newOrder.LocationId))
             {
@@ -120,17 +123,13 @@ namespace DogSitterMarketplaceBll.Services
         public List<OrderResponse> GetAllOrdersUnderConsiderationBySitterId(int userId)
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(GetAllOrdersUnderConsiderationBySitterId)}");
-
-            // запрос в другой репозиторий Или вставить Проверку
-            var userEntity = _petRepository.GetUserById(userId);
+            var userEntity = _userRepository.GetUserWithRoleById(userId);
             var allOrdersEntities = _orderRepository.GetAllOrdersBySitterId(userId);
-
-            // !!! из-за разных контекстов, сейчас эти  метод не работают. ПОТОМ ПРОВЕРИТЬ!
             var userRole = _userRepository.GetUserRoleById(userEntity.UserRoleId);
 
             if (userRole.Name == UserRole.Sitter)
             {
-                var ordersUnderConsiderationEntities = allOrdersEntities.Where(o => o.OrderStatusId == 3).ToList();
+                var ordersUnderConsiderationEntities = allOrdersEntities.Where(o => o.OrderStatus.Name == OrderStatus.UnderConsideration).ToList();
                 var ordersUnderConsiderationResponses = _mapper.Map<List<OrderResponse>>(ordersUnderConsiderationEntities);
                 _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(GetAllOrdersUnderConsiderationBySitterId)}");
 
@@ -212,11 +211,8 @@ namespace DogSitterMarketplaceBll.Services
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(UpdateOrder)}");
             var orderEntity = _mapper.Map<OrderEntity>(orderUpdate);
-            orderEntity.OrderStatus = _orderRepository.GetOrderStatusById(orderUpdate.OrderStatusId);
-
-            //перенести методы-проверки в Сервис
-            orderEntity.SitterWork = _orderRepository.GetSitterWorkById(orderUpdate.SitterWorkId);
-            orderEntity.Location = _orderRepository.GetLocationById(orderUpdate.LocationId);
+            orderEntity.SitterWork = _workAndLocationRepository.GetNotDeletedSitterWorkById(orderUpdate.SitterWorkId);
+            orderEntity.Location = _workAndLocationRepository.GetLocationById(orderUpdate.LocationId);
 
             var allPets = _petRepository.GetPetsInOrderEntities(orderUpdate.Pets);
             var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
@@ -279,7 +275,7 @@ namespace DogSitterMarketplaceBll.Services
         {
             try
             {
-                var allSitterWorks = _orderRepository.GetAllSitterWorksByUserId(sitterId);
+                var allSitterWorks = _workAndLocationRepository.GetAllSitterWorksByUserId(sitterId);
                 if (allSitterWorks.Any())
                 {
                     foreach (var sitterWork in allSitterWorks)

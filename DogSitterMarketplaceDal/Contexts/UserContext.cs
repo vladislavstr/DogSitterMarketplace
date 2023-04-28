@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using DogSitterMarketplaceDal.Models.Users;
+using DogSitterMarketplaceDal.Models.Works;
 
 namespace DogSitterMarketplaceDal.Contexts
 {
@@ -13,6 +13,12 @@ namespace DogSitterMarketplaceDal.Contexts
         public DbSet<UserRoleEntity> UsersRoles { get; set; }
 
         public DbSet<UserStatusEntity> UsersStatuses { get; set; }
+
+        // Локейшн и Ситтер НЕ УДАЛЯТЬ!
+        public DbSet<LocationWorkEntity> LocationWorks { get; set; }
+
+        public DbSet<SitterWorkEntity> SitterWorks { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSItterMarketplaseDBConnect"));

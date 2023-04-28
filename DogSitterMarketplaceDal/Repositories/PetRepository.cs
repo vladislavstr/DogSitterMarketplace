@@ -144,20 +144,20 @@ namespace DogSitterMarketplaceDal.Repositories
         }
 
         // перенести в Юзера
-        public UserEntity GetUserById(int id)
-        {
-            try
-            {
-                return _context.Users
-                    .Include(u => u.UserRole)
-                    .Single(u => u.Id == id && !u.IsDeleted);
-            }
-            catch (InvalidOperationException)
-            {
-                //  _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetExistAndNotDeletedUserById)} {nameof(UserEntity)} with id {id} not found.");
-                _logger.Log(LogLevel.Debug, $"{nameof(PetRepository)} {nameof(GetUserById)} {nameof(UserEntity)} with id {id} not found.");
-                throw new NotFoundException(id, nameof(UserEntity));
-            }
-        }
+        //public UserEntity GetUserById(int id)
+        //{
+        //    try
+        //    {
+        //        return _context.Users
+        //            .Include(u => u.UserRole)
+        //            .Single(u => u.Id == id && !u.IsDeleted);
+        //    }
+        //    catch (InvalidOperationException)
+        //    {
+        //        //  _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetExistAndNotDeletedUserById)} {nameof(UserEntity)} with id {id} not found.");
+        //        _logger.Log(LogLevel.Debug, $"{nameof(PetRepository)} {nameof(GetUserById)} {nameof(UserEntity)} with id {id} not found.");
+        //        throw new NotFoundException(id, nameof(UserEntity));
+        //    }
+        //}
     }
 }

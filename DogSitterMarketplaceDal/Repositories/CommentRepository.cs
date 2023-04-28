@@ -33,6 +33,9 @@ namespace DogSitterMarketplaceDal.Repositories
 
             return _context.Comments
                 .Include(c => c.Order)
+                .ThenInclude(o => o.SitterWork)
+                .Include(c => c.Order)
+                .ThenInclude(o => o.OrderStatus)
                 .Include(c => c.CommentFromUser)
                 .Include(c => c.CommentToUser)
                 .Where(c => c.CommentToUserId == userIdToComment).ToList();
@@ -42,6 +45,9 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             return _context.Comments
                     .Include(c => c.Order)
+                    .ThenInclude(o => o.SitterWork)
+                    .Include(c => c.Order)
+                    .ThenInclude(o => o.OrderStatus)
                     .Include(c => c.CommentFromUser)
                     .Include(c => c.CommentToUser).ToList();
         }
@@ -89,9 +95,9 @@ namespace DogSitterMarketplaceDal.Repositories
                 _context.SaveChanges();
 
                 return _context.Comments
-                    .Include(c => c.Order)
-                    .Include(c => c.CommentFromUser)
-                    .Include(c => c.CommentToUser)
+                    // .Include(c => c.Order)
+                    //.Include(c => c.CommentFromUser)
+                    //.Include(c => c.CommentToUser)
                     .Single(c => c.Id == addComment.Id);
             }
             catch (Exception ex)
@@ -124,18 +130,18 @@ namespace DogSitterMarketplaceDal.Repositories
         }
 
         // перенести в ЮзерРепозитори
-        public UserEntity GetUserById(int id)
-        {
-            try
-            {
-                return _context.Users.Single(u => u.Id == id && !u.IsDeleted);
-            }
-            catch (InvalidOperationException)
-            {
-                //_logger.LogDebug($"{nameof(UserEntity)} with id {id} not found.");
-                _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
-                throw new NotFoundException(id, nameof(UserEntity));
-            }
-        }
+        //public UserEntity GetUserById(int id)
+        //{
+        //    try
+        //    {
+        //        return _context.Users.Single(u => u.Id == id && !u.IsDeleted);
+        //    }
+        //    catch (InvalidOperationException)
+        //    {
+        //        //_logger.LogDebug($"{nameof(UserEntity)} with id {id} not found.");
+        //        _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
+        //        throw new NotFoundException(id, nameof(UserEntity));
+        //    }
+        //}
     }
 }

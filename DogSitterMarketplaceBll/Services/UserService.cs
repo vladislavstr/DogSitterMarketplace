@@ -3,6 +3,7 @@
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceBll.Models.Users.Response;
+using DogSitterMarketplaceCore;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Users;
 
@@ -30,7 +31,7 @@ namespace DogSitterMarketplaceBll.Services
         public ICollection<UserResponse> GetAllNotDeletedUsers()
         {
             var allusersEntitys = _userRepository.GetAllUsers();
-            var  usersEntitys = allusersEntitys
+            var usersEntitys = allusersEntitys
                            .Where(u => !u.IsDeleted);
             var userResponse = _mapper.Map<ICollection<UserResponse>>(usersEntitys);
 
@@ -73,6 +74,27 @@ namespace DogSitterMarketplaceBll.Services
         public void DeleteUserById(int id)
         {
             _userRepository.DeleteUserById(id);
+        }
+
+        //добавить логгер
+        public List<UserShortResponse> GetAllSittersForClientByLocationId(int locationId, int clientId)
+        {
+            var userEntity = _userRepository.GetUserWithRoleById(clientId);
+            var userRole = userEntity.UserRole;
+
+            if (userRole.Name == UserRole.Client)
+            {
+                var allSittersEntity = _userRepository.GetAllSittersByLocationId(locationId);
+                var allSittersIsActiveEntity = allSittersEntity.Where(s => s.SitterWorks.Any(sw => sw.LocationWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))).ToList();
+                var usersShortsResponse = _mapper.Map<List<UserShortResponse>>(allSittersIsActiveEntity);
+
+                return usersShortsResponse;
+            }
+            else
+            {
+                // _logger.Log(LogLevel.Debug, $"{nameof(UserService)} {nameof(GetAllSittersForClientByLocationId)} User with id {clientId} does not have nessety role for get List os Sitters");
+                throw new ArgumentException($"User with id {clientId} does not have nessety role for get List os Sitters");
+            }
         }
     }
 }

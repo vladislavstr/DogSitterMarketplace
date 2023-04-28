@@ -17,15 +17,17 @@ namespace DogSitterMarketplaceDal.Contexts
 
         public DbSet<AppealEntity> Appeals { get; set; }
 
-        public DbSet<SitterWorkEntity> SitterWork { get; set; }
+        public DbSet<SitterWorkEntity> SitterWorks { get; set; }
 
-        public DbSet<LocationEntity> Location { get; set; }
+        public DbSet<LocationEntity> Locations { get; set; }
 
         public DbSet<PetEntity> Pets { get; set; }
 
         public DbSet<AnimalTypeEntity> AnimalsTypes { get; set; }
 
         public DbSet<UserEntity> Users { get; set; }
+
+        public DbSet<WorkTypeEntity> WorkTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
