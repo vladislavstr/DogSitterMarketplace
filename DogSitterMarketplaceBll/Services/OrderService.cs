@@ -2,6 +2,7 @@
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
+using DogSitterMarketplaceCore;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Orders;
@@ -22,14 +23,20 @@ namespace DogSitterMarketplaceBll.Services
 
         private readonly IOrderRepository _orderRepository;
 
-        private readonly IPetRepository _petReposotory;
+        private readonly IPetRepository _petRepository;
+
+        private readonly IUserRepository _userRepository;
+
+        private readonly IWorkAndLocationRepository _workAndLocationRepository;
 
         private readonly ILogger _logger;
 
-        public OrderService(IOrderRepository orderReposotory, IPetRepository petReposotory, IMapper mapper, ILogger nLogger)
+        public OrderService(IOrderRepository orderReposotory, IPetRepository petReposotory, IUserRepository userRepository, IWorkAndLocationRepository workAndLocationRepository, IMapper mapper, ILogger nLogger)
         {
             _orderRepository = orderReposotory;
-            _petReposotory = petReposotory;
+            _petRepository = petReposotory;
+            _userRepository = userRepository;
+            _workAndLocationRepository = workAndLocationRepository;
             _mapper = mapper;
             _logger = nLogger;
         }
@@ -37,7 +44,7 @@ namespace DogSitterMarketplaceBll.Services
         public OrderResponse AddOrder(OrderCreateRequest newOrder)
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(AddOrder)}");
-            var allPets = _petReposotory.GetPetsInOrderEntities(newOrder.Pets);
+            var allPets = _petRepository.GetPetsInOrderEntities(newOrder.Pets);
             var petsNotDeleted = allPets.Where(p => !p.IsDeleted).ToList();
 
             if (petsNotDeleted.Count <= 0)
@@ -58,7 +65,7 @@ namespace DogSitterMarketplaceBll.Services
                 throw new ArgumentException("DateStart of order should be earlier then dateEnd of order");
             }
 
-            var sitterWork = _orderRepository.GetSitterWorkById(newOrder.SitterWorkId);
+            var sitterWork = _workAndLocationRepository.GetNotDeletedSitterWorkById(newOrder.SitterWorkId);
 
             if (!CheckSitterHasTimingToOrder(sitterWork.UserId, newOrder.DateStart, newOrder.DateEnd, newOrder.LocationId))
             {
@@ -75,7 +82,8 @@ namespace DogSitterMarketplaceBll.Services
             var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
             var orderEntity = _mapper.Map<OrderEntity>(newOrder);
             orderEntity.Pets.AddRange(petsNotDeleted);
-            orderEntity.OrderStatusId = 3;
+            var orderStatusUnderConsideration = _orderRepository.GetOrderStatusByName(OrderStatus.UnderConsideration);
+            orderEntity.OrderStatusId = orderStatusUnderConsideration.Id;
             var addOrderEntity = _orderRepository.AddNewOrder(orderEntity);
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
             CheckPetsInOrderIsExist(allPets, newOrder.Pets, addOrderResponse);
@@ -89,17 +97,18 @@ namespace DogSitterMarketplaceBll.Services
         {
             var orderResponse = CheckOrderIsExistAndIsNotDeleted(orderId);
             var changeOrderResponse = new OrderResponse();
-            switch (orderStatusId)
+            var orderStatus = _orderRepository.GetOrderStatusById(orderStatusId);
+            switch (orderStatus.Name)
             {
-                case 4:
+                case OrderStatus.AtWork:
                     changeOrderResponse = ChangeOrderStatusToAtWork(orderResponse, orderStatusId);
                     break;
 
-                case 5:
+                case OrderStatus.Completed:
                     changeOrderResponse = ChangeOrderStatusToComplete(orderResponse, orderStatusId);
                     break;
 
-                case 6:
+                case OrderStatus.Rejected:
                     changeOrderResponse = ChangeOrderStatusToReject(orderResponse, orderStatusId);
                     break;
 
@@ -113,15 +122,14 @@ namespace DogSitterMarketplaceBll.Services
 
         public List<OrderResponse> GetAllOrdersUnderConsiderationBySitterId(int userId)
         {
-            // запрос в другой репозиторий Или вставить Проверку
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(GetAllOrdersUnderConsiderationBySitterId)}");
-
-            var userEntity = _petReposotory.GetUserById(userId);
+            var userEntity = _userRepository.GetUserWithRoleById(userId);
             var allOrdersEntities = _orderRepository.GetAllOrdersBySitterId(userId);
+            var userRole = _userRepository.GetUserRoleById(userEntity.UserRoleId);
 
-            if (userEntity.UserRole.Id == 4)
+            if (userRole.Name == UserRole.Sitter)
             {
-                var ordersUnderConsiderationEntities = allOrdersEntities.Where(o => o.OrderStatusId == 3).ToList();
+                var ordersUnderConsiderationEntities = allOrdersEntities.Where(o => o.OrderStatus.Name == OrderStatus.UnderConsideration).ToList();
                 var ordersUnderConsiderationResponses = _mapper.Map<List<OrderResponse>>(ordersUnderConsiderationEntities);
                 _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(GetAllOrdersUnderConsiderationBySitterId)}");
 
@@ -203,13 +211,10 @@ namespace DogSitterMarketplaceBll.Services
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(UpdateOrder)}");
             var orderEntity = _mapper.Map<OrderEntity>(orderUpdate);
-            orderEntity.OrderStatus = _orderRepository.GetOrderStatusById(orderUpdate.OrderStatusId);
+            orderEntity.SitterWork = _workAndLocationRepository.GetNotDeletedSitterWorkById(orderUpdate.SitterWorkId);
+            orderEntity.Location = _workAndLocationRepository.GetLocationById(orderUpdate.LocationId);
 
-            //перенести методы-проверки в Сервис
-            orderEntity.SitterWork = _orderRepository.GetSitterWorkById(orderUpdate.SitterWorkId);
-            orderEntity.Location = _orderRepository.GetLocationById(orderUpdate.LocationId);
-
-            var allPets = _petReposotory.GetPetsInOrderEntities(orderUpdate.Pets);
+            var allPets = _petRepository.GetPetsInOrderEntities(orderUpdate.Pets);
             var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
             orderEntity.Pets.AddRange(allPets.Where(p => !p.IsDeleted));
             var updateOrderEntity = _orderRepository.UpdateOrder(orderEntity);
@@ -270,7 +275,7 @@ namespace DogSitterMarketplaceBll.Services
         {
             try
             {
-                var allSitterWorks = _orderRepository.GetAllSitterWorksByUserId(sitterId);
+                var allSitterWorks = _workAndLocationRepository.GetAllSitterWorksByUserId(sitterId);
                 if (allSitterWorks.Any())
                 {
                     foreach (var sitterWork in allSitterWorks)
@@ -365,7 +370,7 @@ namespace DogSitterMarketplaceBll.Services
 
         private OrderResponse ChangeOrderStatusToAtWork(OrderResponse orderResponse, int orderStatusId)
         {
-            if (orderResponse.OrderStatus.Id == 3 || orderResponse.OrderStatus.Id == 6)
+            if (orderResponse.OrderStatus.Name == OrderStatus.UnderConsideration || orderResponse.OrderStatus.Name == OrderStatus.Rejected)
             {
                 var updateOrderEntity = _orderRepository.ChangeOrderStatus(orderResponse.Id, orderStatusId);
                 var changeOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
@@ -381,7 +386,7 @@ namespace DogSitterMarketplaceBll.Services
 
         private OrderResponse ChangeOrderStatusToReject(OrderResponse orderResponse, int orderStatusId)
         {
-            if (orderResponse.OrderStatus.Id == 3)
+            if (orderResponse.OrderStatus.Name == OrderStatus.UnderConsideration)
             {
                 var updateOrderEntity = _orderRepository.ChangeOrderStatus(orderResponse.Id, orderStatusId);
                 var changeOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
@@ -397,7 +402,7 @@ namespace DogSitterMarketplaceBll.Services
 
         private OrderResponse ChangeOrderStatusToComplete(OrderResponse orderResponse, int orderStatusId)
         {
-            if (orderResponse.OrderStatus.Id == 4)
+            if (orderResponse.OrderStatus.Name == OrderStatus.AtWork)
             {
                 var updateOrderEntity = _orderRepository.ChangeOrderStatus(orderResponse.Id, orderStatusId);
                 var changeOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);

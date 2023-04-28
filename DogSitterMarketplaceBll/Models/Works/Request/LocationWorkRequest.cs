@@ -1,4 +1,6 @@
-﻿namespace DogSitterMarketplaceBll.Models.Works.Request
+using DogSitterMarketplaceBll.Models.Works.Response;
+
+namespace DogSitterMarketplaceBll.Models.Works.Request
 {
     public class LocationWorkRequest
     {

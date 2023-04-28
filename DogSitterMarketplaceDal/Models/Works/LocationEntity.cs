@@ -1,19 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Index = Microsoft.EntityFrameworkCore.Metadata.Internal.Index;
 
 namespace DogSitterMarketplaceDal.Models.Works
 {
-    //public class LocationEntity
-    //{
-    //    public int Id { get; set; }
-
-    //    public string Name { get; set; }
-
-    //    public bool IsDeleted { get; set; }
-    //}
-
     [Index(nameof(Name), IsUnique = true)]
     public class LocationEntity
     {
@@ -22,7 +14,7 @@ namespace DogSitterMarketplaceDal.Models.Works
 
         [Required]
         [Column(TypeName = "nvarchar(100)")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         [Required]
         public bool IsDeleted { get; set; }

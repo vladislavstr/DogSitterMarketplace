@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceBll.Models.Appeals.Response;
+using DogSitterMarketplaceBll.Models.Appeals.Response;
 using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceDal.Models.Appeals;
@@ -16,7 +16,7 @@ namespace DogSitterMarketplaceBll.Models.Orders.Response
 
         public SitterWorkResponse SitterWork { get; set; }
 
-        public int Summ { get; set; }
+        public decimal Summ { get; set; }
 
         public DateTime DateStart { get; set; }
 

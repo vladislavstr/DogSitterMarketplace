@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
+
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,12 +10,6 @@ namespace DogSitterMarketplaceDal.Models.Works
 {
     public class TimingLocationWorkEntity
     {
-        //public DayOfWeekEntity DayOfWeek { get; set; }
-
-        //public LocationWorkEntity LocationWork { get; set; }
-
-        //public WorkTimeEntity WorkTime { get; set; }
-
         [Key]
         public int Id { get; set; }
 
@@ -34,5 +32,10 @@ namespace DogSitterMarketplaceDal.Models.Works
         public virtual LocationWorkEntity LocationWork { get; set; }
 
         public int LocationWorkId { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id: {Id} DayId: {DayOfWeekId} Interval {Start} - {Stop} ";
+        }
     }
 }

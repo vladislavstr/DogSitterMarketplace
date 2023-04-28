@@ -27,7 +27,8 @@ namespace DogSitterMarketplaceDal.Models.Orders
         public int SitterWorkId { get; set; }
 
         [Required]
-        public int Summ { get; set; }
+        [Column(TypeName = "decimal(6,2)")]
+        public decimal Summ { get; set; }
 
         [Required]
         public DateTime DateStart { get; set; }
