@@ -4,6 +4,6 @@
     {
         public decimal AverageScore { get; set; }
 
-        public List<CommentWithoutUserResponse> CommentsWithoutUser { get; set; } = new();
+        public List<CommentResponse> CommentsWithoutUser { get; set; } = new();
     }
 }

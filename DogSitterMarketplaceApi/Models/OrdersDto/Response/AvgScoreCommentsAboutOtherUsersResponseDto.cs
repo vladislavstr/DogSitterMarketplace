@@ -2,10 +2,10 @@
 
 namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
 {
-    public class AvgScoreCommentResponseDto
+    public class AvgScoreCommentsAboutOtherUsersResponseDto
     {
         public decimal AverageScore { get; set; }
 
-        public List<CommentResponseDto> Comments { get; set; } = new();
+        public List<CommentsAboutOtherUsersResponseDto> CommentsAboutOtherUsers { get; set; } = new();
     }
 }

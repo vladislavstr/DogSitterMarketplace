@@ -164,7 +164,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 1000
                 },
-                Comments = new List<CommentResponse>(),
+                Comments = new List<CommentWithUserShortResponse>(),
                 Appeals = new List<AppealResponse>(),
                 Pets = petsResponse,
                 Messages = new List<string>()
@@ -419,7 +419,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 10002
                 },
-                Comments = new List<CommentResponse>(),
+                Comments = new List<CommentWithUserShortResponse>(),
                 Appeals = new List<AppealResponse>(),
                 Pets = petsResponse,
                 Messages = new List<string>()
@@ -689,7 +689,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 100023
                 },
-                Comments = new List<CommentResponse>(),
+                Comments = new List<CommentWithUserShortResponse>(),
                 Appeals = new List<AppealResponse>(),
                 Pets = petsResponse,
                 Messages = new List<string>
@@ -897,7 +897,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 10004
                 },
-                Comments = new List<CommentResponse>(),
+                Comments = new List<CommentWithUserShortResponse>(),
                 Appeals = new List<AppealResponse>(),
                 Pets = petsResponse,
                 Messages = new List<string>()
@@ -1129,7 +1129,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 100045
                 },
-                Comments = new List<CommentResponse>(),
+                Comments = new List<CommentWithUserShortResponse>(),
                 Appeals = new List<AppealResponse>(),
                 Pets = petsResponse,
                 Messages = new List<string>()

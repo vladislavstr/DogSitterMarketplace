@@ -76,111 +76,58 @@ namespace DogSitterMarketplaceBll.Services
             }
         }
 
-        public AvgScoreCommentsAboutSitterForClientResponse GetCommentsAndScoresForClientAboutSitter(int userIdGetComment, int userIdToComment)
+        public AvgScoreCommenstResponse<T> GetCommentsAndScoresForUserAboutHim<T>(int userId, string role) where T : CommentResponse
         {
-            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForClientAboutSitter)}");
-            var commentUserToResponse = CheckUserIsExistAndIsNotDeleted(userIdToComment);
-            var userWhoGetCommentResponse = CheckUserIsExistAndIsNotDeleted(userIdGetComment);
-            var sortDescCommentsEntities = SortDescComments(userIdToComment);
-            var userRoleWhoGetComment = _userRepository.GetUserRoleById(userWhoGetCommentResponse.RoleId);
-            var userRoleCommentTo = _userRepository.GetUserRoleById(commentUserToResponse.RoleId);
-
-            if (userRoleWhoGetComment.Name == UserRole.Client && userRoleCommentTo.Name == UserRole.Sitter)
-            {
-                var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
-                var resultComments = _mapper.Map<List<CommentAboutSitterForClientResponse>>(sortDescCommentsEntities);
-                var resultAvgComments = new AvgScoreCommentsAboutSitterForClientResponse
-                {
-                    AverageScore = averageScore,
-                    CommentsAboutSitterForClient = resultComments
-                };
-                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresForClientAboutSitter)}");
-                return resultAvgComments;
-            }
-            else
-            {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresForClientAboutSitter)} {nameof(CommentEntity)} One or more of users has not got necessity UserRole for getComments");
-                throw new ArgumentException("One or more of users has not got necessity UserRole for getComments");
-            }
-        }
-
-        public AvgScoreCommentAboutClientForSitterResponse GetCommentsAndScoresForSitterAboutClient(int userIdGetComment, int userIdToComment)
-        {
-            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForSitterAboutClient)}");
-            var commentUserToResponse = CheckUserIsExistAndIsNotDeleted(userIdToComment);
-            var userWhoGetCommentResponse = CheckUserIsExistAndIsNotDeleted(userIdGetComment);
-            var sortDescCommentsEntities = SortDescComments(userIdToComment);
-            var userRoleWhoGetComment = _userRepository.GetUserRoleById(userWhoGetCommentResponse.RoleId);
-            var userRoleCommentTo = _userRepository.GetUserRoleById(commentUserToResponse.RoleId);
-
-            if (userRoleWhoGetComment.Name == UserRole.Sitter && userRoleCommentTo.Name == UserRole.Client)
-            {
-                var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
-                var resultComments = _mapper.Map<List<CommentAboutClientsForSitterResponse>>(sortDescCommentsEntities);
-                var resultAvgComments = new AvgScoreCommentAboutClientForSitterResponse
-                {
-                    AverageScore = averageScore,
-                    CommentsAboutClientForSitter = resultComments
-                };
-                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresForSitterAboutClient)}");
-                return resultAvgComments;
-            }
-            else
-            {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresForSitterAboutClient)} {nameof(CommentEntity)} One or more of users has not got necessity UserRole for getComments");
-                throw new ArgumentException("One or more of users has not got necessity UserRole for getComments");
-            }
-        }
-
-        public AvgScoreCommentResponse GetCommentsAndScoresForClientAboutHim(int userId)
-        {
-            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForClientAboutHim)}");
+            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForUserAboutHim)}");
             var user = CheckUserIsExistAndIsNotDeleted(userId);
-            var sortDescCommentsEntities = SortDescComments(userId);
+            var sortDescCommentsEntities = GetSortedDescComments(userId);
             var userRole = _userRepository.GetUserRoleById(user.RoleId);
 
-            if (userRole.Name == UserRole.Client)
+            if (userRole.Name == role)
             {
                 var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
-                var resultComments = _mapper.Map<List<CommentResponse>>(sortDescCommentsEntities);
-                var resultAvgComments = new AvgScoreCommentResponse
+                var resultComments = _mapper.Map<List<T>>(sortDescCommentsEntities);
+                var resultAvgComments = new AvgScoreCommenstResponse<T>
                 {
                     AverageScore = averageScore,
                     Comments = resultComments
                 };
-                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresForClientAboutHim)}");
+                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresForUserAboutHim)}");
                 return resultAvgComments;
             }
             else
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresForClientAboutHim)} {nameof(CommentEntity)} User has not got necessity UserRole for getComments");
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresForUserAboutHim)} {nameof(CommentEntity)} User has not got necessity UserRole for getComments");
                 throw new ArgumentException("User has not got necessity UserRole for getComments");
             }
         }
 
-        public AvgScoreCommentWithoutUserResponse GetCommentsAndScoresForSitterAboutHim(int userId)
+        public AvgScoreCommenstResponse<T> GetCommentsAndScoresAboutOtherUsers<T>(int userIdGetComment, string roleUserGetComment,  
+                                                                                  int userIdToComment, string roleUserToComment) where T : CommentResponse
         {
-            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForSitterAboutHim)}");
-            var user = CheckUserIsExistAndIsNotDeleted(userId);
-            var sortDescCommentsEntities = SortDescComments(userId);
-            var userRole = _userRepository.GetUserRoleById(user.RoleId);
+            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresAboutOtherUsers)}");
+            var commentUserToResponse = CheckUserIsExistAndIsNotDeleted(userIdToComment);
+            var userWhoGetCommentResponse = CheckUserIsExistAndIsNotDeleted(userIdGetComment);
+            var sortDescCommentsEntities = GetSortedDescComments(userIdToComment);
+            var userRoleWhoGetComment = _userRepository.GetUserRoleById(userWhoGetCommentResponse.RoleId);
+            var userRoleCommentTo = _userRepository.GetUserRoleById(commentUserToResponse.RoleId);
 
-            if (userRole.Name == UserRole.Sitter)
+            if (userRoleWhoGetComment.Name == roleUserGetComment && userRoleCommentTo.Name == roleUserToComment)
             {
                 var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
-                var resultComments = _mapper.Map<List<CommentWithoutUserResponse>>(sortDescCommentsEntities);
-                var resultAvgComments = new AvgScoreCommentWithoutUserResponse
+                var resultComments = _mapper.Map<List<T>>(sortDescCommentsEntities);
+                var resultAvgComments = new AvgScoreCommenstResponse<T>
                 {
                     AverageScore = averageScore,
-                    CommentsWithoutUser = resultComments
+                    Comments = resultComments
                 };
-                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresForSitterAboutHim)}");
+                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresAboutOtherUsers)}");
                 return resultAvgComments;
             }
             else
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresForSitterAboutHim)} {nameof(CommentEntity)} User has not got necessity UserRole for getComments");
-                throw new ArgumentException("User has not got necessity UserRole for getComments");
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresAboutOtherUsers)} {nameof(CommentEntity)} One or more of users has not got necessity UserRole for getComments");
+                throw new ArgumentException("One or more of users has not got necessity UserRole for getComments");
             }
         }
 
@@ -244,7 +191,7 @@ namespace DogSitterMarketplaceBll.Services
             return userResponse;
         }
 
-        private List<CommentEntity> SortDescComments(int userIdToComment)
+        private List<CommentEntity> GetSortedDescComments(int userIdToComment)
         {
             var commentsEntities = _commentRepository.GetAllCommentsAndScoresByUserId(userIdToComment);
             var sortDescCommentsEntities = commentsEntities.OrderByDescending(c => c.Order.DateStart).ToList();

@@ -10,18 +10,20 @@ namespace DogSitterMarketplaceApi.Mappings
 {
     public class MapperApiCommentProfile : Profile
     {
-        public MapperApiCommentProfile() 
+        public MapperApiCommentProfile()
         {
             CreateMap<CommentOrderResponse, CommentOrderResponseDto>();
             CreateMap<CommentRequestDto, CommentRequest>();
             CreateMap<CommentUpdateDto, CommentUpdate>();
-            CreateMap<CommentAboutSitterForClientResponse, CommentAboutSitterForClientResponseDto>();
-            CreateMap<CommentAboutClientsForSitterResponse, CommentAboutClientsForSitterResponseDto>();
-            CreateMap<CommentWithoutUserResponse, CommentWithoutUserResponseDto>();
+            CreateMap<CommentsAboutOtherUsersResponse, CommentsAboutOtherUsersResponseDto>();
+            CreateMap<CommentResponse, CommentWithoutUserResponseDto>();
             CreateMap<UserForCommentResponse, UserForCommentResponseDto>();
-            CreateMap<AvgScoreCommentsAboutSitterForClientResponse, AvgScoreCommentsAboutSitterForClientResponseDto>();
-            CreateMap<AvgScoreCommentAboutClientForSitterResponse, AvgScoreCommentAboutClientForSitterResponseDto>();
-            CreateMap<AvgScoreCommentResponse, AvgScoreCommentResponseDto>();
+            CreateMap<AvgScoreCommenstResponse<CommentResponse>, AvgScoreCommentWithoutUserResponseDto>()
+                .ForMember(dest => dest.CommentsWithoutUser, opt => opt.MapFrom(src => src.Comments));
+            CreateMap<AvgScoreCommenstResponse<CommentsAboutOtherUsersResponse>, AvgScoreCommentsAboutOtherUsersResponseDto>()
+                .ForMember(dest => dest.CommentsAboutOtherUsers, opt => opt.MapFrom(src => src.Comments));
+            CreateMap<AvgScoreCommenstResponse<CommentWithUserShortResponse>, AvgScoreCommentsResponseDto>();
+            CreateMap<AvgScoreCommenstResponse<CommentsAboutOtherUsersResponse>, AvgScoreCommentsResponseDto>();
             CreateMap<AvgScoreCommentWithoutUserResponse, AvgScoreCommentWithoutUserResponseDto>();
         }
     }

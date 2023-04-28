@@ -26,7 +26,7 @@ namespace DogSitterMarketplaceApi.Mappings
             CreateMap<LocationResponse, LocationResponseDto>();
             CreateMap<OrderResponse, OrderResponseDto>();
             CreateMap<PetResponse, PetResponseDto>();
-            CreateMap<CommentResponse, CommentResponseDto>();
+            CreateMap<CommentWithUserShortResponse, CommentResponseDto>();
             CreateMap<AppealResponse, AppealResponseDto>();
             CreateMap<OrderUpdateDto, OrderUpdate>();
         }

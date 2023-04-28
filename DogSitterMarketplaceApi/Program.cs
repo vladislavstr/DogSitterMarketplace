@@ -46,7 +46,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddAutoMapper(typeof(MapperApiOrderProfile), typeof(MapperBllOrderProfile),  
                                typeof(MapperApiPetProfile), typeof(MapperBllPetProfile),
                                typeof(MapperApiCommentProfile), typeof(MapperBllCommentProfile));
-InjectLogger(builder);
+//InjectLogger(builder);
 
 
 builder.Services.AddScoped<IUserService, UserService>();
@@ -81,15 +81,15 @@ app.MapControllers();
 
 app.Run();
 
-void InjectLogger(WebApplicationBuilder builder)
-{
-    var config = new NLog.Config.LoggingConfiguration();
-    var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "logs.txt" };
-    var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
-    config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logconsole);
-    config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, logfile);
-    LogManager.Configuration = config;
+//void InjectLogger(WebApplicationBuilder builder)
+//{
+//    var config = new NLog.Config.LoggingConfiguration();
+//    var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "logs.txt" };
+//    var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
+//    config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logconsole);
+//    config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, logfile);
+//    LogManager.Configuration = config;
 
-    var logger = NLog.LogManager.Setup().GetCurrentClassLogger();
-    builder.Services.AddSingleton<NLog.ILogger>(logger);
-}
+//    var logger = NLog.LogManager.Setup().GetCurrentClassLogger();
+//    builder.Services.AddSingleton<NLog.ILogger>(logger);
+//}

@@ -24,7 +24,7 @@ namespace DogSitterMarketplaceBll.Models.Orders.Response
 
         public LocationResponse Location { get; set; }
 
-        public List<CommentResponse> Comments { get; set; } = new();
+        public List<CommentWithUserShortResponse> Comments { get; set; } = new();
 
         public List<AppealResponse> Appeals { get; set; } = new();
 

@@ -15,8 +15,6 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public CommentEntity UpdateComment(CommentEntity comment);
 
-       // public UserEntity GetUserById(int id);
-
         public List<CommentEntity> GetAllCommentsAndScoresByUserId(int userId);
     }
 }

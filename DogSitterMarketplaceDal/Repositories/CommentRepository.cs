@@ -37,7 +37,9 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(c => c.Order)
                 .ThenInclude(o => o.OrderStatus)
                 .Include(c => c.CommentFromUser)
+                .ThenInclude(u => u.UserRole)
                 .Include(c => c.CommentToUser)
+                .ThenInclude(u => u.UserRole)
                 .Where(c => c.CommentToUserId == userIdToComment).ToList();
         }
 
@@ -128,20 +130,5 @@ namespace DogSitterMarketplaceDal.Repositories
 
             return commentDB;
         }
-
-        // перенести в ЮзерРепозитори
-        //public UserEntity GetUserById(int id)
-        //{
-        //    try
-        //    {
-        //        return _context.Users.Single(u => u.Id == id && !u.IsDeleted);
-        //    }
-        //    catch (InvalidOperationException)
-        //    {
-        //        //_logger.LogDebug($"{nameof(UserEntity)} with id {id} not found.");
-        //        _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
-        //        throw new NotFoundException(id, nameof(UserEntity));
-        //    }
-        //}
     }
 }

@@ -15,12 +15,9 @@ namespace DogSitterMarketplaceBll.IServices
 
         public CommentOrderResponse UpdateComment(CommentUpdate commentRequest);
 
-        public AvgScoreCommentsAboutSitterForClientResponse GetCommentsAndScoresForClientAboutSitter(int userIdGetComment, int userIdToComment);
+        public AvgScoreCommenstResponse<T> GetCommentsAndScoresForUserAboutHim<T>(int userId, string role) where T : CommentResponse;
 
-        public AvgScoreCommentAboutClientForSitterResponse GetCommentsAndScoresForSitterAboutClient(int userIdGetComment, int userIdToComment);
-
-        public AvgScoreCommentResponse GetCommentsAndScoresForClientAboutHim(int userId);
-
-        public AvgScoreCommentWithoutUserResponse GetCommentsAndScoresForSitterAboutHim(int userId);
+        public AvgScoreCommenstResponse<T> GetCommentsAndScoresAboutOtherUsers<T>(int userIdGetComment, string roleUserGetComment,
+                                                                                  int userIdToComment, string roleUserToComment) where T : CommentResponse;
     }
 }

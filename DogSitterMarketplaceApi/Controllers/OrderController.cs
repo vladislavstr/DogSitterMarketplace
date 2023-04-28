@@ -56,7 +56,7 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPatch("{id}", Name = "ChangeOrderStatus")]
-        public ActionResult<OrderResponseDto> ChangeOrderStatus(int id, int orderStatusId)
+        public ActionResult<OrderResponseDto> ChangeOrderStatus(int id, [FromBody]int orderStatusId)
         {
             try
             {

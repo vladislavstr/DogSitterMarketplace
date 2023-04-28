@@ -5,6 +5,7 @@ using DogSitterMarketplaceApi.Validations;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
+using DogSitterMarketplaceCore;
 using DogSitterMarketplaceCore.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -38,12 +39,12 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("forClientAboutSitter/{userIdToComment}", Name = "GetCommentsAndScoresForClientAboutSitter")]
-        public ActionResult<AvgScoreCommentsAboutSitterForClientResponseDto> GetCommentsAndScoresForClientAboutSitter(int userIdGetComment, int userIdToComment)
+        public ActionResult<AvgScoreCommentsAboutOtherUsersResponseDto> GetCommentsAndScoresForClientAboutSitter(int userIdGetComment, int userIdToComment)
         {
             try
             {
-                var avgScoreCommentResponse = _commentService.GetCommentsAndScoresForClientAboutSitter(userIdGetComment, userIdToComment);
-                var result = _mapper.Map<AvgScoreCommentsAboutSitterForClientResponseDto>(avgScoreCommentResponse);
+                var avgScoreCommentResponse = _commentService.GetCommentsAndScoresAboutOtherUsers<CommentsAboutOtherUsersResponse>(userIdGetComment, UserRole.Client, userIdToComment, UserRole.Sitter);
+                var result = _mapper.Map<AvgScoreCommentsAboutOtherUsersResponseDto>(avgScoreCommentResponse);
 
                 return Ok(result);
             }
@@ -64,12 +65,12 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("forSitterAboutClient/{userIdToComment}", Name = "GetCommentsAndScoresForSitterAboutClient")]
-        public ActionResult<AvgScoreCommentAboutClientForSitterResponseDto> GetCommentsAndScoresForSitterAboutClient(int userIdGetComment, int userIdToComment)
+        public ActionResult<AvgScoreCommentsAboutOtherUsersResponseDto> GetCommentsAndScoresForSitterAboutClient(int userIdGetComment, int userIdToComment)
         {
             try
             {
-                var avgScoreCommentsResponse = _commentService.GetCommentsAndScoresForSitterAboutClient(userIdGetComment, userIdToComment);
-                var result = _mapper.Map<AvgScoreCommentAboutClientForSitterResponseDto>(avgScoreCommentsResponse);
+                var avgScoreCommentsResponse = _commentService.GetCommentsAndScoresAboutOtherUsers<CommentsAboutOtherUsersResponse>(userIdGetComment, UserRole.Sitter, userIdToComment, UserRole.Client);
+                var result = _mapper.Map<AvgScoreCommentsAboutOtherUsersResponseDto>(avgScoreCommentsResponse);
 
                 return Ok(result);
             }
@@ -90,12 +91,12 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("forClientAboutHim/{userId}", Name = "GetCommentsAndScoresForClientAboutHim")]
-        public ActionResult<AvgScoreCommentResponseDto> GetCommentsAndScoresForClientAboutHim(int userId)
+        public ActionResult<AvgScoreCommentsResponseDto> GetCommentsAndScoresForClientAboutHim(int userId)
         {
             try
             {
-                var avgScoreCommentsResponse = _commentService.GetCommentsAndScoresForClientAboutHim(userId);
-                var result = _mapper.Map<AvgScoreCommentResponseDto>(avgScoreCommentsResponse);
+                var avgScoreCommentsResponse = _commentService.GetCommentsAndScoresForUserAboutHim<CommentWithUserShortResponse>(userId, UserRole.Client);
+                var result = _mapper.Map<AvgScoreCommentsResponseDto>(avgScoreCommentsResponse);
 
                 return Ok(result);
             }
@@ -120,7 +121,7 @@ namespace DogSitterMarketplaceApi.Controllers
         {
             try
             {
-                var avgScoreCommentsResponse = _commentService.GetCommentsAndScoresForSitterAboutHim(userId);
+                var avgScoreCommentsResponse = _commentService.GetCommentsAndScoresForUserAboutHim< CommentResponse>(userId, UserRole.Sitter);
                 var result = _mapper.Map<AvgScoreCommentWithoutUserResponseDto>(avgScoreCommentsResponse);
 
                 return Ok(result);
