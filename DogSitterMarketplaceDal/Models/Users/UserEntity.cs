@@ -52,7 +52,5 @@ namespace DogSitterMarketplaceDal.Models.Users
         public ICollection<PetEntity>? Pets { get; set; }
 
         public List<SitterWorkEntity> SitterWorks { get; set; } = new List<SitterWorkEntity>();
-
-
     }
 }

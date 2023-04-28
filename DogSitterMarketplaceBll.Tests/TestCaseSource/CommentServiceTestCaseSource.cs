@@ -248,5 +248,121 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                                          userRoleCommentFromEntity,  userRoleCommentToId, userRoleCommentToEntity, allOrders,
                                          commentEntity, addCommentEntity, addComment, expected, orderId, orderResponse};
         }
+
+        public static IEnumerable AddComment__WhenOrderBetweenSitterAndClientIsNotExist_CommentFromClientToUser_ShouldBeArgumentException_TestCaseSource()
+        {
+            //Случай, когда Коммент оставляет Клинет на Ситтера, но при этом между ними нет ордера, в рамках которого можно было бы оставить коммент
+
+            int userCommentFromId = 19;
+            UserEntity userCommentFromEntity = new UserEntity
+            {
+                Id = 19,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 109,
+                    Name = "Client"
+                },
+                Email = "19@ru",
+                PhoneNumber = "1119",
+                Name = "1119",
+                UserRoleId = 109,
+                IsDeleted = false
+            };
+            int userCommentToId = 29;
+            UserEntity userCommentToEntity = new UserEntity
+            {
+                Id = 29,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 209,
+                    Name = "Sitter"
+                },
+                Email = "29@ru",
+                PhoneNumber = "2229",
+                Name = "2229",
+                UserRoleId = 209,
+                IsDeleted = false
+            };
+            int userRoleCommentFromId = 109;
+            UserRoleEntity userRoleCommentFromEntity = new UserRoleEntity
+            {
+                Id = 109,
+                Name = "Client"
+            };
+            int userRoleCommentToId = 209;
+            UserRoleEntity userRoleCommentToEntity = new UserRoleEntity
+            {
+                Id = 209,
+                Name = "Sitter"
+            };
+
+            CommentRequest addComment = new CommentRequest
+            {
+                OrderId = 119,
+                CommentFromUserId = 19,
+                CommentToUserId = 29
+            };
+
+            int orderId = 119;
+            OrderResponse orderResponse = new OrderResponse
+            {
+                Id = 119
+            };
+
+            yield return new object[] { userCommentFromId, userCommentFromEntity,  userCommentToId, userCommentToEntity,  userRoleCommentFromId,
+                                         userRoleCommentFromEntity,  userRoleCommentToId, userRoleCommentToEntity,addComment, orderId, orderResponse};
+        }
+
+        public static IEnumerable AddComment_WhenOrderIsNotExist_ShouldBeNotFoundException_TestCaseSource()
+        {
+            //Случай, когда Коммент оставляет Клинет на Ситтера, но при этом переданный в моделе ордер не существует
+
+            int userCommentFromId = 198;
+            UserEntity userCommentFromEntity = new UserEntity
+            {
+                Id = 198,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 1098,
+                    Name = "Client"
+                },
+                Email = "198@ru",
+                PhoneNumber = "11198",
+                Name = "11198",
+                UserRoleId = 1098,
+                IsDeleted = false
+            };
+            int userCommentToId = 298;
+            UserEntity userCommentToEntity = new UserEntity
+            {
+                Id = 298,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 2098,
+                    Name = "Sitter"
+                },
+                Email = "298@ru",
+                PhoneNumber = "22298",
+                Name = "22298",
+                UserRoleId = 2098,
+                IsDeleted = false
+            };
+            int userRoleCommentFromId = 1098;
+            int userRoleCommentToId = 2098;
+            CommentRequest addComment = new CommentRequest
+            {
+                OrderId = 11900,
+                CommentFromUserId = 198,
+                CommentToUserId = 298
+            };
+            int orderId = 11900;
+
+            yield return new object[] { userCommentFromId, userCommentFromEntity,  userCommentToId, userCommentToEntity, 
+                                        userRoleCommentFromId, userRoleCommentToId, addComment, orderId};
+        }
     }
 }
+
+//int userCommentFromId, UserEntity userCommentFromEntity,
+//                                  int userCommentToId, UserEntity userCommentToEntity, int userRoleCommentFromId, int userRoleCommentToId,
+//                                CommentRequest addComment, int orderId

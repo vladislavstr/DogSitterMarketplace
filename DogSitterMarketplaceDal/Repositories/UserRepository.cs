@@ -183,6 +183,8 @@ namespace DogSitterMarketplaceDal.Repositories
                     .Include(u => u.UserRole)
                     .Include(u => u.SitterWorks)
                     .ThenInclude(sw => sw.LocationWork)
+                     .Include(u => u.SitterWorks)
+                    .ThenInclude(sw => sw.WorkType)
                     .Where(u => u.UserRole.Name == UserRole.Sitter
                            && u.SitterWorks.Any(sw => sw.LocationWork.Any(l => l.LocationId == locationId)))
                     .ToList();

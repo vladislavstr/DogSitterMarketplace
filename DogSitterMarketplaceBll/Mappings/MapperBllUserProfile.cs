@@ -5,6 +5,8 @@ using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceBll.Models.Pets.Request;
 using DogSitterMarketplaceDal.Models.Pets;
+using DogSitterMarketplaceDal.Models.Works;
+using DogSitterMarketplaceBll.Models.Works.Response;
 
 namespace DogSitterMarketplaceBll.Mappings
 {
@@ -16,6 +18,7 @@ namespace DogSitterMarketplaceBll.Mappings
             CreateMap<UserRoleEntity,UserRoleResponse>();
             CreateMap<UserPassportDataEntity,UserPassportDataResponse>();
             CreateMap<UserStatusEntity,UserStatusResponse>();
+            CreateMap<WorkTypeEntity, WorkTypeResponse>();
 
             //CreateMap<UserEntity, UserResponse>();
             //CreateMap<UserRequest, UserEntity>();

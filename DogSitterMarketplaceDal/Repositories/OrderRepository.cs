@@ -191,21 +191,6 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        // перенести в Сервис
-        //public LocationEntity GetLocationById(int id)
-        //{
-        //    try
-        //    {
-        //        return _context.Locations.Single(o => o.Id == id && !o.IsDeleted);
-        //    }
-        //    catch (InvalidOperationException ex)
-        //    {
-        //        //_logger.LogDebug($"{nameof(LocationEntity)} with id {id} not found.");
-        //        _logger.Log(LogLevel.Debug, $"{nameof(LocationEntity)} with id {id} not found.");
-        //        throw new NotFoundException(id, nameof(LocationEntity));
-        //    }
-        //}
-
         public OrderStatusEntity GetOrderStatusById(int id)
         {
             try
@@ -219,51 +204,6 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new NotFoundException(id, nameof(OrderStatusEntity));
             }
         }
-
-        // перенести в Сервис
-        //public SitterWorkEntity GetSitterWorkById(int id)
-        //{
-        //    try
-        //    {
-        //        return _context.SitterWork.Single(o => o.Id == id && !o.IsDeleted);
-        //    }
-        //    catch (InvalidOperationException ex)
-        //    {
-        //        // logger.LogDebug($"{nameof(SitterWorkEntity)} with id {id} not found.");
-        //        _logger.Log(LogLevel.Debug, $"{nameof(SitterWorkEntity)} with id {id} not found.");
-        //        throw new NotFoundException(id, nameof(SitterWorkEntity));
-        //    }
-        //}
-
-        // перенести в ЮзерРепозитори
-        //public UserEntity GetExistAndNotDeletedUserById(int id)
-        //{
-        //    try
-        //    {
-        //        return _context.Users
-        //            .Include(u => u.UserRole)
-        //            .Single(u => u.Id == id && !u.IsDeleted);
-        //    }
-        //    catch (InvalidOperationException)
-        //    {
-        //        //_logger.LogDebug($"{nameof(UserEntity)} with id {id} not found.");
-        //        _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
-        //        throw new NotFoundException(id, nameof(UserEntity));
-        //    }
-        //}
-
-
-        // перенести в Сервис
-        //public List<SitterWorkEntity> GetAllSitterWorksByUserId(int id)
-        //{
-        //    return _context.SitterWork
-        //        .Include(sw => sw.WorkType)
-        //        .Include(sw => sw.User)
-        //        .Include(sw => sw.LocationWork)
-        //        .ThenInclude(lw => lw.TimingLocationWorks)
-        //        .ThenInclude(tlw => tlw.DayOfWeek)
-        //        .Where(sw => sw.User.Id == id).ToList();
-        //}
 
         public List<OrderEntity> GetOrdersAtWorkOnDateByUserId(int sitterId, DateTime startDate)
         {

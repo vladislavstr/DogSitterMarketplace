@@ -6,6 +6,8 @@ using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceApi.Models.PetsDto.Request;
 using DogSitterMarketplaceBll.Models.Pets.Request;
+using DogSitterMarketplaceApi.Models.WorksDto.Response;
+using DogSitterMarketplaceBll.Models.Works.Response;
 
 namespace DogSitterMarketplaceApi.Mappings
 {
@@ -23,7 +25,9 @@ namespace DogSitterMarketplaceApi.Mappings
             CreateMap<UserStatusResponse, UserStatusResponseDto>();
             CreateMap<PetRequestDto, PetRequest>().ReverseMap();
             CreateMap<UserUpdateDto, UserUpdate>().ReverseMap();
-            
+            CreateMap<UserShortLocationWorkResponse, UserShortLocationWorkResponseDto>();
+            CreateMap<WorkTypeResponse, WorkTypeResponseDto>();            
+            CreateMap<WorkTypePriceResponse, WorkTypePriceResponseDto>();            
         }
     }
 }

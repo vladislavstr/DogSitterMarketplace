@@ -19,6 +19,8 @@ namespace DogSitterMarketplaceDal.Contexts
 
         public DbSet<SitterWorkEntity> SitterWorks { get; set; }
 
+        public DbSet<WorkTypeEntity> WorkTypes { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSItterMarketplaseDBConnect"));
