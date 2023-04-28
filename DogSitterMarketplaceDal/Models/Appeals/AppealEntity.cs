@@ -35,7 +35,6 @@ namespace DogSitterMarketplaceDal.Models.Appeals
         public AppealStatusEntity Status { get; set; }
 
         public int StatusId { get; set; }
-
         
         [ForeignKey(nameof(OrderId))]
         public OrderEntity? Order { get; set; }
