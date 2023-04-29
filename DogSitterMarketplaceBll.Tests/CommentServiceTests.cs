@@ -5,6 +5,7 @@ using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Services;
 using DogSitterMarketplaceBll.Tests.TestCaseSource;
+using DogSitterMarketplaceCore;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Orders;
@@ -12,6 +13,7 @@ using DogSitterMarketplaceDal.Models.Users;
 using FluentAssertions;
 using Moq;
 using NLog;
+using NUnit.Framework.Constraints;
 
 namespace DogSitterMarketplaceBll.Tests
 {
@@ -154,6 +156,40 @@ namespace DogSitterMarketplaceBll.Tests
             _mockOrderRepo.Verify(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId), Times.Never);
             _mockOrderRepo.Verify(o => o.GetOrdersBySitterIdAndClientId(userCommentToId, userCommentFromId), Times.Never);
             _mockCommentRepo.Verify(c => c.AddComment(It.IsAny<CommentEntity>()), Times.Never);
+        }
+
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTestCaseSource))]
+        public void GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest(int userId, UserEntity userEntity, List<CommentEntity> commentsEntities, int userRoleId, 
+                                                                              UserRoleEntity userRole, AvgScoreCommentsResponse<CommentWithUserShortResponse> expected)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).Returns(userEntity);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userId)).Returns(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleId)).Returns(userRole);
+
+            AvgScoreCommentsResponse<CommentWithUserShortResponse> actual = _commentService.GetCommentsAndScoresForUserAboutHim<CommentWithUserShortResponse>(userId, UserRole.Client);
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userId), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userId), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleId), Times.Once);
+
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresForUserAboutHim_ForSitterAboutHimTestCaseSource))]
+        public void GetCommentsAndScoresForUserAboutHim_ForSitterAboutHimTest(int userId, UserEntity userEntity, List<CommentEntity> commentsEntities, int userRoleId,
+                                                                              UserRoleEntity userRole, AvgScoreCommentsResponse<CommentResponse> expected)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).Returns(userEntity);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userId)).Returns(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleId)).Returns(userRole);
+
+            AvgScoreCommentsResponse<CommentResponse> actual = _commentService.GetCommentsAndScoresForUserAboutHim<CommentResponse>(userId, UserRole.Sitter);
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userId), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userId), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleId), Times.Once);
+
+            actual.Should().BeEquivalentTo(expected);
         }
 
         private bool method(CommentEntity c, CommentEntity commentEntity)

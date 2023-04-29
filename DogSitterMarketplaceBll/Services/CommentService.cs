@@ -76,7 +76,7 @@ namespace DogSitterMarketplaceBll.Services
             }
         }
 
-        public AvgScoreCommenstResponse<T> GetCommentsAndScoresForUserAboutHim<T>(int userId, string role) where T : CommentResponse
+        public AvgScoreCommentsResponse<T> GetCommentsAndScoresForUserAboutHim<T>(int userId, string role) where T : CommentResponse
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForUserAboutHim)}");
             var user = CheckUserIsExistAndIsNotDeleted(userId);
@@ -87,7 +87,7 @@ namespace DogSitterMarketplaceBll.Services
             {
                 var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
                 var resultComments = _mapper.Map<List<T>>(sortDescCommentsEntities);
-                var resultAvgComments = new AvgScoreCommenstResponse<T>
+                var resultAvgComments = new AvgScoreCommentsResponse<T>
                 {
                     AverageScore = averageScore,
                     Comments = resultComments
@@ -102,7 +102,7 @@ namespace DogSitterMarketplaceBll.Services
             }
         }
 
-        public AvgScoreCommenstResponse<T> GetCommentsAndScoresAboutOtherUsers<T>(int userIdGetComment, string roleUserGetComment,  
+        public AvgScoreCommentsResponse<T> GetCommentsAndScoresAboutOtherUsers<T>(int userIdGetComment, string roleUserGetComment,  
                                                                                   int userIdToComment, string roleUserToComment) where T : CommentResponse
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresAboutOtherUsers)}");
@@ -116,7 +116,7 @@ namespace DogSitterMarketplaceBll.Services
             {
                 var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
                 var resultComments = _mapper.Map<List<T>>(sortDescCommentsEntities);
-                var resultAvgComments = new AvgScoreCommenstResponse<T>
+                var resultAvgComments = new AvgScoreCommentsResponse<T>
                 {
                     AverageScore = averageScore,
                     Comments = resultComments

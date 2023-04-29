@@ -5,17 +5,12 @@ using DogSitterMarketplaceDal.Models.Orders;
 
 namespace DogSitterMarketplaceBll.Models.Orders.Response
 {
-    public class AvgScoreCommenstResponse<T> where T : CommentResponse
+    public class AvgScoreCommentsResponse<T> where T : CommentResponse
     {
         public decimal AverageScore { get; set; }
 
         public List<T> Comments { get; set; } = new(); //CommentWithUserShortResponse
-    }
-
-
-
-
-    
+    }    
 }
 
 

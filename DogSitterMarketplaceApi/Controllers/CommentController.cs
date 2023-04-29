@@ -121,7 +121,7 @@ namespace DogSitterMarketplaceApi.Controllers
         {
             try
             {
-                var avgScoreCommentsResponse = _commentService.GetCommentsAndScoresForUserAboutHim< CommentResponse>(userId, UserRole.Sitter);
+                var avgScoreCommentsResponse = _commentService.GetCommentsAndScoresForUserAboutHim<CommentResponse>(userId, UserRole.Sitter);
                 var result = _mapper.Map<AvgScoreCommentWithoutUserResponseDto>(avgScoreCommentsResponse);
 
                 return Ok(result);

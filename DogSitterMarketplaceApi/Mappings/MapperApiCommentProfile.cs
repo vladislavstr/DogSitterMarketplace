@@ -18,13 +18,13 @@ namespace DogSitterMarketplaceApi.Mappings
             CreateMap<CommentsAboutOtherUsersResponse, CommentsAboutOtherUsersResponseDto>();
             CreateMap<CommentResponse, CommentWithoutUserResponseDto>();
             CreateMap<UserForCommentResponse, UserForCommentResponseDto>();
-            CreateMap<AvgScoreCommenstResponse<CommentResponse>, AvgScoreCommentWithoutUserResponseDto>()
+            CreateMap<AvgScoreCommentsResponse<CommentResponse>, AvgScoreCommentWithoutUserResponseDto>()
                 .ForMember(dest => dest.CommentsWithoutUser, opt => opt.MapFrom(src => src.Comments));
-            CreateMap<AvgScoreCommenstResponse<CommentsAboutOtherUsersResponse>, AvgScoreCommentsAboutOtherUsersResponseDto>()
+            CreateMap<AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse>, AvgScoreCommentsAboutOtherUsersResponseDto>()
                 .ForMember(dest => dest.CommentsAboutOtherUsers, opt => opt.MapFrom(src => src.Comments));
-            CreateMap<AvgScoreCommenstResponse<CommentWithUserShortResponse>, AvgScoreCommentsResponseDto>();
-            CreateMap<AvgScoreCommenstResponse<CommentsAboutOtherUsersResponse>, AvgScoreCommentsResponseDto>();
-            CreateMap<AvgScoreCommentWithoutUserResponse, AvgScoreCommentWithoutUserResponseDto>();
+            CreateMap<AvgScoreCommentsResponse<CommentWithUserShortResponse>, AvgScoreCommentsResponseDto>();
+            CreateMap<AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse>, AvgScoreCommentsResponseDto>();
+           // CreateMap<AvgScoreCommentWithoutUserResponse, AvgScoreCommentWithoutUserResponseDto>();
         }
     }
 }

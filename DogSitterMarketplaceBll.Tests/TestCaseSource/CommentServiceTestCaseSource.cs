@@ -357,12 +357,396 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             };
             int orderId = 11900;
 
-            yield return new object[] { userCommentFromId, userCommentFromEntity,  userCommentToId, userCommentToEntity, 
+            yield return new object[] { userCommentFromId, userCommentFromEntity,  userCommentToId, userCommentToEntity,
                                         userRoleCommentFromId, userRoleCommentToId, addComment, orderId};
+        }
+
+        public static IEnumerable GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTestCaseSource()
+        {
+            //1. Клиент получает комменты о нем - толкьо 1 коммент
+
+            int userId = 1;
+            UserEntity userEntity = new UserEntity
+            {
+                Id = 1,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 11,
+                    Name = "Client"
+                },
+                IsDeleted = false
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+                new CommentEntity
+                {
+                 Id = 9,
+                 Score = 3,
+                 Text = "comment 3",
+                 Order = new OrderEntity
+                 {
+                     DateStart = new DateTime(2023-04-28),
+                     DateEnd = new DateTime(2023-04-29),
+                 },
+                 CommentFromUser = new UserEntity
+                 {
+                    Id = 7,
+                    Email = "7@ru",
+                    PhoneNumber = "77777",
+                    Name = "7",
+                    UserRoleId =66,
+                    UserRole = new UserRoleEntity
+                    {
+                    Id = 66
+                    }
+                 }
+                }
+            };
+            int userRoleId = 11;
+            UserRoleEntity userRole = new UserRoleEntity
+            {
+                Id = 11,
+                Name = "Client"
+            };
+            AvgScoreCommentsResponse<CommentWithUserShortResponse> expected = new AvgScoreCommentsResponse<CommentWithUserShortResponse>
+            {
+                AverageScore = 3,
+                Comments = new List<CommentWithUserShortResponse>
+                {
+                    new CommentWithUserShortResponse
+                    {
+                        Id = 9,
+                        Score = 3,
+                        Text = "comment 3",
+                        CommentFromUser = new UserShortResponse
+                        {
+                            Id = 7,
+                            Email = "7@ru",
+                            PhoneNumber = "77777",
+                            Name = "7",
+                            RoleId = 66
+                        }
+                    }
+                }
+            };
+
+            yield return new object[] { userId, userEntity, commentsEntities, userRoleId, userRole, expected };
+
+            //2. Клиент получает комменты о нем - 2 коммента
+
+            userId = 12;
+            userEntity = new UserEntity
+            {
+                Id = 12,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 112,
+                    Name = "Client"
+                },
+                IsDeleted = false
+            };
+            commentsEntities = new List<CommentEntity>
+            {
+                new CommentEntity
+                {
+                 Id = 92,
+                 Score = 5,
+                 Text = "comment 32",
+                 Order = new OrderEntity
+                 {
+                     DateStart = new DateTime(2023-04-20),
+                     DateEnd = new DateTime(2023-04-21),
+                 },
+                 CommentFromUser = new UserEntity
+                 {
+                    Id = 72,
+                    Email = "72@ru",
+                    PhoneNumber = "777772",
+                    Name = "72",
+                    UserRoleId =662,
+                    UserRole = new UserRoleEntity
+                    {
+                    Id = 662
+                    }
+                 }
+                },
+                new CommentEntity
+                {
+                 Id = 923,
+                 Score = 2,
+                 Text = "comment 323",
+                 Order = new OrderEntity
+                 {
+                     DateStart = new DateTime(2023-03-28),
+                     DateEnd = new DateTime(2023-03-29),
+                 },
+                 CommentFromUser = new UserEntity
+                 {
+                    Id = 723,
+                    Email = "723@ru",
+                    PhoneNumber = "7777723",
+                    Name = "723",
+                    UserRoleId =662,
+                    UserRole = new UserRoleEntity
+                    {
+                    Id = 662
+                    }
+                 }
+                }
+            };
+            userRoleId = 112;
+            userRole = new UserRoleEntity
+            {
+                Id = 112,
+                Name = "Client"
+            };
+            expected = new AvgScoreCommentsResponse<CommentWithUserShortResponse>
+            {
+                AverageScore = 3.5M,
+                Comments = new List<CommentWithUserShortResponse>
+                {
+                     new CommentWithUserShortResponse
+                    {
+                        Id = 923,
+                        Score = 2,
+                        Text = "comment 323",
+                        CommentFromUser = new UserShortResponse
+                        {
+                            Id = 723,
+                            Email = "723@ru",
+                            PhoneNumber = "7777723",
+                            Name = "723",
+                            RoleId = 662
+                        }
+                    },
+                    new CommentWithUserShortResponse
+                    {
+                        Id = 92,
+                        Score = 5,
+                        Text = "comment 32",
+                        CommentFromUser = new UserShortResponse
+                        {
+                            Id = 72,
+                            Email = "72@ru",
+                            PhoneNumber = "777772",
+                            Name = "72",
+                            RoleId = 662
+                        }
+                    }
+                }
+            };
+
+            yield return new object[] { userId, userEntity, commentsEntities, userRoleId, userRole, expected };
+
+            //3. Клиент получает комменты о нем - комментов нет - пустой лист
+
+            userId = 124;
+            userEntity = new UserEntity
+            {
+                Id = 124,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 1124,
+                    Name = "Client"
+                },
+                IsDeleted = false
+            };
+            commentsEntities = new List<CommentEntity>();
+            userRoleId = 1124;
+            userRole = new UserRoleEntity
+            {
+                Id = 1124,
+                Name = "Client"
+            };
+            expected = new AvgScoreCommentsResponse<CommentWithUserShortResponse>
+            {
+                AverageScore = 0,
+                Comments = new List<CommentWithUserShortResponse>()
+            };
+
+            yield return new object[] { userId, userEntity, commentsEntities, userRoleId, userRole, expected };
+        }
+
+        public static IEnumerable GetCommentsAndScoresForUserAboutHim_ForSitterAboutHimTestCaseSource()
+        {
+            //1. Ситтер получает комменты о нем - толкьо 1 коммент
+
+            int userId = 17;
+            UserEntity userEntity = new UserEntity
+            {
+                Id = 17,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 117,
+                    Name = "Sitter"
+                },
+                IsDeleted = false
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+                new CommentEntity
+                {
+                 Id = 97,
+                 Score = 4,
+                 Text = "comment 37",
+                 Order = new OrderEntity
+                 {
+                     DateStart = new DateTime(2023-01-27),
+                     DateEnd = new DateTime(2023-01-29),
+                 },
+                 CommentFromUser = new UserEntity
+                 {
+                    Id = 77,
+                    Email = "77@ru",
+                    PhoneNumber = "777777",
+                    Name = "77",
+                    UserRoleId =667,
+                    UserRole = new UserRoleEntity
+                    {
+                    Id = 667
+                    }
+                 }
+                }
+            };
+            int userRoleId = 117;
+            UserRoleEntity userRole = new UserRoleEntity
+            {
+                Id = 117,
+                Name = "Sitter"
+            };
+            AvgScoreCommentsResponse<CommentResponse> expected = new AvgScoreCommentsResponse<CommentResponse>
+            {
+                AverageScore = 4,
+                Comments = new List<CommentResponse>
+                {
+                  new CommentResponse
+                  {
+                      Id = 97,
+                      Score = 4,
+                      Text = "comment 37"
+                  }
+                }
+            };
+
+            yield return new object[] { userId, userEntity, commentsEntities, userRoleId, userRole, expected };
+
+            //2. Ситтер получает комменты о нем - 2 коммента
+
+            userId = 176;
+            userEntity = new UserEntity
+            {
+                Id = 176,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 1176,
+                    Name = "Sitter"
+                },
+                IsDeleted = false
+            };
+            commentsEntities = new List<CommentEntity>
+            {
+                new CommentEntity
+                {
+                 Id = 976,
+                 Score = 3,
+                 Text = "comment 376",
+                 Order = new OrderEntity
+                 {
+                     DateStart = new DateTime(2023-01-27),
+                     DateEnd = new DateTime(2023-01-29),
+                 },
+                 CommentFromUser = new UserEntity
+                 {
+                    Id = 776,
+                    Email = "776@ru",
+                    PhoneNumber = "7777776",
+                    Name = "776",
+                    UserRoleId =6676,
+                    UserRole = new UserRoleEntity
+                    {
+                    Id = 6676
+                    }
+                 }
+                },
+                new CommentEntity
+                {
+                 Id = 9765,
+                 Score = 1,
+                 Text = "comment 3765",
+                 Order = new OrderEntity
+                 {
+                     DateStart = new DateTime(2023-01-21),
+                     DateEnd = new DateTime(2023-01-22),
+                 },
+                 CommentFromUser = new UserEntity
+                 {
+                    Id = 7765,
+                    Email = "7765@ru",
+                    PhoneNumber = "77777765",
+                    Name = "7765",
+                    UserRoleId =66765,
+                    UserRole = new UserRoleEntity
+                    {
+                    Id = 66765
+                    }
+                 }
+                }
+            };
+            userRoleId = 1176;
+            userRole = new UserRoleEntity
+            {
+                Id = 1176,
+                Name = "Sitter"
+            };
+           expected = new AvgScoreCommentsResponse<CommentResponse>
+            {
+                AverageScore = 2,
+                Comments = new List<CommentResponse>
+                {
+                   new CommentResponse
+                   {
+                     Id = 9765,
+                     Score = 1,
+                     Text = "comment 3765"
+                   },
+                  new CommentResponse
+                  {
+                      Id = 976,
+                      Score = 3,
+                      Text = "comment 376",
+                  }
+                }
+            };
+
+            yield return new object[] { userId, userEntity, commentsEntities, userRoleId, userRole, expected };
+
+            //3. Ситтер получает комменты о нем - комментов нет -пустой лист
+
+            userId = 1765;
+            userEntity = new UserEntity
+            {
+                Id = 1765,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 11765,
+                    Name = "Sitter"
+                },
+                IsDeleted = false
+            };
+            commentsEntities = new List<CommentEntity>();
+            userRoleId = 11765;
+            userRole = new UserRoleEntity
+            {
+                Id = 11765,
+                Name = "Sitter"
+            };
+            expected = new AvgScoreCommentsResponse<CommentResponse>
+            {
+                AverageScore = 0,
+                Comments = new List<CommentResponse>()
+            };
+
+            yield return new object[] { userId, userEntity, commentsEntities, userRoleId, userRole, expected };
         }
     }
 }
-
-//int userCommentFromId, UserEntity userCommentFromEntity,
-//                                  int userCommentToId, UserEntity userCommentToEntity, int userRoleCommentFromId, int userRoleCommentToId,
-//                                CommentRequest addComment, int orderId
