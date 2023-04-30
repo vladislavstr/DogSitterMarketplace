@@ -1,13 +1,12 @@
 ﻿using DogSitterMarketplaceBll.Models.Appeals.Request;
 using DogSitterMarketplaceBll.Models.Appeals.Response;
-using DogSitterMarketplaceDal.Models.Appeals;
 
 namespace DogSitterMarketplaceBll.IServices
 {
     public interface IAppealService
     {
         public IEnumerable<AppealResponse> GetAllAppeals();
-        
+
         public IEnumerable<AppealResponse> GetAllNotDeletedAppeals();
 
         public AppealResponse GetAppealById(int id);

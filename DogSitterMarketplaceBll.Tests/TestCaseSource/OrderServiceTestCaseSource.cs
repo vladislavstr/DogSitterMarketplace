@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using DogSitterMarketplaceBll.Models.Appeals.Response;
+﻿using DogSitterMarketplaceBll.Models.Appeals.Response;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets.Response;
@@ -9,13 +8,7 @@ using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DogSitterMarketplaceBll.Tests.TestCaseSource
 {

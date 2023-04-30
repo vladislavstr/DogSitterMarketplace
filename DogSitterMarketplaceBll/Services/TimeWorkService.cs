@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Works.Request;
-using DogSitterMarketplaceBll.Models.Works.Request;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Works;
@@ -128,7 +127,7 @@ namespace DogSitterMarketplaceBll.Services
             }
             else
             {
-                oldTimings.RemoveAll(t=>t.Id == timingUpdateDal.Id);
+                oldTimings.RemoveAll(t => t.Id == timingUpdateDal.Id);
             }
 
             var dublicateTiming = GetDublicateInterval(timingUpdateDal, oldTimings);

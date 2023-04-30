@@ -2,14 +2,10 @@
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
-using DogSitterMarketplaceDal.Models.Appeals;
 using DogSitterMarketplaceDal.Models.Orders;
-using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;
-using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 using NLog;
-using System.Linq;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -27,20 +23,20 @@ namespace DogSitterMarketplaceDal.Repositories
             _logger = nLogger;
         }
 
-        public OrderEntity AddNewOrder(OrderEntity order)
+        public async Task<OrderEntity> AddNewOrder(OrderEntity order)
         {
             try
             {
-                _context.Orders.Add(order);
-                _context.SaveChanges();
+                await _context.Orders.AddAsync(order);
+                await _context.SaveChangesAsync();
 
-                return _context.Orders
+                return await _context.Orders
                     .Include(o => o.OrderStatus)
                     .Include(o => o.SitterWork)
                     .Include(o => o.SitterWork.User)
                     .Include(o => o.SitterWork.WorkType)
                     .Include(o => o.Location)
-                    .Single(o => o.Id == order.Id);
+                    .SingleAsync(o => o.Id == order.Id);
             }
             catch (Exception ex)
             {
@@ -50,9 +46,9 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public OrderEntity ChangeOrderStatus(int orderId, int orderStatusId)
+        public async Task<OrderEntity> ChangeOrderStatus(int orderId, int orderStatusId)
         {
-            var orderDB = _context.Orders.SingleOrDefault(o => o.Id == orderId);
+            var orderDB = await _context.Orders.SingleOrDefaultAsync(o => o.Id == orderId);
             if (orderDB == null)
             {
                 // _logger.LogDebug($"{nameof(OrderEntity)} with id {orderUpdateEntity.Id} not found.");
@@ -60,7 +56,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new NotFoundException(orderId, nameof(OrderEntity));
             }
 
-            var orderStatusDB = _context.OrderStatuses.SingleOrDefault(os => os.Id == orderStatusId);
+            var orderStatusDB = await _context.OrderStatuses.SingleOrDefaultAsync(os => os.Id == orderStatusId);
             if (orderStatusDB == null)
             {
                 // _logger.LogDebug($"{nameof(OrderEntity)} with id {orderUpdateEntity.Id} not found.");
@@ -69,17 +65,18 @@ namespace DogSitterMarketplaceDal.Repositories
             }
 
             orderDB.OrderStatusId = orderStatusId;
-            _context.SaveChanges();
-            orderDB = _context.Orders
+            await _context.SaveChangesAsync();
+
+            orderDB = await _context.Orders
                 .Include(o => o.OrderStatus)
-                .SingleOrDefault(o => o.Id == orderId);
+                .SingleOrDefaultAsync(o => o.Id == orderId);
 
             return orderDB;
         }
 
-        public List<OrderEntity> GetAllOrders()
+        public async Task<List<OrderEntity>> GetAllOrders()
         {
-            return _context.Orders
+            return await _context.Orders
                         .Include(o => o.OrderStatus)
                         .Include(o => o.SitterWork)
                         .Include(o => o.Location)
@@ -88,21 +85,21 @@ namespace DogSitterMarketplaceDal.Repositories
                         .Include(o => o.Comments)
                         .Include(o => o.Appeals)
                         .Include(o => o.Pets)
-                        .AsNoTracking().ToList();
+                        .AsNoTracking().ToListAsync();
         }
 
-        public List<OrderEntity> GetAllOrdersBySitterId(int userId)
+        public async Task<List<OrderEntity>> GetAllOrdersBySitterId(int userId)
         {
             try
             {
-                return _context.Orders
+                return await _context.Orders
                         .Include(o => o.OrderStatus)
                         .Include(o => o.SitterWork)
                         .ThenInclude(sw => sw.WorkType)
                         .Include(o => o.Location)
                         .Include(o => o.Pets)
                         .ThenInclude(p => p.User)
-                        .Where(o => o.SitterWork.UserId == userId).ToList();
+                        .Where(o => o.SitterWork.UserId == userId).ToListAsync();
             }
             catch (InvalidOperationException ex)
             {
@@ -112,11 +109,11 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public OrderEntity GetOrderById(int id)
+        public async Task<OrderEntity> GetOrderById(int id)
         {
             try
             {
-                return _context.Orders
+                return await _context.Orders
                     .Include(o => o.OrderStatus)
                     .Include(o => o.SitterWork)
                     .Include(o => o.Location)
@@ -131,7 +128,7 @@ namespace DogSitterMarketplaceDal.Repositories
                     .Include(o => o.Appeals)
                     .ThenInclude(o => o.AppealToUser)
                     .Include(o => o.Pets)
-                    .Single(o => o.Id == id);
+                    .SingleAsync(o => o.Id == id);
             }
             catch (InvalidOperationException ex)
             {
@@ -141,13 +138,11 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public OrderEntity UpdateOrder(OrderEntity orderUpdateEntity)
+        public async Task<OrderEntity> UpdateOrder(OrderEntity orderUpdateEntity)
         {
-            // _context.Orders.Update(orderUpdateEntity);
-
-            var orderDB = _context.Orders
-                .Include(o => o.Pets)
-                .SingleOrDefault(o => o.Id == orderUpdateEntity.Id && !o.IsDeleted);
+            var orderDB = await _context.Orders
+                            .Include(o => o.Pets)
+                            .SingleOrDefaultAsync(o => o.Id == orderUpdateEntity.Id && !o.IsDeleted);
 
             if (orderDB == null)
             {
@@ -165,23 +160,23 @@ namespace DogSitterMarketplaceDal.Repositories
             orderDB.Pets.Clear();
             orderDB.Pets.AddRange(orderUpdateEntity.Pets);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            return _context.Orders
+            return await _context.Orders
                 .Include(o => o.OrderStatus)
                 .Include(o => o.SitterWork)
                 .Include(o => o.Location)
                 .Include(o => o.Pets)
-                .Single(o => o.Id == orderUpdateEntity.Id);
+                .SingleAsync(o => o.Id == orderUpdateEntity.Id);
         }
 
-        public void DeleteOrderById(int id)
+        public async Task DeleteOrderById(int id)
         {
             try
             {
-                var orderDb = _context.Orders.Single(o => o.Id == id && !o.IsDeleted);
+                var orderDb = await _context.Orders.SingleAsync(o => o.Id == id && !o.IsDeleted);
                 orderDb.IsDeleted = true;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (InvalidOperationException ex)
             {
@@ -191,11 +186,11 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public OrderStatusEntity GetOrderStatusById(int id)
+        public async Task<OrderStatusEntity> GetOrderStatusById(int id)
         {
             try
             {
-                return _context.OrderStatuses.Single(o => o.Id == id); ;
+                return await _context.OrderStatuses.SingleAsync(o => o.Id == id); ;
             }
             catch (InvalidOperationException ex)
             {
@@ -205,17 +200,17 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public List<OrderEntity> GetOrdersAtWorkOnDateByUserId(int sitterId, DateTime startDate)
+        public async Task<List<OrderEntity>> GetOrdersAtWorkOnDateByUserId(int sitterId, DateTime startDate)
         {
             try
             {
-                return _context.Orders
-                    .Include(o => o.SitterWork)
-                    .Include(o => o.OrderStatus)
-                    .Where(o => o.OrderStatus.Name == OrderStatus.AtWork
-                        && o.DateStart.Date == startDate.Date
-                        && o.SitterWork.UserId == sitterId)
-                    .ToList();
+                return await _context.Orders
+                                    .Include(o => o.SitterWork)
+                                    .Include(o => o.OrderStatus)
+                                    .Where(o => o.OrderStatus.Name == OrderStatus.AtWork
+                                            && o.DateStart.Date == startDate.Date
+                                            && o.SitterWork.UserId == sitterId)
+                                    .ToListAsync();
             }
             catch (InvalidOperationException ex)
             {
@@ -225,11 +220,11 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public OrderStatusEntity GetOrderStatusByName(string name)
+        public async Task<OrderStatusEntity> GetOrderStatusByName(string name)
         {
             try
             {
-                return _context.OrderStatuses.Single(os => os.Name == name);
+                return await _context.OrderStatuses.SingleAsync(os => os.Name == name);
             }
             catch (ArgumentException)
             {
@@ -238,16 +233,16 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public List<OrderEntity> GetOrdersBySitterIdAndClientId(int sitterId, int clientId)
+        public async Task<List<OrderEntity>> GetOrdersBySitterIdAndClientId(int sitterId, int clientId)
         {
             try
             {
-                return _context.Orders
-                    .Include(o => o.Pets)
-                    .Include(o => o.SitterWork)
-                    .Where(o => o.SitterWork.UserId == sitterId
-                        && o.Pets.Any(p => p.UserId == clientId))
-                    .ToList();
+                return await _context.Orders
+                                .Include(o => o.Pets)
+                                .Include(o => o.SitterWork)
+                                .Where(o => o.SitterWork.UserId == sitterId
+                                        && o.Pets.Any(p => p.UserId == clientId))
+                                .ToListAsync();
             }
             catch (ArgumentException)
             {

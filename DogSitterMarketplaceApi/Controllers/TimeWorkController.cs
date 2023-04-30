@@ -2,7 +2,6 @@
 using DogSitterMarketplaceApi.Models.WorksDto.Request;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Works.Request;
-using DogSitterMarketplaceBll.Models.Works.Request;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using ILogger = NLog.ILogger;
@@ -84,7 +83,7 @@ namespace DogSitterMarketplaceApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
+
         private void ChekWriteTime(List<TimingLocationWorkRequestDto> timings)
         {
             string exceptionMessage = "";

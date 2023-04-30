@@ -24,7 +24,7 @@ namespace DogSitterMarketplaceApi.Mappings
                 .ForMember(dest => dest.CommentsAboutOtherUsers, opt => opt.MapFrom(src => src.Comments));
             CreateMap<AvgScoreCommentsResponse<CommentWithUserShortResponse>, AvgScoreCommentsResponseDto>();
             CreateMap<AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse>, AvgScoreCommentsResponseDto>();
-           // CreateMap<AvgScoreCommentWithoutUserResponse, AvgScoreCommentWithoutUserResponseDto>();
+            // CreateMap<AvgScoreCommentWithoutUserResponse, AvgScoreCommentWithoutUserResponseDto>();
         }
     }
 }

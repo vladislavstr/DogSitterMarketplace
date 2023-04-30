@@ -10,7 +10,6 @@ using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceBll.Models.Works.Response;
-using DogSitterMarketplaceDal.Models.Orders;
 
 namespace DogSitterMarketplaceApi.Mappings
 {

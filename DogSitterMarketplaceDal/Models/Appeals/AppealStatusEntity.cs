@@ -8,7 +8,7 @@ namespace DogSitterMarketplaceDal.Models.Appeals
     {
         [Key]
         public int Id { get; set; }
-        
+
         [Required]
         [Column(TypeName = "nvarchar(20)"),]
         public string Name { get; set; }

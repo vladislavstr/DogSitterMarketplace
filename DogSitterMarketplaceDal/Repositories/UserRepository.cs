@@ -2,7 +2,6 @@
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
-using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
@@ -55,13 +54,13 @@ namespace DogSitterMarketplaceDal.Repositories
         }
 
         //2 логгер оставить
-        public UserEntity GetUserWithRoleById(int id)
+        public async Task<UserEntity> GetUserWithRoleById(int id)
         {
             try
             {
-                return _context.Users
-                    .Include(u => u.UserRole)
-                    .Single(u => u.Id == id && !u.IsDeleted);
+                return await _context.Users
+                                .Include(u => u.UserRole)
+                                .SingleAsync(u => u.Id == id && !u.IsDeleted);
             }
             catch (InvalidOperationException)
             {
@@ -136,11 +135,11 @@ namespace DogSitterMarketplaceDal.Repositories
         //}
 
         //2 логгер прописать
-        public UserRoleEntity GetUserRoleById(int id)
+        public async Task<UserRoleEntity> GetUserRoleById(int id)
         {
             try
             {
-                return _context.UsersRoles.Single(ur => ur.Id == id);
+                return await _context.UsersRoles.SingleAsync(ur => ur.Id == id);
             }
             catch (InvalidOperationException)
             {
@@ -150,28 +149,28 @@ namespace DogSitterMarketplaceDal.Repositories
         }
 
         //2 логгер прописать
-        public UserEntity GetExistAndNotDeletedUserById(int id)
+        public async Task<UserEntity> GetExistAndNotDeletedUserById(int id)
         {
             try
             {
-                return _context.Users
-                    .Include(u => u.UserRole)
-                    .Single(u => u.Id == id && !u.IsDeleted);
+                return await _context.Users
+                            .Include(u => u.UserRole)
+                            .SingleAsync(u => u.Id == id && !u.IsDeleted);
             }
             catch (InvalidOperationException)
             {
                 //_logger.LogDebug($"{nameof(UserEntity)} with id {id} not found.");
-               // _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
+                // _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
                 throw new NotFoundException(id, nameof(UserEntity));
             }
         }
 
         //2 логгер прописать
-        public List<UserEntity> GetAllSittersByLocationId(int locationId)
+        public async Task<List<UserEntity>> GetAllSittersByLocationId(int locationId)
         {
             try
             {
-                var location = _contextWork.Locations.SingleOrDefault(l => l.Id == locationId);
+                var location = await _contextWork.Locations.SingleOrDefaultAsync(l => l.Id == locationId);
 
                 if (location == null)
                 {
@@ -179,15 +178,15 @@ namespace DogSitterMarketplaceDal.Repositories
                     throw new NotFoundException(locationId, nameof(LocationEntity));
                 }
 
-                return _context.Users
-                    .Include(u => u.UserRole)
-                    .Include(u => u.SitterWorks)
-                    .ThenInclude(sw => sw.LocationWork)
-                     .Include(u => u.SitterWorks)
-                    .ThenInclude(sw => sw.WorkType)
-                    .Where(u => u.UserRole.Name == UserRole.Sitter
-                           && u.SitterWorks.Any(sw => sw.LocationWork.Any(l => l.LocationId == locationId)))
-                    .ToList();
+                return await _context.Users
+                                .Include(u => u.UserRole)
+                                .Include(u => u.SitterWorks)
+                                .ThenInclude(sw => sw.LocationWork)
+                                 .Include(u => u.SitterWorks)
+                                .ThenInclude(sw => sw.WorkType)
+                                .Where(u => u.UserRole.Name == UserRole.Sitter
+                                       && u.SitterWorks.Any(sw => sw.LocationWork.Any(l => l.LocationId == locationId)))
+                                .ToListAsync();
             }
             catch (Exception ex)
             {

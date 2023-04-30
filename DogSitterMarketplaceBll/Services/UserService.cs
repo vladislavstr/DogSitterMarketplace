@@ -4,7 +4,6 @@ using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceBll.Models.Works.Response;
-using DogSitterMarketplaceCore;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Users;
 
@@ -78,14 +77,14 @@ namespace DogSitterMarketplaceBll.Services
         }
 
         //добавить логгер
-        public List<UserShortLocationWorkResponse> GetAllSittersByLocationId(int locationId)
+        public async Task<List<UserShortLocationWorkResponse>> GetAllSittersByLocationId(int locationId)
         {
             //var userEntity = _userRepository.GetUserWithRoleById(clientId);
             //var userRole = userEntity.UserRole;
 
             //if (userRole.Name == UserRole.Client)
             //{
-            var allSittersEntity = _userRepository.GetAllSittersByLocationId(locationId);
+            var allSittersEntity = await _userRepository.GetAllSittersByLocationId(locationId);
             var allSittersIsActiveEntity = allSittersEntity.Where(s => s.SitterWorks.Any(sw => sw.LocationWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))).ToList();
             //    var usersShortsResponse = _mapper.Map<List<UserShortLocationWorkResponse>>(allSittersIsActiveEntity);
             var usersShortsResponse = allSittersIsActiveEntity.Select(s => new UserShortLocationWorkResponse

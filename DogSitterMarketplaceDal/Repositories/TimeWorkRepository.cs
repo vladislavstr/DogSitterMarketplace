@@ -1,5 +1,5 @@
-﻿using DogSitterMarketplaceDal.IRepositories;
-using DogSitterMarketplaceDal.Contexts;
+﻿using DogSitterMarketplaceDal.Contexts;
+using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 using ILogger = NLog.ILogger;
@@ -86,8 +86,8 @@ namespace DogSitterMarketplaceDal.Repositories
             bool isDelete = false;
 
             var deleteTiming = _context.TimingLocationWorks
-                .SingleOrDefault(t=>t.Id==id);
-            
+                .SingleOrDefault(t => t.Id == id);
+
             if (deleteTiming != null)
             {
                 _context.TimingLocationWorks.Remove(deleteTiming);
@@ -99,7 +99,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 _logger.Log(LogLevel.Error, $"Time interval with id {id} not found");
                 throw new FileNotFoundException($"Time interval with id {id} not found");
             }
-            
+
             return isDelete;
         }
     }

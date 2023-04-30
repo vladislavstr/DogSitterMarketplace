@@ -1,7 +1,6 @@
 ﻿using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceDal.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.Repositories

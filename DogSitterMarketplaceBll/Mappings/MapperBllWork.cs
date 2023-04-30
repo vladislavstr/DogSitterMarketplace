@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceBll.Models.Works.Request;
-using DogSitterMarketplaceBll.Models.Works.Request;
 using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceDal.Models.Works;
 

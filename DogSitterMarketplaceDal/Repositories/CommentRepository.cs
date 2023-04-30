@@ -3,7 +3,6 @@ using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Users;
-using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
@@ -21,9 +20,9 @@ namespace DogSitterMarketplaceDal.Repositories
             _logger = nLogger;
         }
 
-        public List<CommentEntity> GetAllCommentsAndScoresByUserId(int userIdToComment)
+        public async Task<List<CommentEntity>> GetAllCommentsAndScoresByUserId(int userIdToComment)
         {
-            var user = _context.Users.SingleOrDefault(u => u.Id == userIdToComment);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userIdToComment);
 
             if (user == null)
             {
@@ -31,39 +30,39 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new NotFoundException(userIdToComment, nameof(UserEntity));
             }
 
-            return _context.Comments
-                .Include(c => c.Order)
-                .ThenInclude(o => o.SitterWork)
-                .Include(c => c.Order)
-                .ThenInclude(o => o.OrderStatus)
-                .Include(c => c.CommentFromUser)
-                .ThenInclude(u => u.UserRole)
-                .Include(c => c.CommentToUser)
-                .ThenInclude(u => u.UserRole)
-                .Where(c => c.CommentToUserId == userIdToComment).ToList();
+            return await _context.Comments
+                        .Include(c => c.Order)
+                        .ThenInclude(o => o.SitterWork)
+                        .Include(c => c.Order)
+                        .ThenInclude(o => o.OrderStatus)
+                        .Include(c => c.CommentFromUser)
+                        .ThenInclude(u => u.UserRole)
+                        .Include(c => c.CommentToUser)
+                        .ThenInclude(u => u.UserRole)
+                        .Where(c => c.CommentToUserId == userIdToComment).ToListAsync();
         }
 
-        public List<CommentEntity> GetAllComments()
+        public async Task<List<CommentEntity>> GetAllComments()
         {
-            return _context.Comments
-                    .Include(c => c.Order)
-                    .ThenInclude(o => o.SitterWork)
-                    .Include(c => c.Order)
-                    .ThenInclude(o => o.OrderStatus)
-                    .Include(c => c.CommentFromUser)
-                    .Include(c => c.CommentToUser).ToList();
+            return await _context.Comments
+                        .Include(c => c.Order)
+                        .ThenInclude(o => o.SitterWork)
+                        .Include(c => c.Order)
+                        .ThenInclude(o => o.OrderStatus)
+                        .Include(c => c.CommentFromUser)
+                        .Include(c => c.CommentToUser).ToListAsync();
         }
 
-        public CommentEntity GetCommentById(int id)
+        public async Task<CommentEntity> GetCommentById(int id)
         {
             try
             {
-                return _context.Comments
-                   .Include(c => c.Order)
-                   .Include(c => c.Order.OrderStatus)
-                   .Include(c => c.CommentFromUser)
-                   .Include(c => c.CommentToUser)
-                   .Single(c => c.Id == id);
+                return await _context.Comments
+                           .Include(c => c.Order)
+                           .Include(c => c.Order.OrderStatus)
+                           .Include(c => c.CommentFromUser)
+                           .Include(c => c.CommentToUser)
+                           .SingleAsync(c => c.Id == id);
             }
             catch (InvalidOperationException)
             {
@@ -73,13 +72,13 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public void DeleteCommentById(int id)
+        public async Task DeleteCommentById(int id)
         {
             try
             {
-                var commentDB = _context.Comments.Single(c => c.Id == id && !c.IsDeleted);
+                var commentDB = await _context.Comments.SingleAsync(c => c.Id == id && !c.IsDeleted);
                 commentDB.IsDeleted = true;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (InvalidOperationException)
             {
@@ -89,18 +88,15 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public CommentEntity AddComment(CommentEntity addComment)
+        public async Task<CommentEntity> AddComment(CommentEntity addComment)
         {
             try
             {
-                _context.Comments.Add(addComment);
-                _context.SaveChanges();
+                await _context.Comments.AddAsync(addComment);
+                await _context.SaveChangesAsync();
 
-                return _context.Comments
-                    // .Include(c => c.Order)
-                    //.Include(c => c.CommentFromUser)
-                    //.Include(c => c.CommentToUser)
-                    .Single(c => c.Id == addComment.Id);
+                return await _context.Comments
+                                .SingleAsync(c => c.Id == addComment.Id);
             }
             catch (Exception ex)
             {
@@ -110,9 +106,9 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        public CommentEntity UpdateComment(CommentEntity comment)
+        public async Task<CommentEntity> UpdateComment(CommentEntity comment)
         {
-            var commentDB = _context.Comments.SingleOrDefault(c => c.Id == comment.Id && !c.IsDeleted);
+            var commentDB = await _context.Comments.SingleOrDefaultAsync(c => c.Id == comment.Id && !c.IsDeleted);
 
             if (commentDB == null)
             {
@@ -126,7 +122,7 @@ namespace DogSitterMarketplaceDal.Repositories
             commentDB.OrderId = comment.OrderId;
             commentDB.CommentFromUserId = comment.CommentFromUserId;
             commentDB.CommentToUserId = comment.CommentToUserId;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return commentDB;
         }

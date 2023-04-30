@@ -5,19 +5,19 @@ namespace DogSitterMarketplaceBll.IServices
 {
     public interface ICommentService
     {
-        public List<CommentOrderResponse> GetAllNotDeletedComments();
+        public Task<List<CommentOrderResponse>> GetAllNotDeletedComments();
 
-        public CommentOrderResponse GetNotDeletedCommentById(int id);
+        public Task<CommentOrderResponse> GetNotDeletedCommentById(int id);
 
-        public void DeleteCommentById(int id);
+        public Task DeleteCommentById(int id);
 
-        public CommentOrderResponse AddComment(CommentRequest commentRequest);
+        public Task<CommentOrderResponse> AddComment(CommentRequest addComment);
 
-        public CommentOrderResponse UpdateComment(CommentUpdate commentRequest);
+        public Task<CommentOrderResponse> UpdateComment(CommentUpdate commentUpdate);
 
-        public AvgScoreCommentsResponse<T> GetCommentsAndScoresForUserAboutHim<T>(int userId, string role) where T : CommentResponse;
+        public Task<AvgScoreCommentsResponse<T>> GetCommentsAndScoresForUserAboutHim<T>(int userId, string role) where T : CommentResponse;
 
-        public AvgScoreCommentsResponse<T> GetCommentsAndScoresAboutOtherUsers<T>(int userIdGetComment, string roleUserGetComment,
+        public Task<AvgScoreCommentsResponse<T>> GetCommentsAndScoresAboutOtherUsers<T>(int userIdGetComment, string roleUserGetComment,
                                                                                   int userIdToComment, string roleUserToComment) where T : CommentResponse;
     }
 }

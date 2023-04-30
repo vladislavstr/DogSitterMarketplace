@@ -2,8 +2,6 @@ using DogSitterMarketplaceApi.Models.AppealsDto.Response;
 using DogSitterMarketplaceApi.Models.PetsDto.Response;
 using DogSitterMarketplaceApi.Models.WorksDto;
 using DogSitterMarketplaceApi.Models.WorksDto.Response;
-using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceDal.Models.Orders;
 
 namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
 {

@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-
-using DogSitterMarketplaceBll.IServices;
-using DogSitterMarketplaceApi.Models.AppealsDto.Response;
-using DogSitterMarketplaceApi.Models.UsersDto.Response;
-using DogSitterMarketplaceApi.Models.UsersDto.Request;
-using DogSitterMarketplaceBll.Models.Users.Request;
-using DogSitterMarketplaceBll.Services;
-using DogSitterMarketplaceBll.Models.Appeals.Request;
 using DogSitterMarketplaceApi.Models.AppealsDto.Request;
+using DogSitterMarketplaceApi.Models.AppealsDto.Response;
+using DogSitterMarketplaceBll.IServices;
+using DogSitterMarketplaceBll.Models.Appeals.Request;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DogSitterMarketplaceApi.Controllers
 {

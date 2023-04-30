@@ -1,6 +1,5 @@
 ﻿using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Users;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -54,6 +53,6 @@ namespace DogSitterMarketplaceDal.Models.Appeals
         public int? AppealToUserId { get; set; }
 
         [NotMapped]
-        public bool IsDeleted { get; set; } 
+        public bool IsDeleted { get; set; }
     }
 }

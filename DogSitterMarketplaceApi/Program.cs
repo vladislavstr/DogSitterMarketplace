@@ -3,25 +3,12 @@ using DogSitterMarketplaceApi.Mappings;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Mappings;
 using DogSitterMarketplaceBll.Services;
+using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Repositories;
 using NLog;
 using ILogger = NLog.ILogger;
 using LogManager = NLog.LogManager;
-
-using DogSitterMarketplaceApi.Mappings;
-using DogSitterMarketplaceBll.IServices;
-using DogSitterMarketplaceBll.Mappings;
-using DogSitterMarketplaceBll.Services;
-using DogSitterMarketplaceDal;
-using DogSitterMarketplaceDal.IRepositories;
-using DogSitterMarketplaceDal.Repositories;
-using Microsoft.Extensions.DependencyInjection;
-using NLog;
-using NLog.Fluent;
-using NLog.Web;
-using DogSitterMarketplaceBll.Mappings;
-using DogSitterMarketplaceDal.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +30,7 @@ builder.Services.AddScoped<IPetRepository, PetRepository>();
 builder.Services.AddScoped<IPetService, PetService>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ICommentService, CommentService>();
-builder.Services.AddAutoMapper(typeof(MapperApiOrderProfile), typeof(MapperBllOrderProfile),  
+builder.Services.AddAutoMapper(typeof(MapperApiOrderProfile), typeof(MapperBllOrderProfile),
                                typeof(MapperApiPetProfile), typeof(MapperBllPetProfile),
                                typeof(MapperApiCommentProfile), typeof(MapperBllCommentProfile));
 //InjectLogger(builder);

@@ -1,6 +1,4 @@
-﻿using DogSitterMarketplaceBll.Models.Pets.Request;
-
-namespace DogSitterMarketplaceBll.Models.Users.Request
+﻿namespace DogSitterMarketplaceBll.Models.Users.Request
 {
     public class UserRequest
     {

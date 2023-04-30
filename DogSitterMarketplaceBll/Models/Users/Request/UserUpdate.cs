@@ -1,13 +1,8 @@
 ﻿using DogSitterMarketplaceBll.Models.Pets.Request;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DogSitterMarketplaceBll.Models.Users.Request
 {
-     public class UserUpdate
+    public class UserUpdate
     {
         public int Id { get; set; }
         public string Email { get; set; }

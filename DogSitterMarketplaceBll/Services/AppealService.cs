@@ -3,11 +3,8 @@
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Appeals.Request;
 using DogSitterMarketplaceBll.Models.Appeals.Response;
-using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceDal.Models.Users;
-using DogSitterMarketplaceDal.Repositories;
 
 
 namespace DogSitterMarketplaceBll.Services
@@ -23,7 +20,7 @@ namespace DogSitterMarketplaceBll.Services
             _appealRepository = appealRepository;
         }
 
-        public IEnumerable<AppealResponse> GetAllAppeals() 
+        public IEnumerable<AppealResponse> GetAllAppeals()
         {
             var allappealsEntitys = _appealRepository.GetAllAppeals();
             var appealResponse = _mapper.Map<IEnumerable<AppealResponse>>(allappealsEntitys);

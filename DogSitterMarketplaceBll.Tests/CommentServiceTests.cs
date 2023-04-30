@@ -13,7 +13,6 @@ using DogSitterMarketplaceDal.Models.Users;
 using FluentAssertions;
 using Moq;
 using NLog;
-using NUnit.Framework.Constraints;
 
 namespace DogSitterMarketplaceBll.Tests
 {
@@ -67,7 +66,7 @@ namespace DogSitterMarketplaceBll.Tests
             _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).Returns(userRoleCommentToEntity);
             // _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId)).Returns(allOrders);
             _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentToId, userCommentFromId)).Returns(allOrders);
-            _mockCommentRepo.Setup(c => c.AddComment(It.Is<CommentEntity>(c => method(c, commentEntity)))).Returns(addCommentEntity);
+            _mockCommentRepo.Setup(c => c.AddComment(It.Is<CommentEntity>(c => Compare(c, commentEntity)))).Returns(addCommentEntity);
 
             CommentOrderResponse actual = _commentService.AddComment(addComment);
 
@@ -96,7 +95,7 @@ namespace DogSitterMarketplaceBll.Tests
             _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).Returns(userRoleCommentToEntity);
             _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId)).Returns(allOrders);
             //_mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentToId, userCommentFromId)).Returns(allOrders);
-            _mockCommentRepo.Setup(c => c.AddComment(It.Is<CommentEntity>(c => method(c, commentEntity)))).Returns(addCommentEntity);
+            _mockCommentRepo.Setup(c => c.AddComment(It.Is<CommentEntity>(c => Compare(c, commentEntity)))).Returns(addCommentEntity);
 
             CommentOrderResponse actual = _commentService.AddComment(addComment);
 
@@ -114,7 +113,7 @@ namespace DogSitterMarketplaceBll.Tests
 
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.AddComment__WhenOrderBetweenSitterAndClientIsNotExist_CommentFromClientToUser_ShouldBeArgumentException_TestCaseSource))]
         public void AddCommentTest_WhenOrderBetweenSitterAndClientIsNotExist_CommentFromClientToUser_ShouldBeArgumentException(int userCommentFromId, UserEntity userCommentFromEntity,
-                                    int userCommentToId, UserEntity userCommentToEntity,int userRoleCommentFromId, UserRoleEntity userRoleCommentFromEntity, int userRoleCommentToId, 
+                                    int userCommentToId, UserEntity userCommentToEntity, int userRoleCommentFromId, UserRoleEntity userRoleCommentFromEntity, int userRoleCommentToId,
                                     UserRoleEntity userRoleCommentToEntity, CommentRequest addComment, int orderId, OrderResponse orderResponse)
         {
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).Returns(userCommentFromEntity);
@@ -159,7 +158,7 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTestCaseSource))]
-        public void GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest(int userId, UserEntity userEntity, List<CommentEntity> commentsEntities, int userRoleId, 
+        public void GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest(int userId, UserEntity userEntity, List<CommentEntity> commentsEntities, int userRoleId,
                                                                               UserRoleEntity userRole, AvgScoreCommentsResponse<CommentWithUserShortResponse> expected)
         {
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).Returns(userEntity);
@@ -192,7 +191,7 @@ namespace DogSitterMarketplaceBll.Tests
             actual.Should().BeEquivalentTo(expected);
         }
 
-        private bool method(CommentEntity c, CommentEntity commentEntity)
+        private bool Compare(CommentEntity c, CommentEntity commentEntity)
         {
             try
             {

@@ -698,7 +698,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 Id = 1176,
                 Name = "Sitter"
             };
-           expected = new AvgScoreCommentsResponse<CommentResponse>
+            expected = new AvgScoreCommentsResponse<CommentResponse>
             {
                 AverageScore = 2,
                 Comments = new List<CommentResponse>

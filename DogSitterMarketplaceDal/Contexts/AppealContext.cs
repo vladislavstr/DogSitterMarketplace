@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceDal.Models.Users;
+﻿using DogSitterMarketplaceDal.Models.Appeals;
 using DogSitterMarketplaceDal.Models.Orders;
+using DogSitterMarketplaceDal.Models.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.Contexts
 {

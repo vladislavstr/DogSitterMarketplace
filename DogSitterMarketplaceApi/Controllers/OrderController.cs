@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
 using DogSitterMarketplaceApi.Models.OrdersDto.Request;
 using DogSitterMarketplaceApi.Models.OrdersDto.Response;
-using DogSitterMarketplaceApi.Models.PetsDto.Response;
-using DogSitterMarketplaceApi.Models.WorksDto.Response;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Orders.Request;
-using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using NLog;
 using ILogger = NLog.ILogger;
-using System.Threading.Tasks;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -35,12 +29,12 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPost(Name = "AddOrder")]
-        public ActionResult<OrderResponseDto> AddOrder(OrderCreateRequestDto addOrder)
+        public async Task<ActionResult<OrderResponseDto>> AddOrder(OrderCreateRequestDto addOrder)
         {
             try
             {
                 var orderRequest = _mapper.Map<OrderCreateRequest>(addOrder);
-                var addOrderResponse = _orderService.AddOrder(orderRequest);
+                var addOrderResponse = await _orderService.AddOrder(orderRequest);
                 var addOrderResponseDto = _mapper.Map<OrderResponseDto>(addOrderResponse);
 
                 return Created(new Uri("api/Order", UriKind.Relative), addOrderResponseDto);
@@ -56,11 +50,11 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPatch("{id}", Name = "ChangeOrderStatus")]
-        public ActionResult<OrderResponseDto> ChangeOrderStatus(int id, [FromBody]int orderStatusId)
+        public async Task<ActionResult<OrderResponseDto>> ChangeOrderStatus(int id, [FromBody] int orderStatusId)
         {
             try
             {
-                var updateOrderResponse = _orderService.ChangeOrderStatus(id, orderStatusId);
+                var updateOrderResponse = await _orderService.ChangeOrderStatus(id, orderStatusId);
                 var updateOrderResponseDto = _mapper.Map<OrderResponseDto>(updateOrderResponse);
 
                 return Ok(updateOrderResponseDto);
@@ -80,11 +74,11 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("ordersUnderConsideration/{userId}", Name = "GetAllOrdersUnderConsiderationBySitterId")]
-        public ActionResult<List<OrderResponseDto>> GetAllOrdersUnderConsiderationBySitterId(int userId)
+        public async Task<ActionResult<List<OrderResponseDto>>> GetAllOrdersUnderConsiderationBySitterId(int userId)
         {
             try
             {
-                var ordersResponse = _orderService.GetAllOrdersUnderConsiderationBySitterId(userId);
+                var ordersResponse = await _orderService.GetAllOrdersUnderConsiderationBySitterId(userId);
                 var ordersResponseDto = _mapper.Map<List<OrderResponseDto>>(ordersResponse);
 
                 return ordersResponseDto;
@@ -106,11 +100,11 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet(Name = "GetAllNotDeletedOrders")]
-        public ActionResult<List<OrderResponseDto>> GetAllNotDeletedOrders()
+        public async Task<ActionResult<List<OrderResponseDto>>> GetAllNotDeletedOrders()
         {
             try
             {
-                var ordersResponse = _orderService.GetAllNotDeletedOrders();
+                var ordersResponse = await _orderService.GetAllNotDeletedOrders();
                 var ordersResponseDto = _mapper.Map<List<OrderResponseDto>>(ordersResponse);
 
                 return Ok(ordersResponseDto);
@@ -124,11 +118,11 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("{id}", Name = "GetNotDeletedOrderById")]
-        public ActionResult<OrderResponseDto> GetNotDeletedOrderById(int id)
+        public async Task<ActionResult<OrderResponseDto>> GetNotDeletedOrderById(int id)
         {
             try
             {
-                var orderResponse = _orderService.GetNotDeletedOrderById(id);
+                var orderResponse = await _orderService.GetNotDeletedOrderById(id);
                 var orderResponseDto = _mapper.Map<OrderResponseDto>(orderResponse);
 
                 return Ok(orderResponseDto);
@@ -140,11 +134,11 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteOrderById")]
-        public IActionResult DeleteOrderById(int id)
+        public async Task<IActionResult> DeleteOrderById(int id)
         {
             try
             {
-                _orderService.DeleteOrderById(id);
+                await _orderService.DeleteOrderById(id);
                 return NoContent();
             }
             catch (NotFoundException)
@@ -154,12 +148,12 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateOrder")]
-        public ActionResult<OrderResponseDto> UpdateOrder(OrderUpdateDto orderUpdateDto)
+        public async Task<ActionResult<OrderResponseDto>> UpdateOrder(OrderUpdateDto orderUpdateDto)
         {
             try
             {
                 var orderUpdate = _mapper.Map<OrderUpdate>(orderUpdateDto);
-                var orderResponse = _orderService.UpdateOrder(orderUpdate);
+                var orderResponse = await _orderService.UpdateOrder(orderUpdate);
                 var orderResponseDto = _mapper.Map<OrderResponseDto>(orderResponse);
 
                 return Ok(orderResponseDto);

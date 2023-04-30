@@ -1,6 +1,4 @@
-﻿using DogSitterMarketplaceBll.Models.Orders.Response;
-
-namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
+﻿namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
 {
     public class AvgScoreCommentsAboutOtherUsersResponseDto
     {

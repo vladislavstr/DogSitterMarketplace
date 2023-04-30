@@ -1,5 +1,4 @@
 ﻿using DogSitterMarketplaceApi.Models.UsersDto.Response;
-using DogSitterMarketplaceBll.Models.Users.Response;
 
 namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
 {

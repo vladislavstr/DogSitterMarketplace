@@ -1,20 +1,19 @@
 ﻿using DogSitterMarketplaceDal.Models.Orders;
-using DogSitterMarketplaceDal.Models.Users;
 
 namespace DogSitterMarketplaceDal.IRepositories
 {
     public interface ICommentRepository
     {
-        public List<CommentEntity> GetAllComments();
+        public Task<List<CommentEntity>> GetAllComments();
 
-        public CommentEntity GetCommentById(int id);
+        public Task<CommentEntity> GetCommentById(int id);
 
-        public void DeleteCommentById(int id);
+        public Task DeleteCommentById(int id);
 
-        public CommentEntity AddComment(CommentEntity addComment);
+        public Task<CommentEntity> AddComment(CommentEntity addComment);
 
-        public CommentEntity UpdateComment(CommentEntity comment);
+        public Task<CommentEntity> UpdateComment(CommentEntity comment);
 
-        public List<CommentEntity> GetAllCommentsAndScoresByUserId(int userId);
+        public Task<List<CommentEntity>> GetAllCommentsAndScoresByUserId(int userIdToComment);
     }
 }

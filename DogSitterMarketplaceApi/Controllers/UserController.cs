@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-
 using DogSitterMarketplaceApi.Models.UsersDto.Request;
 using DogSitterMarketplaceApi.Models.UsersDto.Response;
-using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceBll.IServices;
-using DogSitterMarketplaceApi.Models.OrdersDto.Response;
-using DogSitterMarketplaceBll.Services;
+using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceCore.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -106,11 +103,11 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("allSittersByLocation/{locationId}", Name = "GetAllSittersByLocationId")]
-        public ActionResult<List<UserShortLocationWorkResponseDto>> GetAllSittersByLocationId(int locationId)
+        public async Task<ActionResult<List<UserShortLocationWorkResponseDto>>> GetAllSittersByLocationId(int locationId)
         {
             try
             {
-                var allSittersResponse = _userService.GetAllSittersByLocationId(locationId);
+                var allSittersResponse = await _userService.GetAllSittersByLocationId(locationId);
                 var allSittersResponseDto = _mapper.Map<List<UserShortLocationWorkResponseDto>>(allSittersResponse);
 
                 return Ok(allSittersResponseDto);

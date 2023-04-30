@@ -1,18 +1,10 @@
 ﻿using AutoMapper;
-using DogSitterMarketplaceApi.Models.OrdersDto.Response;
 using DogSitterMarketplaceApi.Models.PetsDto.Request;
 using DogSitterMarketplaceApi.Models.PetsDto.Response;
 using DogSitterMarketplaceBll.IServices;
-using DogSitterMarketplaceBll.Models.Orders.Request;
-using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets.Request;
-using DogSitterMarketplaceBll.Models.Pets.Response;
-using DogSitterMarketplaceBll.Services;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Threading.Tasks;
-using NLog;
 using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
@@ -35,11 +27,11 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet(Name = "GetAllNotDeletedPets")]
-        public ActionResult<List<PetResponseDto>> GetAllPets()
+        public async Task<ActionResult<List<PetResponseDto>>> GetAllPets()
         {
             try
             {
-                var petsResponse = _petService.GetAllNotDeletedPets();
+                var petsResponse = await _petService.GetAllNotDeletedPets();
                 var petsResponseDto = _mapper.Map<List<PetResponseDto>>(petsResponse);
 
                 return Ok(petsResponseDto);
@@ -53,11 +45,11 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("{id}", Name = "GetNotDeletedPetById")]
-        public ActionResult<PetResponseDto> GetPetById(int id)
+        public async Task<ActionResult<PetResponseDto>> GetPetById(int id)
         {
             try
             {
-                var petResponse = _petService.GetNotDeletedPetById(id);
+                var petResponse = await _petService.GetNotDeletedPetById(id);
                 var petResponseDto = _mapper.Map<PetResponseDto>(petResponse);
 
                 return Ok(petResponseDto);
@@ -69,11 +61,11 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeletePetById")]
-        public IActionResult DeletePetById(int id)
+        public async Task<IActionResult> DeletePetById(int id)
         {
             try
             {
-                _petService.DeletePetById(id);
+                await _petService.DeletePetById(id);
 
                 return NoContent();
             }
@@ -84,12 +76,12 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPost(Name = "AddPet")]
-        public ActionResult<PetResponseDto> AddPet(PetRequestDto addPet)
+        public async Task<ActionResult<PetResponseDto>> AddPet(PetRequestDto addPet)
         {
             try
             {
                 var petRequst = _mapper.Map<PetRequest>(addPet);
-                var addPetResponse = _petService.AddPet(petRequst);
+                var addPetResponse = await _petService.AddPet(petRequst);
                 var addPetResponseDto = _mapper.Map<PetResponseDto>(addPetResponse);
 
                 return Created(new Uri("api/Pet", UriKind.Relative), addPetResponseDto);
@@ -101,12 +93,12 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdatePet")]
-        public ActionResult<PetResponseDto> UpdatePet(PetUpdateDto petUpdateDto)
+        public async Task<ActionResult<PetResponseDto>> UpdatePet(PetUpdateDto petUpdateDto)
         {
             try
             {
                 var petUpdate = _mapper.Map<PetUpdate>(petUpdateDto);
-                var petResponse = _petService.UpdatePet(petUpdate);
+                var petResponse = await _petService.UpdatePet(petUpdate);
                 var petResponseDto = _mapper.Map<PetResponseDto>(petResponse);
 
                 return Ok(petResponseDto);

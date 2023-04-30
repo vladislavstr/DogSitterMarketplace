@@ -15,6 +15,6 @@ namespace DogSitterMarketplaceBll.IServices
 
         public void DeleteUserById(int id);
 
-        public List<UserShortLocationWorkResponse> GetAllSittersByLocationId(int locationId);
+        public Task<List<UserShortLocationWorkResponse>> GetAllSittersByLocationId(int locationId);
     }
 }

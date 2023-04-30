@@ -1,8 +1,8 @@
-﻿using DogSitterMarketplaceDal.IRepositories;
+﻿using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.Contexts;
+using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
-using DogSitterMarketplaceCore.Exceptions;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -42,29 +42,29 @@ namespace DogSitterMarketplaceDal.Repositories
         }
 
         //прописать 2й логгер
-        public SitterWorkEntity GetNotDeletedSitterWorkById(int id)
+        public async Task<SitterWorkEntity> GetNotDeletedSitterWorkById(int id)
         {
             try
             {
-                return _context.SitterWorks.Single(o => o.Id == id && !o.IsDeleted);
+                return await _context.SitterWorks.SingleAsync(o => o.Id == id && !o.IsDeleted);
             }
             catch (InvalidOperationException ex)
             {
                 // logger.LogDebug($"{nameof(SitterWorkEntity)} with id {id} not found.");
-              //  _logger.Log(LogLevel.Debug, $"{nameof(SitterWorkEntity)} with id {id} not found.");
+                //  _logger.Log(LogLevel.Debug, $"{nameof(SitterWorkEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(SitterWorkEntity));
             }
         }
 
-        public List<SitterWorkEntity> GetAllSitterWorksByUserId(int id)
+        public async Task<List<SitterWorkEntity>> GetAllSitterWorksByUserId(int id)
         {
-            return _context.SitterWorks
-                .Include(sw => sw.WorkType)
-                .Include(sw => sw.User)
-                .Include(sw => sw.LocationWork)
-                .ThenInclude(lw => lw.TimingLocationWorks)
-                .ThenInclude(tlw => tlw.DayOfWeek)
-                .Where(sw => sw.User.Id == id).ToList();
+            return await _context.SitterWorks
+                            .Include(sw => sw.WorkType)
+                            .Include(sw => sw.User)
+                            .Include(sw => sw.LocationWork)
+                            .ThenInclude(lw => lw.TimingLocationWorks)
+                            .ThenInclude(tlw => tlw.DayOfWeek)
+                            .Where(sw => sw.User.Id == id).ToListAsync();
         }
 
 
@@ -80,16 +80,16 @@ namespace DogSitterMarketplaceDal.Repositories
         }
 
         // 2й логгер прописать
-        public LocationEntity GetLocationById(int id)
+        public async Task<LocationEntity> GetLocationById(int id)
         {
             try
             {
-                return _context.Locations.Single(o => o.Id == id && !o.IsDeleted);
+                return await _context.Locations.SingleAsync(o => o.Id == id && !o.IsDeleted);
             }
             catch (InvalidOperationException ex)
             {
                 //_logger.LogDebug($"{nameof(LocationEntity)} with id {id} not found.");
-               // _logger.Log(LogLevel.Debug, $"{nameof(LocationEntity)} with id {id} not found.");
+                // _logger.Log(LogLevel.Debug, $"{nameof(LocationEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(LocationEntity));
             }
         }

@@ -1,5 +1,4 @@
 ﻿using DogSitterMarketplaceBll.Models.Works.Request;
-using DogSitterMarketplaceBll.Models.Works.Request;
 
 namespace DogSitterMarketplaceBll.IServices
 {

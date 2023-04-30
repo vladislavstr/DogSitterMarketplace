@@ -1,9 +1,7 @@
-using System;
+using DogSitterMarketplaceDal.Models.Pets;
+using DogSitterMarketplaceDal.Models.Works;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DogSitterMarketplaceDal.Models.Pets;
-using System.ComponentModel.DataAnnotations;
-using DogSitterMarketplaceDal.Models.Works;
 
 namespace DogSitterMarketplaceDal.Models.Users
 {
