@@ -54,21 +54,21 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.AddComment_WhenCommentFromUserToSitterTestCaseSource))]
-        public void AddCommentTest_WhenCommentFromUserToSitter(int userCommentFromId, UserEntity userCommentFromEntity, int userCommentToId, UserEntity userCommentToEntity,
+        public async Task AddCommentTest_WhenCommentFromUserToSitter(int userCommentFromId, UserEntity userCommentFromEntity, int userCommentToId, UserEntity userCommentToEntity,
                                     int userRoleCommentFromId, UserRoleEntity userRoleCommentFromEntity, int userRoleCommentToId, UserRoleEntity userRoleCommentToEntity,
                                     List<OrderEntity> allOrders, CommentEntity commentEntity, CommentEntity addCommentEntity, CommentRequest addComment,
                                     CommentOrderResponse expected, int orderId, OrderResponse orderResponse)
         {
-            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).Returns(userCommentFromEntity);
-            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).Returns(userCommentToEntity);
-            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).Returns(orderResponse);
-            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentFromId)).Returns(userRoleCommentFromEntity);
-            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).Returns(userRoleCommentToEntity);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).ReturnsAsync(userCommentFromEntity);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).ReturnsAsync(userCommentToEntity);
+            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).ReturnsAsync(orderResponse);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentFromId)).ReturnsAsync(userRoleCommentFromEntity);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).ReturnsAsync(userRoleCommentToEntity);
             // _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId)).Returns(allOrders);
-            _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentToId, userCommentFromId)).Returns(allOrders);
-            _mockCommentRepo.Setup(c => c.AddComment(It.Is<CommentEntity>(c => Compare(c, commentEntity)))).Returns(addCommentEntity);
+            _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentToId, userCommentFromId)).ReturnsAsync(allOrders);
+            _mockCommentRepo.Setup(c => c.AddComment(It.Is<CommentEntity>(c => Compare(c, commentEntity)))).ReturnsAsync(addCommentEntity);
 
-            CommentOrderResponse actual = _commentService.AddComment(addComment);
+            CommentOrderResponse actual = await _commentService.AddComment(addComment);
 
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentFromId), Times.Once);
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentToId), Times.Once);
@@ -83,21 +83,21 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.AddComment_WhenCommentFromSitterToUserTestCaseSource))]
-        public void AddCommentTest_WhenCommentFromSitterToUser(int userCommentFromId, UserEntity userCommentFromEntity, int userCommentToId, UserEntity userCommentToEntity,
+        public async Task AddCommentTest_WhenCommentFromSitterToUser(int userCommentFromId, UserEntity userCommentFromEntity, int userCommentToId, UserEntity userCommentToEntity,
                                     int userRoleCommentFromId, UserRoleEntity userRoleCommentFromEntity, int userRoleCommentToId, UserRoleEntity userRoleCommentToEntity,
                                     List<OrderEntity> allOrders, CommentEntity commentEntity, CommentEntity addCommentEntity, CommentRequest addComment,
                                     CommentOrderResponse expected, int orderId, OrderResponse orderResponse)
         {
-            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).Returns(userCommentFromEntity);
-            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).Returns(userCommentToEntity);
-            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).Returns(orderResponse);
-            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentFromId)).Returns(userRoleCommentFromEntity);
-            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).Returns(userRoleCommentToEntity);
-            _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId)).Returns(allOrders);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).ReturnsAsync(userCommentFromEntity);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).ReturnsAsync(userCommentToEntity);
+            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).ReturnsAsync(orderResponse);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentFromId)).ReturnsAsync(userRoleCommentFromEntity);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).ReturnsAsync(userRoleCommentToEntity);
+            _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId)).ReturnsAsync(allOrders);
             //_mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentToId, userCommentFromId)).Returns(allOrders);
-            _mockCommentRepo.Setup(c => c.AddComment(It.Is<CommentEntity>(c => Compare(c, commentEntity)))).Returns(addCommentEntity);
+            _mockCommentRepo.Setup(c => c.AddComment(It.Is<CommentEntity>(c => Compare(c, commentEntity)))).ReturnsAsync(addCommentEntity);
 
-            CommentOrderResponse actual = _commentService.AddComment(addComment);
+            CommentOrderResponse actual = await _commentService.AddComment(addComment);
 
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentFromId), Times.Once);
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentToId), Times.Once);
@@ -112,19 +112,19 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.AddComment__WhenOrderBetweenSitterAndClientIsNotExist_CommentFromClientToUser_ShouldBeArgumentException_TestCaseSource))]
-        public void AddCommentTest_WhenOrderBetweenSitterAndClientIsNotExist_CommentFromClientToUser_ShouldBeArgumentException(int userCommentFromId, UserEntity userCommentFromEntity,
+        public async Task AddCommentTest_WhenOrderBetweenSitterAndClientIsNotExist_CommentFromClientToUser_ShouldBeArgumentException(int userCommentFromId, UserEntity userCommentFromEntity,
                                     int userCommentToId, UserEntity userCommentToEntity, int userRoleCommentFromId, UserRoleEntity userRoleCommentFromEntity, int userRoleCommentToId,
                                     UserRoleEntity userRoleCommentToEntity, CommentRequest addComment, int orderId, OrderResponse orderResponse)
         {
-            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).Returns(userCommentFromEntity);
-            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).Returns(userCommentToEntity);
-            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).Returns(orderResponse);
-            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentFromId)).Returns(userRoleCommentFromEntity);
-            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).Returns(userRoleCommentToEntity);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).ReturnsAsync(userCommentFromEntity);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).ReturnsAsync(userCommentToEntity);
+            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).ReturnsAsync(orderResponse);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentFromId)).ReturnsAsync(userRoleCommentFromEntity);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).ReturnsAsync(userRoleCommentToEntity);
             //_mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId)).Returns(allOrders);
-            _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentToId, userCommentFromId)).Throws<ArgumentException>();
+            _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentToId, userCommentFromId)).ThrowsAsync(new ArgumentException());
 
-            Assert.Throws<ArgumentException>(() => _commentService.AddComment(addComment));
+            Assert.ThrowsAsync<ArgumentException>(async () => await _commentService.AddComment(addComment));
 
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentFromId), Times.Once);
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentToId), Times.Once);
@@ -141,11 +141,11 @@ namespace DogSitterMarketplaceBll.Tests
                                                                                 int userCommentToId, UserEntity userCommentToEntity, int userRoleCommentFromId,
                                                                                 int userRoleCommentToId, CommentRequest addComment, int orderId)
         {
-            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).Returns(userCommentFromEntity);
-            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).Returns(userCommentToEntity);
-            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).Throws(() => new NotFoundException(orderId, "OrderEntity"));
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).ReturnsAsync(userCommentFromEntity);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).ReturnsAsync(userCommentToEntity);
+            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).ThrowsAsync( new NotFoundException(orderId, "OrderEntity"));
 
-            Assert.Throws<NotFoundException>(() => _commentService.AddComment(addComment));
+            Assert.ThrowsAsync<NotFoundException>(async () => await _commentService.AddComment(addComment));
 
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentFromId), Times.Once);
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentToId), Times.Once);
@@ -158,14 +158,14 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTestCaseSource))]
-        public void GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest(int userId, UserEntity userEntity, List<CommentEntity> commentsEntities, int userRoleId,
+        public async Task GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest(int userId, UserEntity userEntity, List<CommentEntity> commentsEntities, int userRoleId,
                                                                               UserRoleEntity userRole, AvgScoreCommentsResponse<CommentWithUserShortResponse> expected)
         {
-            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).Returns(userEntity);
-            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userId)).Returns(commentsEntities);
-            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleId)).Returns(userRole);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).ReturnsAsync(userEntity);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userId)).ReturnsAsync(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleId)).ReturnsAsync(userRole);
 
-            AvgScoreCommentsResponse<CommentWithUserShortResponse> actual = _commentService.GetCommentsAndScoresForUserAboutHim<CommentWithUserShortResponse>(userId, UserRole.Client);
+            AvgScoreCommentsResponse<CommentWithUserShortResponse> actual = await _commentService.GetCommentsAndScoresForUserAboutHim<CommentWithUserShortResponse>(userId, UserRole.Client);
 
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userId), Times.Once);
             _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userId), Times.Once);
@@ -175,14 +175,14 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresForUserAboutHim_ForSitterAboutHimTestCaseSource))]
-        public void GetCommentsAndScoresForUserAboutHim_ForSitterAboutHimTest(int userId, UserEntity userEntity, List<CommentEntity> commentsEntities, int userRoleId,
+        public async Task GetCommentsAndScoresForUserAboutHim_ForSitterAboutHimTest(int userId, UserEntity userEntity, List<CommentEntity> commentsEntities, int userRoleId,
                                                                               UserRoleEntity userRole, AvgScoreCommentsResponse<CommentResponse> expected)
         {
-            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).Returns(userEntity);
-            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userId)).Returns(commentsEntities);
-            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleId)).Returns(userRole);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).ReturnsAsync(userEntity);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userId)).ReturnsAsync(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleId)).ReturnsAsync(userRole);
 
-            AvgScoreCommentsResponse<CommentResponse> actual = _commentService.GetCommentsAndScoresForUserAboutHim<CommentResponse>(userId, UserRole.Sitter);
+            AvgScoreCommentsResponse<CommentResponse> actual = await _commentService.GetCommentsAndScoresForUserAboutHim<CommentResponse>(userId, UserRole.Sitter);
 
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userId), Times.Once);
             _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userId), Times.Once);
