@@ -191,6 +191,48 @@ namespace DogSitterMarketplaceBll.Tests
             actual.Should().BeEquivalentTo(expected);
         }
 
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresForUserAboutHim_ForClientAboutHim_WhenUserIsNotExist_ShouldBeNotFoundException_TestCaseSource))]
+        public void GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest_WhenUserIsNotExist_ShouldBeNotFoundException(int userId, int userRoleId)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).ThrowsAsync(new NotFoundException(userId, "UserEntity"));
+
+            Assert.ThrowsAsync<NotFoundException>(async () => await _commentService.GetCommentsAndScoresForUserAboutHim<CommentWithUserShortResponse>(userId, UserRole.Client));
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userId), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userId), Times.Never);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleId), Times.Never);
+        }
+
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresForUserAboutHim_ForClientAboutHim_WhenUserRoleIsNotExist_ShouldBeNotFoundException_TestCaseSource))]
+        public void GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest_WhenUserRoleIsNotExist_ShouldBeNotFoundException(int userId, UserEntity userEntity, 
+                                                                                                                               List<CommentEntity> commentsEntities, int userRoleId)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).ReturnsAsync(userEntity);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userId)).ReturnsAsync(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleId)).ThrowsAsync(new NotFoundException(userRoleId, "UserRoleEntity"));
+
+            Assert.ThrowsAsync<NotFoundException>(async () => await _commentService.GetCommentsAndScoresForUserAboutHim<CommentWithUserShortResponse>(userId, UserRole.Client));
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userId), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userId), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleId), Times.Once);
+        }
+
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresForUserAboutHim_ForClientAboutHim_WhenUserRoleIsNotClient_ShouldBeNotFoundException_TestCaseSource))]
+        public void GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest_WhenUserRoleIsNotClient_ShouldBeNotFoundException(int userId, UserEntity userEntity, 
+                                                                                                                 List<CommentEntity> commentsEntities, int userRoleId, UserRoleEntity userRole)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).ReturnsAsync(userEntity);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userId)).ReturnsAsync(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleId)).ReturnsAsync(userRole);
+
+            Assert.ThrowsAsync<ArgumentException>(async () => await _commentService.GetCommentsAndScoresForUserAboutHim<CommentWithUserShortResponse>(userId, UserRole.Client));
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userId), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userId), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleId), Times.Once);
+        }
+
         private bool Compare(CommentEntity c, CommentEntity commentEntity)
         {
             try

@@ -2,6 +2,7 @@
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceBll.Models.Users.Response;
+using DogSitterMarketplaceCore;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;
@@ -747,6 +748,107 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             };
 
             yield return new object[] { userId, userEntity, commentsEntities, userRoleId, userRole, expected };
+        }
+
+        public static IEnumerable GetCommentsAndScoresForUserAboutHim_ForClientAboutHim_WhenUserIsNotExist_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userId = 13;
+            int userRoleId = 29;
+
+            yield return new object[] { userId, userRoleId};
+        }
+
+        public static IEnumerable GetCommentsAndScoresForUserAboutHim_ForClientAboutHim_WhenUserRoleIsNotExist_ShouldBeNotFoundException_TestCaseSource()
+        {
+           int userId = 3;
+           UserEntity userEntity = new UserEntity
+            {
+                Id = 3,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 61,
+                    Name = "Client"
+                },
+                IsDeleted = false
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+                new CommentEntity
+                {
+                 Id = 924,
+                 Score = 4,
+                 Text = "comment 324",
+                 Order = new OrderEntity
+                 {
+                     DateStart = new DateTime(2023-04-24),
+                     DateEnd = new DateTime(2023-04-25),
+                 },
+                 CommentFromUser = new UserEntity
+                 {
+                    Id = 724,
+                    Email = "724@ru",
+                    PhoneNumber = "7777724",
+                    Name = "724",
+                    UserRoleId =6624,
+                    UserRole = new UserRoleEntity
+                    {
+                    Id = 6624
+                    }
+                 }
+                }
+            };
+            int userRoleId = 61;
+
+            yield return new object[] { userId, userEntity, commentsEntities, userRoleId };
+        }
+
+        public static IEnumerable GetCommentsAndScoresForUserAboutHim_ForClientAboutHim_WhenUserRoleIsNotClient_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userId = 18;
+            UserEntity userEntity = new UserEntity
+            {
+                Id = 18,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 118,
+                    Name = "Admin"
+                },
+                IsDeleted = false
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+                new CommentEntity
+                {
+                 Id = 98,
+                 Score = 4,
+                 Text = "comment 38",
+                 Order = new OrderEntity
+                 {
+                     DateStart = new DateTime(2023-04-27),
+                     DateEnd = new DateTime(2023-04-28),
+                 },
+                 CommentFromUser = new UserEntity
+                 {
+                    Id = 78,
+                    Email = "78@ru",
+                    PhoneNumber = "777778",
+                    Name = "78",
+                    UserRoleId =668,
+                    UserRole = new UserRoleEntity
+                    {
+                    Id = 668
+                    }
+                 }
+                }
+            };
+            int userRoleId = 118;
+            UserRoleEntity userRole = new UserRoleEntity
+            {
+                Id = 118,
+                Name = "Admin"
+            };
+
+            yield return new object[] { userId, userEntity, commentsEntities, userRoleId, userRole };
         }
     }
 }
