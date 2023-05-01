@@ -28,11 +28,11 @@ namespace DogSitterMarketplaceBll.Services
             return appealResponse;
         }
 
-        public IEnumerable<AppealResponse> GetAllNotDeletedAppeals()
+        public IEnumerable<AppealResponse> GetAllNotAnsweredAppeals()
         {
             var allappealsEntitys = _appealRepository.GetAllAppeals();
             var appealsEntitys = allappealsEntitys
-                           .Where(u => !u.IsDeleted);
+                           .Where(u => u.StatusId == 1);
             var appealResponse = _mapper.Map<IEnumerable<AppealResponse>>(appealsEntitys);
 
             return appealResponse;
@@ -40,14 +40,34 @@ namespace DogSitterMarketplaceBll.Services
 
         public AppealResponse GetAppealById(int id)
         {
-            var appealsEntitys = _appealRepository.GetAppealById(id);
-            var appealResponse = _mapper.Map<AppealResponse>(appealsEntitys);
+            var appealEntitys = _appealRepository.GetAppealById(id);
+            var appealResponse = _mapper.Map<AppealResponse>(appealEntitys);
+
+            return appealResponse;
+        }
+
+        public AppealResponse GetAppealByUserIdToWhom(int id)
+        {
+            var appealEntitys = _appealRepository.GetAppealByUserIdToWhom(id);
+            var appealResponse = _mapper.Map<AppealResponse>(appealEntitys);
+
+            return appealResponse;
+        }
+
+        public AppealResponse GetAppealByUserIdFromWhom(int id)
+        {
+            var appealEntitys = _appealRepository.GetAppealByUserIdFromWhom(id);
+            var appealResponse = _mapper.Map<AppealResponse>(appealEntitys);
 
             return appealResponse;
         }
 
         public AppealResponse AddAppeal(AppealRequest appeal)
         {
+            appeal.ResponseText = null;
+            appeal.DateOfCreate = DateTime.Now;
+            appeal.DateOfResponse = null;
+            appeal.StatusId = 1;
             var appealEntity = _mapper.Map<AppealEntity>(appeal);
             var addAppealEntity = _appealRepository.AddAppeal(appealEntity);
             var addAppealResponse = _mapper.Map<AppealResponse>(addAppealEntity);
@@ -73,9 +93,31 @@ namespace DogSitterMarketplaceBll.Services
             return addAppealTypeResponse;
         }
 
-        public void DeleteAppealById(int id)
+        public void UpdateAppealStatusById(int AppealId, int StatusId)
         {
-            _appealRepository.DeleteAppealById(id);
+            _appealRepository.UpdateAppealStatusById(AppealId, StatusId);
+        }
+
+        public AppealResponse DoResponseTextByAppeal(int id, string text, int statusId)
+        {
+            var appeal = _appealRepository.GetAppealById(id);
+            int stsusId = appeal.StatusId;
+            if (stsusId == 1)
+            {
+
+                appeal.DateOfResponse = DateTime.Now;
+                appeal.ResponseText = text;
+                appeal.StatusId = statusId;
+                var appealEntity = _mapper.Map<AppealEntity>(appeal);
+                var addAppealEntity = _appealRepository.DoResponseTextByAppeal(appealEntity);
+                var addAppealResponse = _mapper.Map<AppealResponse>(addAppealEntity);
+
+                return addAppealResponse;
+            }
+            else
+            {
+                throw new ArgumentException($"Appeal with stsrus id {stsusId} was answered");
+            }
         }
     }
 }

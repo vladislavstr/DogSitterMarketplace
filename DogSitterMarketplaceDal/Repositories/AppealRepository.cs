@@ -2,6 +2,7 @@
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Appeals;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -49,8 +50,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new Exception($"Id:{id} - отсутствует");
             }
         }
-
-        public AppealEntity GetAppealByUserId(int id)
+        public AppealEntity GetAppealByUserIdToWhom(int id)
         {
             try
             {
@@ -60,7 +60,26 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(a => a.Order)
                 .Include(a => a.AppealFromUser)
                 .Include(a => a.AppealToUser)
-                .Single(a => a.Id == id);
+                .Single(a => a.AppealToUserId == id);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                throw new Exception($"Id:{id} - отсутствует");
+            }
+        }
+
+        public AppealEntity GetAppealByUserIdFromWhom(int id)
+        {
+            try
+            {
+                return _context.Appeals
+                .Include(a => a.Type)
+                .Include(a => a.Status)
+                .Include(a => a.Order)
+                .Include(a => a.AppealFromUser)
+                .Include(a => a.AppealToUser)
+                .Single(a => a.AppealFromUserId == id);
             }
             catch (Exception exception)
             {
@@ -71,7 +90,6 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public AppealEntity AddAppeal(AppealEntity appeal)
         {
-            appeal.IsDeleted = false;
             _context.Appeals.Add(appeal);
             _context.SaveChanges();
 
@@ -100,18 +118,37 @@ namespace DogSitterMarketplaceDal.Repositories
             return appealType;
         }
 
-        public void DeleteAppealById(int id)
+        public void UpdateAppealStatusById(int AppealId, int StatusId)
         {
             try
             {
-                var appeal = _context.Appeals.Single(a => !a.IsDeleted && a.Id == id);
-                appeal.IsDeleted = true;
+                var appeal = _context.Appeals.Single(a => a.Id == AppealId);
+                appeal.StatusId = StatusId;
                 _context.SaveChanges();
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{id} - отсутствует");
+                throw new Exception($"Id:{AppealId} - отсутствует");
+            }
+        }
+
+        public AppealEntity DoResponseTextByAppeal(AppealEntity appeal)
+        {
+            try
+            {
+                var appealDb = _context.Appeals.Single(a => a.Id == appeal.Id);
+                appealDb.ResponseText = appeal.ResponseText;
+                appealDb.StatusId = appeal.StatusId;
+                appealDb.DateOfResponse = appeal.DateOfResponse;
+                _context.SaveChanges();
+
+                return appealDb;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                throw new Exception($"Id:{appeal.Id} - отсутствует");
             }
         }
     }

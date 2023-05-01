@@ -18,6 +18,8 @@ namespace DogSitterMarketplaceBll.Mappings
             //AppealType
             CreateMap<AppealTypeEntity, AppealTypeResponse>();
             CreateMap<AppealTypeRequest, AppealTypeEntity>();
+            //AppealUpdate
+            CreateMap<AppealUpdate, AppealEntity>().ReverseMap();
         }
     }
 }

@@ -8,7 +8,9 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public AppealEntity GetAppealById(int id);
 
-        public AppealEntity GetAppealByUserId(int id);
+        public AppealEntity GetAppealByUserIdToWhom(int id);
+        
+        public AppealEntity GetAppealByUserIdFromWhom(int id);
 
         public AppealEntity AddAppeal(AppealEntity appeal);
 
@@ -16,6 +18,8 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public AppealTypeEntity AddAppealType(AppealTypeEntity appealType);
 
-        public void DeleteAppealById(int id);
+        public void UpdateAppealStatusById(int AppealId, int StatusId);
+
+        public AppealEntity DoResponseTextByAppeal(AppealEntity appeal);
     }
 }

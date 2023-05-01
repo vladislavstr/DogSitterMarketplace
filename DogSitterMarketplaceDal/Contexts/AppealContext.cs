@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceDal.Models.Appeals;
+using DogSitterMarketplaceDal.Models.Appeals;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Users;
 using Microsoft.EntityFrameworkCore;

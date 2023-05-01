@@ -33,8 +33,6 @@ namespace DogSitterMarketplaceApi.Controllers
         {
             try
             {
-                //var allAppeals = _appealService.GetAllAppeals();
-                //var allAppealsDto = _mapper.Map<IEnumerable<AppealResponseDto>>(allAppeals);
                 return Ok(_appealService.GetAllAppeals());
             }
             catch (Exception ex)
@@ -43,12 +41,12 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("GetAllNotDeletedAppeals", Name = "GetAllNotDeletedAppeals")]
-        public ActionResult GetAllNotDeletedAppeals()
+        [HttpGet("GetAllNotAnsweredAppeals", Name = "GetAllNotAnsweredAppeals")]
+        public ActionResult GetAllNotAnsweredAppeals()
         {
             try
             {
-                return Ok(_appealService.GetAllNotDeletedAppeals());
+                return Ok(_appealService.GetAllNotAnsweredAppeals());
             }
             catch (Exception ex)
             {
@@ -56,7 +54,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetAppealById")]
+        [HttpGet("GetAppealById/{id:int}", Name = "GetAppealById")]
         public ActionResult GetAppealById(int id)
         {
             try
@@ -69,13 +67,25 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpDelete("{id}", Name = "DeleteAppealById")]
-        public IActionResult DeleteAppealById(int id)
+        [HttpGet("GetAppealByUserIdToWhom/{id:int}", Name = "GetAppealByUserIdToWhom")]
+        public ActionResult GetAppealByUserIdToWhom(int id)
         {
             try
             {
-                _appealService.DeleteAppealById(id);
-                return NoContent();
+                return Ok(_appealService.GetAppealByUserIdToWhom(id));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
+
+        [HttpGet("GetAppealByUserIdFromWhom/{id:int}", Name = "GetAppealByUserIdFromWhom")]
+        public ActionResult GetAppealByUserIdFromWhom(int id)
+        {
+            try
+            {
+                return Ok(_appealService.GetAppealByUserIdFromWhom(id));
             }
             catch (Exception ex)
             {
@@ -133,5 +143,51 @@ namespace DogSitterMarketplaceApi.Controllers
                 return Ok(ex.Message);
             }
         }
+
+        [HttpPut("UpdateAppealStatusById/{AppealId:int}_{StatusId:int}", Name = "UpdateAppealStatusById")]
+        public IActionResult UpdateAppealStatusById(int AppealId, int StatusId)
+        {
+            try
+            {
+                _appealService.UpdateAppealStatusById(AppealId, StatusId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
+
+        [HttpPut("DoResponseTextById/{id:int}", Name = "DoResponseTextById")]
+        public ActionResult<AppealUpdateDto> DoResponseTextByAppealId(int id, string text, int statusId)
+        {
+            try
+            {
+                if (statusId != 1)
+                {
+                    if(text is not null)
+                    {
+
+                    var addAppealResponse = _appealService.DoResponseTextByAppeal(id,text,statusId);
+                    var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
+
+                    return Created(new Uri("api/Appeal", UriKind.Relative), addAppealResponseDto);
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Appeal text of response must be filled in");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException($"Appeal with stsrus id {statusId} can't exist");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
     }
 }
+
