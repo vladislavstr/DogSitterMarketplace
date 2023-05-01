@@ -850,5 +850,106 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
 
             yield return new object[] { userId, userEntity, commentsEntities, userRoleId, userRole };
         }
+
+        public static IEnumerable GetCommentsAndScoresForUserAboutHim_ForSitterAboutHim_WhenUserIsNotExist_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userId = 131;
+            int userRoleId = 291;
+
+            yield return new object[] { userId, userRoleId };
+        }
+
+        public static IEnumerable GetCommentsAndScoresForUserAboutHim_ForSitterAboutHim_WhenUserRoleIsNotExist_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userId = 31;
+            UserEntity userEntity = new UserEntity
+            {
+                Id = 31,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 611,
+                    Name = "Sitter"
+                },
+                IsDeleted = false
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+                new CommentEntity
+                {
+                 Id = 9241,
+                 Score = 41,
+                 Text = "comment 3241",
+                 Order = new OrderEntity
+                 {
+                     DateStart = new DateTime(2023-01-24),
+                     DateEnd = new DateTime(2023-01-25),
+                 },
+                 CommentFromUser = new UserEntity
+                 {
+                    Id = 7241,
+                    Email = "7241@ru",
+                    PhoneNumber = "77777241",
+                    Name = "7241",
+                    UserRoleId =66241,
+                    UserRole = new UserRoleEntity
+                    {
+                    Id = 66241
+                    }
+                 }
+                }
+            };
+            int userRoleId = 611;
+
+            yield return new object[] { userId, userEntity, commentsEntities, userRoleId };
+        }
+
+        public static IEnumerable GetCommentsAndScoresForUserAboutHim_ForSitterAboutHim_WhenUserRoleIsNotClient_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userId = 181;
+            UserEntity userEntity = new UserEntity
+            {
+                Id = 181,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 1181,
+                    Name = "Admin"
+                },
+                IsDeleted = false
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+                new CommentEntity
+                {
+                 Id = 981,
+                 Score = 41,
+                 Text = "comment 381",
+                 Order = new OrderEntity
+                 {
+                     DateStart = new DateTime(2021-04-27),
+                     DateEnd = new DateTime(2021-04-28),
+                 },
+                 CommentFromUser = new UserEntity
+                 {
+                    Id = 781,
+                    Email = "781@ru",
+                    PhoneNumber = "7777781",
+                    Name = "781",
+                    UserRoleId =6681,
+                    UserRole = new UserRoleEntity
+                    {
+                    Id = 6681
+                    }
+                 }
+                }
+            };
+            int userRoleId = 1181;
+            UserRoleEntity userRole = new UserRoleEntity
+            {
+                Id = 1181,
+                Name = "Admin"
+            };
+
+            yield return new object[] { userId, userEntity, commentsEntities, userRoleId, userRole };
+        }
     }
 }
