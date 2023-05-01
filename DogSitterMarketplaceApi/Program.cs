@@ -1,4 +1,3 @@
-
 using DogSitterMarketplaceApi.Mappings;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Mappings;
@@ -6,14 +5,23 @@ using DogSitterMarketplaceBll.Services;
 using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Repositories;
+using DogSitterMarketplaceApi.Configuration;
+using DogSitterMarketplaceDal.Configurations;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using NLog;
+using System.Text;
 using ILogger = NLog.ILogger;
 using LogManager = NLog.LogManager;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+InjectSettingsConfiguration(builder);
+InjectAuthenticationDependencies(builder);
 
+// Add services to the container.
 LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 builder.Services.AddControllers();
@@ -52,6 +60,7 @@ builder.Services.AddScoped<IWorkAndLocationRepository, WorkAndLocationRepository
 builder.Services.AddScoped<ITimeWorkRepository, TimeWorkRepository>();
 builder.Services.AddScoped<ITimeWorkService, TimeWorkService>();
 builder.Services.AddAutoMapper(typeof(MapperApiWorkProfile), typeof(MapperBllWorkProfile));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -62,6 +71,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
@@ -81,3 +92,65 @@ app.Run();
 //    var logger = NLog.LogManager.Setup().GetCurrentClassLogger();
 //    builder.Services.AddSingleton<NLog.ILogger>(logger);
 //}
+
+void InjectSettingsConfiguration(WebApplicationBuilder builder)
+{
+    var authRepositorySection = builder.Configuration.GetSection("AuthRepositorySettings")
+        .Get<AuthRepositorySettings>();
+
+    builder.Services.AddSingleton<IAuthRepositorySettings>(authRepositorySection);
+}
+
+void InjectAuthenticationDependencies(WebApplicationBuilder builder)
+{
+    // Get configuration for token generation
+    var jwtConfig = builder.Configuration.GetSection("JwtSettings")
+        .Get<JwtConfigurationSettings>();
+
+    builder.Services.AddSingleton<IJwtConfigurationSettings>(jwtConfig);
+
+    // Add auth dependencies
+    builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(jwt =>
+    {
+        var key = Encoding.ASCII.GetBytes(
+            jwtConfig.Key);
+
+        jwt.SaveToken = true;
+        jwt.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+
+            // Just to avoid issues on localhost, it must be true on prod
+            ValidateIssuer = false,
+            ValidateAudience = false,
+
+            // To avoid re-generation scenario just for develop
+            RequireExpirationTime = false,
+
+            ValidateLifetime = true
+        };
+    });
+
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("User", policy =>
+                          policy.RequireClaim("User"));
+
+        options.AddPolicy("Admin", policy =>
+                      policy.RequireClaim("Admin"));
+
+        options.AddPolicy("Sitter", policy =>
+                      policy.RequireClaim("Sitter"));
+    });
+
+    builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+        .AddEntityFrameworkStores<AuthContext>();
+}
