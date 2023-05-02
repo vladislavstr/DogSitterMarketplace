@@ -17,8 +17,6 @@ namespace DogSitterMarketplaceApi.Controllers
 
         private readonly IMapper _mapper;
 
-        // private readonly ILogger<OrderController> _logger;
-
         private readonly ILogger _logger;
 
         public OrderController(IOrderService orderService, IMapper mapper, ILogger nLogger)
@@ -42,6 +40,36 @@ namespace DogSitterMarketplaceApi.Controllers
             catch (ArgumentException ex)
             {
                 return BadRequest();
+
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("/addSeveralOrders", Name = "AddSeveralOrdersForOneClientFromOneSitter")]
+        public async Task<ActionResult<List<OrderResponseDto>>> AddSeveralOrdersForOneClientFromOneSitter(List<OrderCreateRequestDto> addOrders)
+        {
+            try
+            {
+                var ordersRequest = _mapper.Map<List<OrderCreateRequest>>(addOrders);
+                var addOrdersResponse = await _orderService.AddSeveralOrdersForOneClientFromOneSitter(ordersRequest);
+                var addOrdersResponseDto = _mapper.Map<List<OrderResponseDto>>(addOrdersResponse);
+
+                return Created(new Uri("api/Order", UriKind.Relative), addOrdersResponseDto);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound();
             }
             catch (Exception ex)
             {
@@ -93,7 +121,6 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                // _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllNotDeletedOrders)}");
                 _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(GetAllOrdersUnderConsiderationBySitterId)}");
                 return BadRequest();
             }
@@ -111,7 +138,6 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                // _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllNotDeletedOrders)}");
                 _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(GetAllNotDeletedOrders)}");
                 return Problem();
             }

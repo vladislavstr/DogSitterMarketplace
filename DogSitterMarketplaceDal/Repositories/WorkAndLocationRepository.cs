@@ -3,6 +3,7 @@ using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -46,7 +47,9 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             try
             {
-                return await _context.SitterWorks.SingleAsync(o => o.Id == id && !o.IsDeleted);
+                return await _context.SitterWorks
+                    .Include(sw => sw.LocationWork)
+                    .SingleAsync(o => o.Id == id && !o.IsDeleted);
             }
             catch (InvalidOperationException ex)
             {
@@ -91,6 +94,33 @@ namespace DogSitterMarketplaceDal.Repositories
                 //_logger.LogDebug($"{nameof(LocationEntity)} with id {id} not found.");
                 // _logger.Log(LogLevel.Debug, $"{nameof(LocationEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(LocationEntity));
+            }
+        }
+
+        // log
+        public async Task<List<SitterWorkEntity>> GetSittersWorksByThemId(List<int> sittersWorksId)
+        {
+            try
+            {
+                if (!sittersWorksId.Any())
+                {
+                    return new List<SitterWorkEntity>();
+                }
+
+                List<SitterWorkEntity> result = new List<SitterWorkEntity>();
+
+                foreach (var id in sittersWorksId)
+                {
+                    //await result.Add(_context.SitterWorks.SingleAsync(sw => sw.Id == id));
+                    var sitterWork = await _context.SitterWorks.SingleAsync(sw => sw.Id == id);
+                    result.Add(sitterWork);
+                }
+
+                return result;
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new ArgumentException($"One or more id from {sittersWorksId} does not found");
             }
         }
     }

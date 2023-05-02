@@ -11,8 +11,6 @@ namespace DogSitterMarketplaceDal.Repositories
     {
         private static OrdersAndPetsAndCommentsContext _context;
 
-        //private readonly ILogger<IPetRepository> _logger;
-
         private readonly ILogger _logger;
 
         public PetRepository(OrdersAndPetsAndCommentsContext context, ILogger nLogger)
@@ -26,6 +24,7 @@ namespace DogSitterMarketplaceDal.Repositories
             return await _context.Pets
                         .Include(p => p.Type)
                         .Include(p => p.User)
+                        .ThenInclude(u => u.UserRole)
                         .AsNoTracking()
                         .ToListAsync();
         }
@@ -37,11 +36,11 @@ namespace DogSitterMarketplaceDal.Repositories
                 return await _context.Pets
                             .Include(p => p.Type)
                             .Include(p => p.User)
+                            .ThenInclude(u => u.UserRole)
                             .SingleAsync(p => p.Id == id);
             }
             catch (InvalidOperationException ex)
             {
-                // _logger.LogDebug($"{nameof(PetEntity)} with id {id} not found");
                 _logger.Log(LogLevel.Debug, $"{nameof(PetEntity)} with id {id} not found");
                 throw new NotFoundException(id, nameof(PetEntity));
             }
@@ -57,7 +56,6 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException ex)
             {
-                //  _logger.LogDebug($"{nameof(PetEntity)} with id {id} not found");
                 _logger.Log(LogLevel.Debug, $"{nameof(PetEntity)} with id {id} not found");
                 throw new NotFoundException(id, nameof(PetEntity));
             }
@@ -77,7 +75,6 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception ex)
             {
-                // _logger.LogDebug($"{ex}, {nameof(PetRepository)} {nameof(PetEntity)} {nameof(AddPet)}");
                 _logger.Log(LogLevel.Debug, $"{ex}, {nameof(PetRepository)} {nameof(PetEntity)} {nameof(AddPet)}");
                 throw new ArgumentException();
             }
@@ -91,24 +88,26 @@ namespace DogSitterMarketplaceDal.Repositories
 
                 if (petDB == null)
                 {
-                    // _logger.LogDebug($"{nameof(PetEntity)} with id {updatePet.Id} not found");
                     _logger.Log(LogLevel.Debug, $"{nameof(PetEntity)} with id {updatePet.Id} not found");
                     throw new NotFoundException(updatePet.Id, nameof(PetEntity));
                 }
 
                 petDB.Name = updatePet.Name;
                 petDB.Characteristics = updatePet.Characteristics;
-                petDB.Type = updatePet.Type;
+                //petDB.Type = updatePet.Type;
                 petDB.TypeId = updatePet.TypeId;
                 petDB.UserId = updatePet.UserId;
 
                 await _context.SaveChangesAsync();
 
-                return petDB;
+                return await _context.Pets
+                                 .Include(p => p.Type)
+                                 .Include(p => p.User)
+                                 .ThenInclude(u => u.UserRole)
+                                 .SingleAsync(p => p.Id == updatePet.Id);
             }
             catch (Exception ex)
             {
-                // _logger.LogDebug($"{ex}, {nameof(PetRepository)} {nameof(PetEntity)} {nameof(AddPet)}");
                 _logger.Log(LogLevel.Debug, $"{ex}, {nameof(PetRepository)} {nameof(PetEntity)} {nameof(AddPet)}");
                 throw new ArgumentException();
             }
@@ -135,7 +134,6 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException)
             {
-                // _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetAnimalTypeById)} {nameof(AnimalTypeEntity)} with id {id} not found");
                 _logger.Log(LogLevel.Debug, $"{nameof(PetRepository)} {nameof(GetAnimalTypeById)} {nameof(AnimalTypeEntity)} with id {id} not found");
                 throw new NotFoundException(id, nameof(AnimalTypeEntity));
             }

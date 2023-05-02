@@ -52,7 +52,6 @@ namespace DogSitterMarketplaceBll.Services
             }
             else
             {
-                //_logger.LogDebug($"{nameof(PetService)} {nameof(GetNotDeletedPetById)} {nameof(PetEntity)} with id {id} is deleted.");
                 _logger.Log(LogLevel.Debug, $"{nameof(PetService)} {nameof(GetNotDeletedPetById)} {nameof(PetEntity)} with id {id} is deleted.");
                 throw new NotFoundException(id, nameof(PetEntity));
             }

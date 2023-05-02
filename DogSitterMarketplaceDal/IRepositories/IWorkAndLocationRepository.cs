@@ -11,5 +11,7 @@ namespace DogSitterMarketplaceDal.IRepositories
         public Task<List<SitterWorkEntity>> GetAllSitterWorksByUserId(int id);
 
         public Task<LocationEntity> GetLocationById(int id);
+
+        public Task<List<SitterWorkEntity>> GetSittersWorksByThemId(List<int> sitersWorksId);
     }
 }

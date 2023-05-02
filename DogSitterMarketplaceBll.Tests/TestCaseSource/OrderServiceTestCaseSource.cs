@@ -37,7 +37,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment",
                 SitterWorkId = 10,
-                Summ = 100,
+                //    Summ = 100,
                 DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
                 DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
                 LocationId = 1000,
@@ -105,7 +105,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 },
                 SitterWork = new SitterWorkEntity
                 {
-                    Id = 10
+                    Id = 10,
+                    LocationWork = new List<LocationWorkEntity>
+                    {
+                        new LocationWorkEntity
+                        {
+                            SitterWorkId = 10,
+                            LocationId = 1000
+                        }
+                    }
                 },
                 Location = new LocationEntity
                 {
@@ -190,6 +198,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 101,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 1000,
+                     SitterWorkId = 10,
+                     Price = 100
+                    }
+                },
                 IsDeleted = false,
             };
             List<SitterWorkEntity> allSitterWorks = new List<SitterWorkEntity>
@@ -243,7 +260,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment2",
                 SitterWorkId = 102,
-                Summ = 1002,
+                //Summ = 1002,
                 DateStart = new DateTime(2023, 04, 18, 12, 30, 00),
                 DateEnd = new DateTime(2023, 04, 18, 13, 30, 00),
                 LocationId = 10002,
@@ -445,6 +462,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 1012,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 10002,
+                     SitterWorkId = 102,
+                     Price = 1002
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -497,7 +523,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment23",
                 SitterWorkId = 1023,
-                Summ = 10023,
+                //Summ = 10023,
                 DateStart = new DateTime(2023, 04, 19, 14, 30, 00),
                 DateEnd = new DateTime(2023, 04, 19, 15, 30, 00),
                 LocationId = 100023,
@@ -718,6 +744,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 10123,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 100023,
+                     SitterWorkId = 1023,
+                     Price = 10023
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -770,7 +805,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment4",
                 SitterWorkId = 104,
-                Summ = 1004,
+                //Summ = 1004,
                 DateStart = new DateTime(2023, 04, 20, 12, 10, 00),
                 DateEnd = new DateTime(2023, 04, 20, 12, 50, 00),
                 LocationId = 10004,
@@ -923,6 +958,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 1014,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 10004,
+                     SitterWorkId = 104,
+                     Price = 1004
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -1002,7 +1046,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment45",
                 SitterWorkId = 1045,
-                Summ = 10045,
+                //Summ = 10045,
                 DateStart = new DateTime(2023, 04, 21, 23, 10, 00),
                 DateEnd = new DateTime(2023, 04, 22, 01, 50, 00),
                 LocationId = 100045,
@@ -1155,6 +1199,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 10145,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 100045,
+                     SitterWorkId = 1045,
+                     Price = 10045
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -1255,7 +1308,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment6",
                 SitterWorkId = 106,
-                Summ = 1006,
+                // Summ = 1006,
                 DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
                 DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
                 LocationId = 10006,
@@ -1310,7 +1363,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment67",
                 SitterWorkId = 1067,
-                Summ = 10067,
+                // Summ = 10067,
                 DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
                 DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
                 LocationId = 100067,
@@ -1395,7 +1448,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment679",
                 SitterWorkId = 10679,
-                Summ = 100679,
+                // Summ = 100679,
                 DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
                 DateEnd = new DateTime(2023, 04, 16, 13, 00, 00),
                 LocationId = 1000679,
@@ -1450,7 +1503,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment6798",
                 SitterWorkId = 106798,
-                Summ = 1006798,
+                //Summ = 1006798,
                 DateStart = new DateTime(2023, 04, 03, 13, 00, 00),
                 DateEnd = new DateTime(2023, 04, 03, 14, 00, 00),
                 LocationId = 10006798,
@@ -1518,6 +1571,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 101458,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 10006798,
+                     SitterWorkId = 106798,
+                     Price = 1006798
+                    }
+                },
                 IsDeleted = false,
             };
             List<SitterWorkEntity> allSitterWorks = new List<SitterWorkEntity>
@@ -1561,7 +1623,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment67987",
                 SitterWorkId = 1067987,
-                Summ = 10067987,
+                //Summ = 10067987,
                 DateStart = new DateTime(2023, 04, 07, 18, 00, 00),
                 DateEnd = new DateTime(2023, 04, 07, 19, 00, 00),
                 LocationId = 100067987,
@@ -1628,6 +1690,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "type1014587",
                     IsDeleted = false
                 },
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                    LocationId = 100067987,
+                    SitterWorkId = 1067987,
+                    Price = 10067987
+                    }
+                },
                 WorkTypeId = 1014587,
                 IsDeleted = false,
             };
@@ -1672,7 +1743,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment679876",
                 SitterWorkId = 10679876,
-                Summ = 100679876,
+                // Summ = 100679876,
                 DateStart = new DateTime(2023, 04, 07, 17, 00, 00),
                 DateEnd = new DateTime(2023, 04, 07, 18, 00, 00),
                 LocationId = 6,
@@ -1740,6 +1811,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 10145876,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                    LocationId = 6,
+                    SitterWorkId = 10679876,
+                    Price = 100679876
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -1786,7 +1866,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment67985",
                 SitterWorkId = 1067985,
-                Summ = 10067985,
+                // Summ = 10067985,
                 DateStart = new DateTime(2023, 04, 03, 12, 00, 00),
                 DateEnd = new DateTime(2023, 04, 03, 13, 00, 00),
                 LocationId = 100067985,
@@ -1854,6 +1934,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 1014585,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                    LocationId = 100067985,
+                    SitterWorkId = 1067985,
+                    Price = 10067985
+                    }
+                },
                 IsDeleted = false,
             };
             List<SitterWorkEntity> allSitterWorks = new List<SitterWorkEntity>
@@ -1925,7 +2014,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment679854",
                 SitterWorkId = 10679854,
-                Summ = 100679854,
+                //Summ = 100679854,
                 DateStart = new DateTime(2023, 04, 08, 14, 00, 00),
                 DateEnd = new DateTime(2023, 04, 08, 15, 00, 00),
                 LocationId = 1000679854,
@@ -1993,6 +2082,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 10145854,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                    LocationId = 1000679854,
+                    SitterWorkId = 10679854,
+                    Price = 100679854
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -2064,7 +2162,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment6798543",
                 SitterWorkId = 43,
-                Summ = 1006798543,
+                //Summ = 1006798543,
                 DateStart = new DateTime(2023, 04, 15, 23, 00, 00),
                 DateEnd = new DateTime(2023, 04, 16, 01, 00, 00),
                 LocationId = 798543,
@@ -2132,6 +2230,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 101458543,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                    LocationId = 798543,
+                    SitterWorkId = 43,
+                    Price = 1006798543
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>

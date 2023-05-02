@@ -10,6 +10,7 @@ using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Repositories;
 using NLog;
+using System.Collections.Generic;
 
 namespace DogSitterMarketplaceBll.Services
 {
@@ -63,6 +64,19 @@ namespace DogSitterMarketplaceBll.Services
 
             var sitterWork = await _workAndLocationRepository.GetNotDeletedSitterWorkById(newOrder.SitterWorkId);
 
+            if (sitterWork.LocationWork == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddOrder)},LocationWork is null");
+                throw new ArgumentException("LocationWork is null");
+            }
+            var summ = sitterWork.LocationWork.SingleOrDefault(lw => lw.SitterWorkId == newOrder.SitterWorkId && lw.LocationId == newOrder.LocationId)?.Price;
+
+            if (!summ.HasValue || summ == 0)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddOrder)}, Summ of order can not be null or 0");
+                throw new ArgumentException("Summ of order can not be null or 0");
+            }
+
             if (!await CheckSitterHasTimingToOrder(sitterWork.UserId, newOrder.DateStart, newOrder.DateEnd, newOrder.LocationId))
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddOrder)}, Sitter does not work at dateTime which is in order");
@@ -80,6 +94,7 @@ namespace DogSitterMarketplaceBll.Services
             orderEntity.Pets.AddRange(petsNotDeleted);
             var orderStatusUnderConsideration = await _orderRepository.GetOrderStatusByName(OrderStatus.UnderConsideration);
             orderEntity.OrderStatusId = orderStatusUnderConsideration.Id;
+            orderEntity.Summ = summ.Value;
             var addOrderEntity = await _orderRepository.AddNewOrder(orderEntity);
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
             CheckPetsInOrderIsExist(allPets, newOrder.Pets, addOrderResponse);
@@ -190,7 +205,6 @@ namespace DogSitterMarketplaceBll.Services
             }
             else
             {
-                // _logger.LogDebug($"{nameof(OrderService)} {nameof(GetNotDeletedOrderById)} {nameof(OrderEntity)} with id {id} is deleted.");
                 _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(GetNotDeletedOrderById)} {nameof(OrderEntity)} with id {id} is deleted.");
                 throw new NotFoundException(id, nameof(orderEntity));
             }
@@ -233,6 +247,52 @@ namespace DogSitterMarketplaceBll.Services
             var orderResponse = _mapper.Map<OrderResponse>(orderEntity);
 
             return orderResponse;
+        }
+
+        public async Task<List<OrderResponse>> AddSeveralOrdersForOneClientFromOneSitter(List<OrderCreateRequest> orders)
+        {
+            if (orders.Count < 1)
+            {
+                return new List<OrderResponse>();
+            }
+            else if (orders.Count == 1)
+            {
+                var orderResponse = await AddOrder(orders[0]);
+                return new List<OrderResponse> { orderResponse };
+            }
+            else
+            {
+                if (!await CheckSeveralSitterWorksWithSameSitter(orders))
+                {
+                    throw new ArgumentException("You can add several orders with the same Sitter, but request List contains different sitters");
+                }
+                else
+                {
+                    if (!await CheckSeveralPetsBelongToSameClient(orders))
+                    {
+                        throw new ArgumentException("You can add several orders where pets belong to the same Client, but request List contains different clients");
+                    }
+                    else
+                    {
+                        if (CheckOrdersAreNotCrossedEachOther(orders))
+                        {
+                            List<OrderResponse> result = new List<OrderResponse>();
+
+                            foreach (var order in orders)
+                            {
+                                var addOrderResponse = await AddOrder(order);
+                                result.Add(addOrderResponse);
+                            }
+
+                            return result;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("DataTime one of the orders cross DataTime other order");
+                        }
+                    }
+                }
+            }
         }
 
         private void CheckPetsInOrderIsExist(List<PetEntity> allPets, List<int> petsId, OrderResponse orderResponse)
@@ -410,6 +470,44 @@ namespace DogSitterMarketplaceBll.Services
                 _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(ChangeOrderStatus)} {nameof(OrderEntity)} Order with id {orderResponse.Id} has an unsuitable status for changing the status to Reject");
                 throw new ArgumentException($"Order with id {orderResponse.Id} has an unsuitable status for changing the status to Reject");
             }
+        }
+
+        private bool CheckOrdersAreNotCrossedEachOther(List<OrderCreateRequest> orders)
+        {
+            var sortedOrders = orders.OrderBy(o => o.DateStart).ToArray();
+            for (int i = 0; i < sortedOrders.Length - 1; i++)
+            {
+                if (sortedOrders[i].DateEnd >= sortedOrders[i + 1].DateStart)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private async Task<bool> CheckSeveralSitterWorksWithSameSitter(List<OrderCreateRequest> orders)
+        {
+            var sittersWorksId = orders.Select(o => o.SitterWorkId).Distinct().ToList();
+            var sittersWorks = await _workAndLocationRepository.GetSittersWorksByThemId(sittersWorksId);
+            var groupSittersWorksCount = sittersWorks.GroupBy(sw => sw.UserId).Count();
+
+            if (groupSittersWorksCount == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            };
+        }
+
+        private async Task<bool> CheckSeveralPetsBelongToSameClient(List<OrderCreateRequest> orders)
+        {
+            var petsId = orders.SelectMany(o => o.Pets).ToList();
+            var petsEntity = await _petRepository.GetPetsInOrderEntities(petsId);
+
+            return CheckAllPetsBelongToSameUser(petsEntity);
         }
     }
 }

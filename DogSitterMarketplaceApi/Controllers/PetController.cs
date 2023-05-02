@@ -36,11 +36,9 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(petsResponseDto);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                //_logger.LogError(ex, $"{nameof(PetController)} {nameof(GetAllPets)}");
-                _logger.Log(NLog.LogLevel.Error, $"({ex}, {nameof(PetController)} {nameof(GetAllPets)}");
-                return Problem();
+                return BadRequest();
             }
         }
 
@@ -86,7 +84,7 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/Pet", UriKind.Relative), addPetResponseDto);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest();
             }
@@ -107,7 +105,7 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 return NotFound();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest();
             }
