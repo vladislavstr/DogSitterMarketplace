@@ -71,6 +71,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 return await _context.Pets
                             .Include(p => p.Type)
                             .Include(p => p.User)
+                            .ThenInclude(u => u.UserRole)
                             .SingleAsync(p => !p.IsDeleted && p.Id == addPet.Id);
             }
             catch (Exception ex)

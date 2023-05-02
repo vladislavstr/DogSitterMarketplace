@@ -5,6 +5,7 @@ using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
@@ -27,6 +28,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPost(Name = "AddOrder")]
+        [SwaggerOperation(Summary = "Add Order")]
+        [SwaggerResponse(201, "Created")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<OrderResponseDto>> AddOrder(OrderCreateRequestDto addOrder)
         {
             try
@@ -52,7 +57,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpPost("/addSeveralOrders", Name = "AddSeveralOrdersForOneClientFromOneSitter")]
+        [HttpPost("addSeveralOrders", Name = "AddSeveralOrdersForOneClientFromOneSitter")]
         public async Task<ActionResult<List<OrderResponseDto>>> AddSeveralOrdersForOneClientFromOneSitter(List<OrderCreateRequestDto> addOrders)
         {
             try
@@ -101,7 +106,8 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("ordersUnderConsideration/{userId}", Name = "GetAllOrdersUnderConsiderationBySitterId")]
+        //[HttpGet("ordersUnderConsideration/{userId}", Name = "GetAllOrdersUnderConsiderationBySitterId")]
+        [HttpGet("{userId}/ordersUnderConsideration", Name = "GetAllOrdersUnderConsiderationBySitterId")]
         public async Task<ActionResult<List<OrderResponseDto>>> GetAllOrdersUnderConsiderationBySitterId(int userId)
         {
             try

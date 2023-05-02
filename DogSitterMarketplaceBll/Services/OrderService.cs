@@ -220,17 +220,21 @@ namespace DogSitterMarketplaceBll.Services
         public async Task<OrderResponse> UpdateOrder(OrderUpdate orderUpdate)
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(UpdateOrder)}");
-            var orderEntity = _mapper.Map<OrderEntity>(orderUpdate);
-            orderEntity.SitterWork = await _workAndLocationRepository.GetNotDeletedSitterWorkById(orderUpdate.SitterWorkId);
-            orderEntity.Location = await _workAndLocationRepository.GetLocationById(orderUpdate.LocationId);
 
             var allPets = await _petRepository.GetPetsInOrderEntities(orderUpdate.Pets);
             var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
+            var orderEntity = _mapper.Map<OrderEntity>(orderUpdate);
+
+            orderEntity.SitterWork = await _workAndLocationRepository.GetNotDeletedSitterWorkById(orderUpdate.SitterWorkId);
+            orderEntity.Location = await _workAndLocationRepository.GetLocationById(orderUpdate.LocationId);
             orderEntity.Pets.AddRange(allPets.Where(p => !p.IsDeleted));
+
             var updateOrderEntity = await _orderRepository.UpdateOrder(orderEntity);
             var updateOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
+
             CheckPetsInOrderIsExist(allPets, orderUpdate.Pets, updateOrderResponse);
             updateOrderResponse.Messages.AddRange(messages);
+
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(UpdateOrder)}");
 
             return updateOrderResponse;
@@ -257,7 +261,7 @@ namespace DogSitterMarketplaceBll.Services
             }
             else if (orders.Count == 1)
             {
-                var orderResponse = await AddOrder(orders[0]);
+                var orderResponse = await AddOrder(orders.Single());
                 return new List<OrderResponse> { orderResponse };
             }
             else
