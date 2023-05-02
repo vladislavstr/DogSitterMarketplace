@@ -25,12 +25,6 @@ namespace DogSitterMarketplaceApi.Controllers
             _appealService = appealService;
         }
 
-        [HttpGet("GrtPing")]
-        public IActionResult GrtPing()
-        {
-            return Ok();
-        }
-
         [HttpGet("GetAllAppeals", Name = "GetAllAppeals")]
         public ActionResult<IEnumerable<AppealResponseDto>> GetAllAppeals()
         {

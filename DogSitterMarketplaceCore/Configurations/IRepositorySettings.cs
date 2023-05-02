@@ -1,11 +1,11 @@
-﻿namespace DogSitterMarketplaceCore.Configurations
-{
-    public interface IRepositorySettings
-    {
-        string ConnectionString { get; }
+﻿//namespace DogSitterMarketplaceCore.Configurations
+//{
+//    public interface IRepositorySettings
+//    {
+//        string ConnectionString { get; }
 
-        bool IsInMemory { get; }
+//        bool IsInMemory { get; }
 
-        string DatabaseName { get; }
-    }
-}
+//        string DatabaseName { get; }
+//    }
+//}

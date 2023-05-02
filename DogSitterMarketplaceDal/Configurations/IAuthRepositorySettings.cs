@@ -1,8 +1,8 @@
-﻿using DogSitterMarketplaceCore.Configurations;
+﻿//using DogSitterMarketplaceCore.Configurations;
 
-namespace DogSitterMarketplaceDal.Configurations
-{
-    public interface IAuthRepositorySettings : IRepositorySettings
-    {
-    }
-}
+//namespace DogSitterMarketplaceDal.Configurations
+//{
+//    public interface IAuthRepositorySettings : IRepositorySettings
+//    {
+//    }
+//}

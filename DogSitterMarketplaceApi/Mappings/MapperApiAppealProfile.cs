@@ -13,12 +13,15 @@ namespace DogSitterMarketplaceApi.Mappings
             //Appeal
             CreateMap<AppealResponse, AppealResponseDto>();
             CreateMap<AppealRequestDto, AppealRequest>();
+
             //AppealStatus
             CreateMap<AppealStatusResponse, AppealStatusResponseDto>();
             CreateMap<AppealStatusRequestDto, AppealStatusRequest>();
+
             //AppealType
             CreateMap<AppealTypeResponse, AppealTypeResponseDto>();
             CreateMap<AppealTypeRequestDto, AppealTypeRequest>();
+
             //AppealUpdate
             CreateMap<AppealUpdateDto, AppealUpdate>();
             CreateMap<AppealResponse, AppealUpdate>();

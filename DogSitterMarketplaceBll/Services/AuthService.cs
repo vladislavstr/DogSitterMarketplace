@@ -15,17 +15,17 @@ namespace DogSitterMarketplaceBll.Services
     internal class AuthService : IAuthService
     {
         private readonly UserManager<IdentityUser> manager;
-        private readonly IAuthRepository repository;
+        private readonly IUserRepository repository;
         private readonly IJwtConfigurationSettings settings;
         private readonly IMapper mapper;
 
         public AuthService(
            UserManager<IdentityUser> userManager,
-           IAuthRepository authRepository,
+           IUserRepository userRepository,
            IJwtConfigurationSettings jwtConfigurationSettings,
            IMapper autoMapper)
         {
-            repository = authRepository;
+            repository = userRepository;
             manager = userManager;
             settings = jwtConfigurationSettings;
             mapper = autoMapper;

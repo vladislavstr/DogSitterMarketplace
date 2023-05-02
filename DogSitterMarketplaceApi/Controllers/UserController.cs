@@ -4,10 +4,13 @@ using DogSitterMarketplaceApi.Models.UsersDto.Response;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceCore.Exceptions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
+    [Authorize(Policy = "User", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -23,11 +26,6 @@ namespace DogSitterMarketplaceApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet("GrtPing")]
-        public IActionResult GrtPing()
-        {
-            return Ok();
-        }
 
         [HttpGet("GetAllUsers", Name = "GetAllUsers")]
         public ActionResult<List<UserResponseDto>> GetAllUsers()

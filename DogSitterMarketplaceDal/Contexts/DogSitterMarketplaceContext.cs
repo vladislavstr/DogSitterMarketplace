@@ -1,13 +1,15 @@
-﻿using DogSitterMarketplaceDal.Models.Appeals;
+﻿using DogSitterMarketplaceDal.Configurations;
+using DogSitterMarketplaceDal.Models.Appeals;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.Contexts
 {
-    public class DogSitterMarketplaceContext : DbContext
+    public class DogSitterMarketplaceContext : IdentityDbContext //DbContext
     {
 
         public DbSet<AppealEntity> Appeals { get; set; }
@@ -49,6 +51,7 @@ namespace DogSitterMarketplaceDal.Contexts
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSItterMarketplaseDBConnect"));
+            builder.UseSqlServer(@"Data Source=DESKTOP-TO5LEQA\SQLEXPRESS;Initial Catalog = DogSItterMarketplaseDB; Integrated Security = True; Persist Security Info = False; Pooling = False; MultipleActiveResultSets = False; Connect Timeout = 60; Encrypt = False; TrustServerCertificate = False");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

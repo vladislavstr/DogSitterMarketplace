@@ -18,7 +18,6 @@ using LogManager = NLog.LogManager;
 
 var builder = WebApplication.CreateBuilder(args);
 
-InjectSettingsConfiguration(builder);
 InjectAuthenticationDependencies(builder);
 
 // Add services to the container.
@@ -72,8 +71,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();
@@ -92,14 +89,6 @@ app.Run();
 //    var logger = NLog.LogManager.Setup().GetCurrentClassLogger();
 //    builder.Services.AddSingleton<NLog.ILogger>(logger);
 //}
-
-void InjectSettingsConfiguration(WebApplicationBuilder builder)
-{
-    var authRepositorySection = builder.Configuration.GetSection("AuthRepositorySettings")
-        .Get<AuthRepositorySettings>();
-
-    builder.Services.AddSingleton<IAuthRepositorySettings>(authRepositorySection);
-}
 
 void InjectAuthenticationDependencies(WebApplicationBuilder builder)
 {
@@ -152,5 +141,5 @@ void InjectAuthenticationDependencies(WebApplicationBuilder builder)
     });
 
     builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-        .AddEntityFrameworkStores<AuthContext>();
+        .AddEntityFrameworkStores<UserContext>();
 }
