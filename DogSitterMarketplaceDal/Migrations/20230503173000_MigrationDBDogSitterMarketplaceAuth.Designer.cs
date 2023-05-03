@@ -4,6 +4,7 @@ using DogSitterMarketplaceDal.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DogSitterMarketplaceDal.Migrations
 {
     [DbContext(typeof(DogSitterMarketplaceContext))]
-    partial class DogSitterMarketplaceContextModelSnapshot : ModelSnapshot
+    [Migration("20230503173000_MigrationDBDogSitterMarketplaceAuth")]
+    partial class MigrationDBDogSitterMarketplaceAuth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

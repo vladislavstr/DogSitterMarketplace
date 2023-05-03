@@ -15,6 +15,7 @@ using NLog;
 using System.Text;
 using ILogger = NLog.ILogger;
 using LogManager = NLog.LogManager;
+using DogSitterMarketplaceApi.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +49,10 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddAutoMapper(typeof(MapperApiUserProfile), typeof(MapperBllUserProfile), typeof(MapperApiAppealProfile), typeof(MapperBllAppealProfile));
 builder.Services.AddSingleton<UserContext>();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddAutoMapper(typeof(MapperApiAuthenticationProfile));
+
 
 builder.Services.AddScoped<IAppealService, AppealService>();
 builder.Services.AddScoped<IAppealRepository, AppealRepository>();

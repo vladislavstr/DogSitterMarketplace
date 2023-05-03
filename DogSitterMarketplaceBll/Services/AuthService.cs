@@ -12,7 +12,7 @@ using System.Text;
 
 namespace DogSitterMarketplaceBll.Services
 {
-    internal class AuthService : IAuthService
+    public class AuthService : IAuthService
     {
         private readonly UserManager<IdentityUser> manager;
         private readonly IUserRepository repository;
@@ -74,9 +74,9 @@ namespace DogSitterMarketplaceBll.Services
             };
         }
 
-        public async Task<AuthResult> LoginUser(UserLogin userLogin)
+        public async Task<AuthResult> LoginEmail(UserLogin userLogin)
         {
-            var existingUser = await manager.FindByNameAsync(userLogin.UserName);
+            var existingUser = await manager.FindByEmailAsync(userLogin.Email);
 
             if (existingUser == null)
             {

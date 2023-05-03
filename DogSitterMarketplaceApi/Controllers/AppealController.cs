@@ -4,12 +4,10 @@ using DogSitterMarketplaceApi.Models.AppealsDto.Response;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Appeals.Request;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
-    [Authorize(Policy = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(Policy = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/[controller]")]
     public class AppealController : ControllerBase
@@ -96,6 +94,11 @@ namespace DogSitterMarketplaceApi.Controllers
             try
             {
                 var appealRequst = _mapper.Map<AppealRequest>(appeal);
+
+
+                appealRequst.DateOfCreate = DateTime.UtcNow;
+                appealRequst.StatusId = 1;
+
                 var addAppealResponse = _appealService.AddAppeal(appealRequst);
                 var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
 
@@ -162,13 +165,12 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 if (statusId != 1)
                 {
-                    if(text is not null)
+                    if (text is not null)
                     {
+                        var addAppealResponse = _appealService.DoResponseTextByAppeal(id, text, statusId);
+                        var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
 
-                    var addAppealResponse = _appealService.DoResponseTextByAppeal(id,text,statusId);
-                    var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
-
-                    return Created(new Uri("api/Appeal", UriKind.Relative), addAppealResponseDto);
+                        return Created(new Uri("api/Appeal", UriKind.Relative), addAppealResponseDto);
                     }
                     else
                     {

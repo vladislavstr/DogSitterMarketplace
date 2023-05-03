@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
-    [Authorize(Policy = "User", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(Policy = "User", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase

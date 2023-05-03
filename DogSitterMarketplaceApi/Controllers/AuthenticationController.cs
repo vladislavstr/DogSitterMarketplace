@@ -17,8 +17,7 @@ namespace DogSitterMarketplaceApi.Controllers
 
         public AuthenticationController(
             IAuthService authService,
-            IMapper autoMapper,
-            ILogger nLogger)
+            IMapper autoMapper)//,ILogger nLogger)
         {
             _service = authService;
             _mapper = autoMapper;
@@ -62,7 +61,7 @@ namespace DogSitterMarketplaceApi.Controllers
 
             //var userRegister = _mapper.Map<UserLoginRequest, UserLogin>(request);
             var userRegister = _mapper.Map<UserLogin>(request);
-            var loginResult = await _service.LoginUser(userRegister);
+            var loginResult = await _service.LoginEmail(userRegister);
 
             //var response = _mapper.Map<AuthResult, AuthResponse>(loginResult);
             var response = _mapper.Map<AuthResponse>(loginResult);

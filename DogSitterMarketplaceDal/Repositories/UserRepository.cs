@@ -10,11 +10,11 @@ namespace DogSitterMarketplaceDal.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private static UserContext _context;
+        private static DogSitterMarketplaceContext _context;
 
         private static WorkContext _contextWork;
 
-        public UserRepository(UserContext context, WorkContext contextWork)
+        public UserRepository(DogSitterMarketplaceContext context, WorkContext contextWork)
         {
             _context = context;
             _contextWork = contextWork;

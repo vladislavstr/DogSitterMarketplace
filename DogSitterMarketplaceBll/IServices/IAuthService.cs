@@ -6,6 +6,6 @@ namespace DogSitterMarketplaceBll.IServices
     {
         Task<AuthResult> RegisterUser(UserRegister userregister);
 
-        Task<AuthResult> LoginUser(UserLogin userLogin);
+        Task<AuthResult> LoginEmail(UserLogin userLogin);
     }
 }
