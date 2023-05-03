@@ -90,16 +90,20 @@ namespace DogSitterMarketplaceBll.Services
                 throw new ArgumentException("Sitter already has other order at work on the same(or near) time");
             }
 
-            var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
+            var messagesAboutDeleted = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
+            var messagesAboutExist = CheckPetsInOrderIsExistAndGetMessages(allPets, newOrder.Pets);
+
             var orderEntity = _mapper.Map<OrderEntity>(newOrder);
             orderEntity.Pets.AddRange(petsNotDeleted);
             var orderStatusUnderConsideration = await _orderRepository.GetOrderStatusByName(OrderStatus.UnderConsideration);
             orderEntity.OrderStatusId = orderStatusUnderConsideration.Id;
             orderEntity.Summ = summ.Value;
+
             var addOrderEntity = await _orderRepository.AddNewOrder(orderEntity);
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
-            CheckPetsInOrderIsExist(allPets, newOrder.Pets, addOrderResponse);
-            addOrderResponse.Messages.AddRange(messages);
+
+            addOrderResponse.Messages.AddRange(messagesAboutDeleted);
+            addOrderResponse.Messages.AddRange(messagesAboutExist);
 
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(AddOrder)}");
 
@@ -110,7 +114,7 @@ namespace DogSitterMarketplaceBll.Services
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(ChangeOrderStatus)}");
 
-            var orderResponse = await CheckOrderIsExistAndIsNotDeleted(orderId);
+            var orderResponse = await CheckAndGetOrderIsExistAndIsNotDeleted(orderId);
             var changeOrderResponse = new OrderResponse();
             var orderStatus = await _orderRepository.GetOrderStatusById(orderStatusId);
             switch (orderStatus.Name)
@@ -234,10 +238,25 @@ namespace DogSitterMarketplaceBll.Services
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(UpdateOrder)}");
 
-            var allPets = await _petRepository.GetPetsInOrderEntities(orderUpdate.Pets);
-            var messages = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
-            var orderEntity = _mapper.Map<OrderEntity>(orderUpdate);
+            if (await CheckAndGetOrderIsExistAndIsNotDeleted(orderUpdate.Id) == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(UpdateOrder)} {nameof(OrderEntity)} with id {orderUpdate.Id} is not exist.");
+                throw new NotFoundException(orderUpdate.Id, nameof(OrderEntity));
+            }
 
+            var allPets = await _petRepository.GetPetsInOrderEntities(orderUpdate.Pets);
+            var petsNotDeleted = allPets.Where(p => !p.IsDeleted).ToList();
+
+            if (petsNotDeleted.Count <= 0)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(UpdateOrder)}, Order does not contain existing pets");
+                throw new ArgumentException("Order does not contain existing pets");
+            }
+
+            var messagesAboutDeleted = allPets.Where(p => p.IsDeleted).Select(p => $"Pet with id {p.Id} is deleted.");
+            var messagesAboutExist = CheckPetsInOrderIsExistAndGetMessages(allPets, orderUpdate.Pets);
+
+            var orderEntity = _mapper.Map<OrderEntity>(orderUpdate);
             orderEntity.SitterWork = await _workAndLocationRepository.GetNotDeletedSitterWorkById(orderUpdate.SitterWorkId);
             orderEntity.Location = await _workAndLocationRepository.GetLocationById(orderUpdate.LocationId);
             orderEntity.Pets.AddRange(allPets.Where(p => !p.IsDeleted));
@@ -245,20 +264,20 @@ namespace DogSitterMarketplaceBll.Services
             var updateOrderEntity = await _orderRepository.UpdateOrder(orderEntity);
             var updateOrderResponse = _mapper.Map<OrderResponse>(updateOrderEntity);
 
-            CheckPetsInOrderIsExist(allPets, orderUpdate.Pets, updateOrderResponse);
-            updateOrderResponse.Messages.AddRange(messages);
+            updateOrderResponse.Messages.AddRange(messagesAboutDeleted);
+            updateOrderResponse.Messages.AddRange(messagesAboutExist);
 
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(UpdateOrder)}");
 
             return updateOrderResponse;
         }
 
-        public async Task<OrderResponse> CheckOrderIsExistAndIsNotDeleted(int orderId)
+        public async Task<OrderResponse> CheckAndGetOrderIsExistAndIsNotDeleted(int orderId)
         {
             var orderEntity = await _orderRepository.GetOrderById(orderId);
             if (orderEntity.IsDeleted)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(CheckOrderIsExistAndIsNotDeleted)} {nameof(OrderEntity)} with id {orderId} is deleted.");
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(CheckAndGetOrderIsExistAndIsNotDeleted)} {nameof(OrderEntity)} with id {orderId} is deleted.");
                 throw new NotFoundException(orderId, nameof(OrderEntity));
             }
             var orderResponse = _mapper.Map<OrderResponse>(orderEntity);
@@ -319,8 +338,10 @@ namespace DogSitterMarketplaceBll.Services
             }
         }
 
-        private void CheckPetsInOrderIsExist(List<PetEntity> allPets, List<int> petsId, OrderResponse orderResponse)
+        private List<string> CheckPetsInOrderIsExistAndGetMessages(List<PetEntity> allPets, List<int> petsId)
         {
+            List<string> messages = new List<string>();
+
             if (allPets.Count != petsId.Count)
             {
                 foreach (int petId in petsId)
@@ -328,10 +349,12 @@ namespace DogSitterMarketplaceBll.Services
                     var match = allPets.FirstOrDefault(p => p.Id == petId);
                     if (match == null)
                     {
-                        orderResponse.Messages.Add($"Pet with id {petId} not found now.");
-                    }
+                        messages.Add($"Pet with id {petId} not found now.");
+                    }                    
                 }
             }
+
+            return messages;
         }
 
         private bool CheckAllPetsBelongToSameUser(List<PetEntity> petsNotDeleted)

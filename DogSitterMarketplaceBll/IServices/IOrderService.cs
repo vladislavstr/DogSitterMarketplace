@@ -17,7 +17,7 @@ namespace DogSitterMarketplaceBll.IServices
 
         public Task<OrderResponse> ChangeOrderStatus(int orderId, int orderStatusId);
 
-        public Task<OrderResponse> CheckOrderIsExistAndIsNotDeleted(int orderId);
+        public Task<OrderResponse> CheckAndGetOrderIsExistAndIsNotDeleted(int orderId);
 
         public Task<List<OrderResponse>> GetAllOrdersUnderConsiderationBySitterId(int userId);
 

@@ -61,7 +61,7 @@ namespace DogSitterMarketplaceBll.Tests
         {
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).ReturnsAsync(userCommentFromEntity);
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).ReturnsAsync(userCommentToEntity);
-            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).ReturnsAsync(orderResponse);
+            _mockOrderService.Setup(os => os.CheckAndGetOrderIsExistAndIsNotDeleted(orderId)).ReturnsAsync(orderResponse);
             _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentFromId)).ReturnsAsync(userRoleCommentFromEntity);
             _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).ReturnsAsync(userRoleCommentToEntity);
             // _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId)).Returns(allOrders);
@@ -72,7 +72,7 @@ namespace DogSitterMarketplaceBll.Tests
 
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentFromId), Times.Once);
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentToId), Times.Once);
-            _mockOrderService.Verify(os => os.CheckOrderIsExistAndIsNotDeleted(orderId), Times.Once);
+            _mockOrderService.Verify(os => os.CheckAndGetOrderIsExistAndIsNotDeleted(orderId), Times.Once);
             _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentFromId), Times.Once);
             _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Once);
             _mockOrderRepo.Verify(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId), Times.Never);
@@ -90,7 +90,7 @@ namespace DogSitterMarketplaceBll.Tests
         {
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).ReturnsAsync(userCommentFromEntity);
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).ReturnsAsync(userCommentToEntity);
-            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).ReturnsAsync(orderResponse);
+            _mockOrderService.Setup(os => os.CheckAndGetOrderIsExistAndIsNotDeleted(orderId)).ReturnsAsync(orderResponse);
             _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentFromId)).ReturnsAsync(userRoleCommentFromEntity);
             _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).ReturnsAsync(userRoleCommentToEntity);
             _mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId)).ReturnsAsync(allOrders);
@@ -101,7 +101,7 @@ namespace DogSitterMarketplaceBll.Tests
 
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentFromId), Times.Once);
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentToId), Times.Once);
-            _mockOrderService.Verify(os => os.CheckOrderIsExistAndIsNotDeleted(orderId), Times.Once);
+            _mockOrderService.Verify(os => os.CheckAndGetOrderIsExistAndIsNotDeleted(orderId), Times.Once);
             _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentFromId), Times.Once);
             _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Once);
             _mockOrderRepo.Verify(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId), Times.Once);
@@ -118,7 +118,7 @@ namespace DogSitterMarketplaceBll.Tests
         {
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).ReturnsAsync(userCommentFromEntity);
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).ReturnsAsync(userCommentToEntity);
-            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).ReturnsAsync(orderResponse);
+            _mockOrderService.Setup(os => os.CheckAndGetOrderIsExistAndIsNotDeleted(orderId)).ReturnsAsync(orderResponse);
             _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentFromId)).ReturnsAsync(userRoleCommentFromEntity);
             _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).ReturnsAsync(userRoleCommentToEntity);
             //_mockOrderRepo.Setup(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId)).Returns(allOrders);
@@ -128,7 +128,7 @@ namespace DogSitterMarketplaceBll.Tests
 
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentFromId), Times.Once);
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentToId), Times.Once);
-            _mockOrderService.Verify(os => os.CheckOrderIsExistAndIsNotDeleted(orderId), Times.Once);
+            _mockOrderService.Verify(os => os.CheckAndGetOrderIsExistAndIsNotDeleted(orderId), Times.Once);
             _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentFromId), Times.Once);
             _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Once);
             _mockOrderRepo.Verify(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId), Times.Never);
@@ -143,13 +143,13 @@ namespace DogSitterMarketplaceBll.Tests
         {
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).ReturnsAsync(userCommentFromEntity);
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).ReturnsAsync(userCommentToEntity);
-            _mockOrderService.Setup(os => os.CheckOrderIsExistAndIsNotDeleted(orderId)).ThrowsAsync( new NotFoundException(orderId, "OrderEntity"));
+            _mockOrderService.Setup(os => os.CheckAndGetOrderIsExistAndIsNotDeleted(orderId)).ThrowsAsync( new NotFoundException(orderId, "OrderEntity"));
 
             Assert.ThrowsAsync<NotFoundException>(async () => await _commentService.AddComment(addComment));
 
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentFromId), Times.Once);
             _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userCommentToId), Times.Once);
-            _mockOrderService.Verify(os => os.CheckOrderIsExistAndIsNotDeleted(orderId), Times.Once);
+            _mockOrderService.Verify(os => os.CheckAndGetOrderIsExistAndIsNotDeleted(orderId), Times.Once);
             _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentFromId), Times.Never);
             _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Never);
             _mockOrderRepo.Verify(o => o.GetOrdersBySitterIdAndClientId(userCommentFromId, userCommentToId), Times.Never);

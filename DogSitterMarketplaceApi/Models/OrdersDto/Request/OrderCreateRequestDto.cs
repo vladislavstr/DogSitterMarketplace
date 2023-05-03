@@ -6,8 +6,6 @@
 
         public int SitterWorkId { get; set; }
 
-      //  public decimal Summ { get; set; }
-
         public DateTime DateStart { get; set; }
 
         public DateTime DateEnd { get; set; }
