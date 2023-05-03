@@ -275,6 +275,170 @@ namespace DogSitterMarketplaceBll.Tests
             _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleId), Times.Once);
         }
 
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTestCaseSource))]
+        public async Task GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTest(int userIdToComment, UserEntity userEntityToComment, int userIdFromComment, UserEntity userEntityFromComment,
+                                                            List<CommentEntity> commentsEntities, int userRoleWhoGetCommentId, UserRoleEntity userRoleWhoGetComment, int userRoleCommentToId,
+                                                            UserRoleEntity userRoleCommentTo, AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse> expected)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdToComment)).ReturnsAsync(userEntityToComment);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdFromComment)).ReturnsAsync(userEntityFromComment);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userIdToComment)).ReturnsAsync(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleWhoGetCommentId)).ReturnsAsync(userRoleWhoGetComment);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).ReturnsAsync(userRoleCommentTo);
+
+            AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse> actual = await _commentService.GetCommentsAndScoresAboutOtherUsers<CommentsAboutOtherUsersResponse>
+                                                                                                                    (userIdFromComment, UserRole.Client, userIdToComment, UserRole.Sitter);
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdFromComment), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleWhoGetCommentId), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Once);
+
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenSitterIsNotExist_ShouldBeNotFoundException_TestCaseSource))]
+        public void GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTest_WhenSitterIsNotExist_ShouldBeNotFoundException(int userIdToComment, int userIdFromComment, 
+                                                                                                                                 int userRoleWhoGetCommentId, int userRoleCommentToId)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdToComment)).ThrowsAsync(new NotFoundException(userIdToComment, "UserEntity"));
+
+            Assert.ThrowsAsync<NotFoundException>(async () => await _commentService.GetCommentsAndScoresAboutOtherUsers<CommentsAboutOtherUsersResponse>
+                                                                                                                (userIdFromComment, UserRole.Client, userIdToComment, UserRole.Sitter));
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdFromComment), Times.Never);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userIdToComment), Times.Never);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleWhoGetCommentId), Times.Never);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Never);
+        }
+
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenClientIsNotExist_ShouldBeNotFoundException_TestCaseSource))]
+        public void GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTest_WhenClientIsNotExist_ShouldBeNotFoundException(int userIdToComment, int userIdFromComment,
+                                                                                                           UserEntity userToCommentEntity, int userRoleWhoGetCommentId, int userRoleCommentToId)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdToComment)).ReturnsAsync(userToCommentEntity);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdFromComment)).ThrowsAsync(new NotFoundException(userIdFromComment, "UserEntity"));
+
+            Assert.ThrowsAsync<NotFoundException>(async () => await _commentService.GetCommentsAndScoresAboutOtherUsers<CommentsAboutOtherUsersResponse>
+                                                                                                                (userIdFromComment, UserRole.Client, userIdToComment, UserRole.Sitter));
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdFromComment), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userIdToComment), Times.Never);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleWhoGetCommentId), Times.Never);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Never);
+        }
+
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenUserRoleWhoGetCommentIsNotExist_ShouldBeNotFoundException_TestCaseSource))]
+        public void GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTest_WhenUserRoleWhoGetCommentIsNotExist_ShouldBeNotFoundException(int userIdToComment, 
+                                                                                                    UserEntity userEntityToComment, int userIdFromComment, UserEntity userEntityFromComment,
+                                                                                                    List<CommentEntity> commentsEntities, int userRoleWhoGetCommentId,  int userRoleCommentToId)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdToComment)).ReturnsAsync(userEntityToComment);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdFromComment)).ReturnsAsync(userEntityFromComment);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userIdToComment)).ReturnsAsync(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleWhoGetCommentId)).ThrowsAsync(new NotFoundException(userRoleWhoGetCommentId, "UserRoleEntity"));
+
+            Assert.ThrowsAsync<NotFoundException>(async () => await _commentService.GetCommentsAndScoresAboutOtherUsers<CommentsAboutOtherUsersResponse>
+                                                                                                                (userIdFromComment, UserRole.Client, userIdToComment, UserRole.Sitter));
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdFromComment), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleWhoGetCommentId), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Never);
+        }
+
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WWhenUserRoleCommentToIsNotExist_ShouldBeNotFoundException_TestCaseSource))]
+        public void GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTest_WhenUserRoleCommentToIsNotExist_ShouldBeNotFoundException(int userIdToComment, UserRoleEntity userRoleWhoGetComment,
+                                                                                                    UserEntity userEntityToComment, int userIdFromComment, UserEntity userEntityFromComment,
+                                                                                                    List<CommentEntity> commentsEntities, int userRoleWhoGetCommentId, int userRoleCommentToId)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdToComment)).ReturnsAsync(userEntityToComment);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdFromComment)).ReturnsAsync(userEntityFromComment);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userIdToComment)).ReturnsAsync(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleWhoGetCommentId)).ReturnsAsync(userRoleWhoGetComment);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).ThrowsAsync(new NotFoundException(userRoleCommentToId, "UserRoleEntity"));
+
+            Assert.ThrowsAsync<NotFoundException>(async () => await _commentService.GetCommentsAndScoresAboutOtherUsers<CommentsAboutOtherUsersResponse>
+                                                                                                                (userIdFromComment, UserRole.Client, userIdToComment, UserRole.Sitter));
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdFromComment), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleWhoGetCommentId), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Once);
+        }
+
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenUserRoleWhoGetCommentIsNotClient_ShouldBeNotFoundException_TestCaseSource))]
+        public void GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTest_WhenUserRoleWhoGetCommentIsNotClient_ShouldBeNotFoundException(int userIdToComment, UserRoleEntity userRoleWhoGetComment,
+                                                                                                    UserEntity userEntityToComment, int userIdFromComment, UserEntity userEntityFromComment,
+                                                                                                    List<CommentEntity> commentsEntities, int userRoleWhoGetCommentId, int userRoleCommentToId,
+                                                                                                    UserRoleEntity userRoleCommentTo)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdToComment)).ReturnsAsync(userEntityToComment);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdFromComment)).ReturnsAsync(userEntityFromComment);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userIdToComment)).ReturnsAsync(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleWhoGetCommentId)).ReturnsAsync(userRoleWhoGetComment);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).ReturnsAsync(userRoleCommentTo);
+
+            Assert.ThrowsAsync<ArgumentException>(async () => await _commentService.GetCommentsAndScoresAboutOtherUsers<CommentsAboutOtherUsersResponse>
+                                                                                                                (userIdFromComment, UserRole.Client, userIdToComment, UserRole.Sitter));
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdFromComment), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleWhoGetCommentId), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Once);
+        }
+
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenUserRoleCommentToIsNotSitter_ShouldBeNotFoundException_TestCaseSource))]
+        public void GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTest_WhenUserRoleCommentToIsNotSitter_ShouldBeNotFoundException(int userIdToComment, UserRoleEntity userRoleWhoGetComment,
+                                                                                                    UserEntity userEntityToComment, int userIdFromComment, UserEntity userEntityFromComment,
+                                                                                                    List<CommentEntity> commentsEntities, int userRoleWhoGetCommentId, int userRoleCommentToId,
+                                                                                                    UserRoleEntity userRoleCommentTo)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdToComment)).ReturnsAsync(userEntityToComment);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdFromComment)).ReturnsAsync(userEntityFromComment);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userIdToComment)).ReturnsAsync(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleWhoGetCommentId)).ReturnsAsync(userRoleWhoGetComment);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).ReturnsAsync(userRoleCommentTo);
+
+            Assert.ThrowsAsync<ArgumentException>(async () => await _commentService.GetCommentsAndScoresAboutOtherUsers<CommentsAboutOtherUsersResponse>
+                                                                                                                (userIdFromComment, UserRole.Client, userIdToComment, UserRole.Sitter));
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdFromComment), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleWhoGetCommentId), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Once);
+        }
+
+        [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresAboutOtherUsers_ForSitterAboutClientTestCaseSource))]
+        public async Task GetCommentsAndScoresAboutOtherUsers_ForSitterAboutClientTest(int userIdToComment, UserEntity userEntityToComment, int userIdFromComment, UserEntity userEntityFromComment,
+                                                            List<CommentEntity> commentsEntities, int userRoleWhoGetCommentId, UserRoleEntity userRoleWhoGetComment, int userRoleCommentToId,
+                                                            UserRoleEntity userRoleCommentTo, AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse> expected)
+        {
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdToComment)).ReturnsAsync(userEntityToComment);
+            _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdFromComment)).ReturnsAsync(userEntityFromComment);
+            _mockCommentRepo.Setup(c => c.GetAllCommentsAndScoresByUserId(userIdToComment)).ReturnsAsync(commentsEntities);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleWhoGetCommentId)).ReturnsAsync(userRoleWhoGetComment);
+            _mockUserRepo.Setup(u => u.GetUserRoleById(userRoleCommentToId)).ReturnsAsync(userRoleCommentTo);
+
+            AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse> actual = await _commentService.GetCommentsAndScoresAboutOtherUsers<CommentsAboutOtherUsersResponse>
+                                                                                                                    (userIdFromComment, UserRole.Sitter, userIdToComment, UserRole.Client);
+
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetExistAndNotDeletedUserById(userIdFromComment), Times.Once);
+            _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userIdToComment), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleWhoGetCommentId), Times.Once);
+            _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleCommentToId), Times.Once);
+
+            actual.Should().BeEquivalentTo(expected);
+        }
+
         private bool Compare(CommentEntity c, CommentEntity commentEntity)
         {
             try

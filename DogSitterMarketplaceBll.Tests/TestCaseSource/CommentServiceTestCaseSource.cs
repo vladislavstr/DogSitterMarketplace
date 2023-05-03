@@ -755,13 +755,13 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             int userId = 13;
             int userRoleId = 29;
 
-            yield return new object[] { userId, userRoleId};
+            yield return new object[] { userId, userRoleId };
         }
 
         public static IEnumerable GetCommentsAndScoresForUserAboutHim_ForClientAboutHim_WhenUserRoleIsNotExist_ShouldBeNotFoundException_TestCaseSource()
         {
-           int userId = 3;
-           UserEntity userEntity = new UserEntity
+            int userId = 3;
+            UserEntity userEntity = new UserEntity
             {
                 Id = 3,
                 UserRole = new UserRoleEntity
@@ -951,5 +951,710 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
 
             yield return new object[] { userId, userEntity, commentsEntities, userRoleId, userRole };
         }
+
+        public static IEnumerable GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTestCaseSource()
+        {
+            //1. Клиент получает комменты о ситтере - 1 коммент
+
+            int userIdFromComment = 1;
+            UserEntity userEntityFromComment = new UserEntity
+            {
+                Id = 1,
+                UserRoleId = 11,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 11,
+                    Name = "Client"
+                }
+            };
+            int userIdToComment = 2;
+            UserEntity userEntityToComment = new UserEntity
+            {
+                Id = 2,
+                UserRoleId = 22,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 22,
+                    Name = "Sitter"
+                }
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+             new CommentEntity
+                 {
+                 Id = 7,
+                 Text = "7",
+                 Score = 5,
+                 Order = new OrderEntity
+                     {
+                     Id = 5,
+                     DateStart = new DateTime (2023-05-01),
+                     DateEnd = new DateTime (2023-05-02),
+                     },
+                 CommentFromUser = new UserEntity
+                    {
+                     Name = "Man"
+                    }
+                 },
+            };
+            int userRoleWhoGetCommentId = 11;
+            UserRoleEntity userRoleWhoGetComment = new UserRoleEntity
+            {
+                Id = 11,
+                Name = "Client"
+            };
+            int userRoleCommentToId = 22;
+            UserRoleEntity userRoleCommentTo = new UserRoleEntity
+            {
+                Id = 22,
+                Name = "Sitter"
+            };
+            AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse> expected = new AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse>
+            {
+                AverageScore = 5,
+                Comments = new List<CommentsAboutOtherUsersResponse>
+                {
+                    new CommentsAboutOtherUsersResponse
+                    {
+                    Id = 7,
+                    Text = "7",
+                    Score = 5,
+                    CommentFromUser = new UserForCommentResponse
+                        {
+                          Name = "Man"
+                        }
+                    }
+                }
+            };
+
+            yield return new object[] {userIdToComment, userEntityToComment, userIdFromComment, userEntityFromComment, commentsEntities, userRoleWhoGetCommentId,
+                                         userRoleWhoGetComment, userRoleCommentToId, userRoleCommentTo, expected };
+
+            //2. Клиент получает комменты о ситтере - 2 коммента
+
+            userIdFromComment = 12;
+            userEntityFromComment = new UserEntity
+            {
+                Id = 12,
+                UserRoleId = 112,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 112,
+                    Name = "Client"
+                }
+            };
+            userIdToComment = 22;
+            userEntityToComment = new UserEntity
+            {
+                Id = 22,
+                UserRoleId = 222,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 222,
+                    Name = "Sitter"
+                }
+            };
+            commentsEntities = new List<CommentEntity>
+            {
+             new CommentEntity
+                 {
+                 Id = 72,
+                 Text = "72",
+                 Score = 5,
+                 Order = new OrderEntity
+                     {
+                     Id = 52,
+                     DateStart = new DateTime (2023-02-01),
+                     DateEnd = new DateTime (2023-02-02),
+                     },
+                 CommentFromUser = new UserEntity
+                    {
+                     Name = "Man2"
+                    }
+                 },
+             new CommentEntity
+                 {
+                 Id = 721,
+                 Text = "721",
+                 Score = 4,
+                 Order = new OrderEntity
+                     {
+                     Id = 521,
+                     DateStart = new DateTime (2023-01-01),
+                     DateEnd = new DateTime (2023-01-02),
+                     },
+                 CommentFromUser = new UserEntity
+                    {
+                     Name = "Man21"
+                    }
+                 },
+            };
+            userRoleWhoGetCommentId = 112;
+            userRoleWhoGetComment = new UserRoleEntity
+            {
+                Id = 112,
+                Name = "Client"
+            };
+            userRoleCommentToId = 222;
+            userRoleCommentTo = new UserRoleEntity
+            {
+                Id = 222,
+                Name = "Sitter"
+            };
+            expected = new AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse>
+            {
+                AverageScore = 4.5M,
+                Comments = new List<CommentsAboutOtherUsersResponse>
+                {
+                    new CommentsAboutOtherUsersResponse
+                 {
+                 Id = 721,
+                 Text = "721",
+                 Score = 4,
+                 CommentFromUser = new UserForCommentResponse
+                    {
+                     Name = "Man21"
+                    }
+                 },
+                    new CommentsAboutOtherUsersResponse
+                    {
+                    Id = 72,
+                    Text = "72",
+                    Score = 5,
+                    CommentFromUser = new UserForCommentResponse
+                        {
+                          Name = "Man2"
+                        }
+                    }
+                }
+            };
+
+            yield return new object[] {userIdToComment, userEntityToComment, userIdFromComment, userEntityFromComment, commentsEntities, userRoleWhoGetCommentId,
+                                         userRoleWhoGetComment, userRoleCommentToId, userRoleCommentTo, expected };
+
+            // 3. Клиент получает комменты о ситтере - 0 комментов - пустой лист
+
+            userIdFromComment = 123;
+            userEntityFromComment = new UserEntity
+            {
+                Id = 123,
+                UserRoleId = 1123,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 1123,
+                    Name = "Client"
+                }
+            };
+            userIdToComment = 223;
+            userEntityToComment = new UserEntity
+            {
+                Id = 223,
+                UserRoleId = 2223,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 2223,
+                    Name = "Sitter"
+                }
+            };
+            commentsEntities = new List<CommentEntity>();
+            userRoleWhoGetCommentId = 1123;
+            userRoleWhoGetComment = new UserRoleEntity
+            {
+                Id = 1123,
+                Name = "Client"
+            };
+            userRoleCommentToId = 2223;
+            userRoleCommentTo = new UserRoleEntity
+            {
+                Id = 2223,
+                Name = "Sitter"
+            };
+            expected = new AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse>
+            {
+                AverageScore = 0,
+                Comments = new List<CommentsAboutOtherUsersResponse>()
+            };
+
+            yield return new object[] {userIdToComment, userEntityToComment, userIdFromComment, userEntityFromComment, commentsEntities, userRoleWhoGetCommentId,
+                                         userRoleWhoGetComment, userRoleCommentToId, userRoleCommentTo, expected };
+        }
+
+        public static IEnumerable GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenSitterIsNotExist_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userIdToComment = 9;
+            int userIdFromComment = 8;
+            int userRoleWhoGetCommentId = 7;
+            int userRoleCommentToId = 6;
+
+            yield return new object[] { userIdToComment, userIdFromComment, userRoleWhoGetCommentId, userRoleCommentToId };
+        }
+
+        public static IEnumerable GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenClientIsNotExist_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userIdToComment = 9;
+            UserEntity userToCommentEntity = new UserEntity
+            {
+                Id = 9,
+                IsDeleted = false
+            };
+            int userIdFromComment = 8;
+            int userRoleWhoGetCommentId = 7;
+            int userRoleCommentToId = 6;
+
+            yield return new object[] { userIdToComment, userIdFromComment, userToCommentEntity, userRoleWhoGetCommentId, userRoleCommentToId };
+        }
+
+        public static IEnumerable GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenUserRoleWhoGetCommentIsNotExist_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userIdFromComment = 17;
+            UserEntity userEntityFromComment = new UserEntity
+            {
+                Id = 17,
+                UserRoleId = 117,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 117,
+                    Name = "Client"
+                }
+            };
+            int userIdToComment = 27;
+            UserEntity userEntityToComment = new UserEntity
+            {
+                Id = 27,
+                UserRoleId = 227,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 227,
+                    Name = "Sitter"
+                }
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+             new CommentEntity
+                 {
+                 Id = 77,
+                 Text = "77",
+                 Score = 2,
+                 Order = new OrderEntity
+                     {
+                     Id = 57,
+                     DateStart = new DateTime (2023-07-01),
+                     DateEnd = new DateTime (2023-07-02),
+                     },
+                 CommentFromUser = new UserEntity
+                    {
+                     Name = "Man7"
+                    }
+                 },
+            };
+            int userRoleWhoGetCommentId = 117;
+            int userRoleCommentToId = 227;
+
+            yield return new object[] {userIdToComment, userEntityToComment, userIdFromComment, userEntityFromComment,
+                                        commentsEntities, userRoleWhoGetCommentId, userRoleCommentToId};
+        }
+
+        public static IEnumerable GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WWhenUserRoleCommentToIsNotExist_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userIdFromComment = 176;
+            UserEntity userEntityFromComment = new UserEntity
+            {
+                Id = 176,
+                UserRoleId = 1176,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 1176,
+                    Name = "Client"
+                }
+            };
+            int userIdToComment = 276;
+            UserEntity userEntityToComment = new UserEntity
+            {
+                Id = 276,
+                UserRoleId = 2276,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 2276,
+                    Name = "Sitter"
+                }
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+             new CommentEntity
+                 {
+                 Id = 776,
+                 Text = "776",
+                 Score = 4,
+                 Order = new OrderEntity
+                     {
+                     Id = 576,
+                     DateStart = new DateTime (2023-06-01),
+                     DateEnd = new DateTime (2023-06-02),
+                     },
+                 CommentFromUser = new UserEntity
+                    {
+                     Name = "Man76"
+                    }
+                 },
+            };
+            int userRoleWhoGetCommentId = 1176;
+            int userRoleCommentToId = 2276;
+            UserRoleEntity userRoleWhoGetComment = new UserRoleEntity
+            {
+                Id = 1176,
+                Name = "Client"
+            };
+
+            yield return new object[] {userIdToComment, userRoleWhoGetComment, userEntityToComment, userIdFromComment, userEntityFromComment,
+                                        commentsEntities, userRoleWhoGetCommentId, userRoleCommentToId};
+        }
+
+        public static IEnumerable GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenUserRoleWhoGetCommentIsNotClient_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userIdFromComment = 1765;
+            UserEntity userEntityFromComment = new UserEntity
+            {
+                Id = 1765,
+                UserRoleId = 11765,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 11765,
+                    Name = "Admin"
+                }
+            };
+            int userIdToComment = 2765;
+            UserEntity userEntityToComment = new UserEntity
+            {
+                Id = 2765,
+                UserRoleId = 165,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 165,
+                    Name = "Sitter"
+                }
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+             new CommentEntity
+                 {
+                 Id = 7765,
+                 Text = "7765",
+                 Score = 1,
+                 Order = new OrderEntity
+                     {
+                     Id = 576,
+                     DateStart = new DateTime (2023-05-01),
+                     DateEnd = new DateTime (2023-05-02),
+                     },
+                 CommentFromUser = new UserEntity
+                    {
+                     Name = "Man765"
+                    }
+                 },
+            };
+            int userRoleWhoGetCommentId = 11765;
+            int userRoleCommentToId = 165;
+            UserRoleEntity userRoleWhoGetComment = new UserRoleEntity
+            {
+                Id = 11765,
+                Name = "Admin"
+            };
+            UserRoleEntity userRoleCommentTo = new UserRoleEntity
+            {
+                Id = 165,
+                Name = "Sitter"
+            };
+
+            yield return new object[] {userIdToComment, userRoleWhoGetComment, userEntityToComment, userIdFromComment, userEntityFromComment,
+                                        commentsEntities, userRoleWhoGetCommentId, userRoleCommentToId, userRoleCommentTo};
+        }
+
+        public static IEnumerable GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenUserRoleCommentToIsNotSitter_ShouldBeNotFoundException_TestCaseSource()
+        {
+            int userIdFromComment = 17654;
+            UserEntity userEntityFromComment = new UserEntity
+            {
+                Id = 17654,
+                UserRoleId = 117654,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 117654,
+                    Name = "Client"
+                }
+            };
+            int userIdToComment = 27654;
+            UserEntity userEntityToComment = new UserEntity
+            {
+                Id = 27654,
+                UserRoleId = 1654,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 1654,
+                    Name = "Client"
+                }
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+             new CommentEntity
+                 {
+                 Id = 77654,
+                 Text = "77654",
+                 Score = 5,
+                 Order = new OrderEntity
+                     {
+                     Id = 576,
+                     DateStart = new DateTime (2023-05-04),
+                     DateEnd = new DateTime (2023-05-05),
+                     },
+                 CommentFromUser = new UserEntity
+                    {
+                     Name = "Man7654"
+                    }
+                 },
+            };
+            int userRoleWhoGetCommentId = 117654;
+            int userRoleCommentToId = 1654;
+            UserRoleEntity userRoleWhoGetComment = new UserRoleEntity
+            {
+                Id = 117654,
+                Name = "Client"
+            };
+            UserRoleEntity userRoleCommentTo = new UserRoleEntity
+            {
+                Id = 1654,
+                Name = "Client"
+            };
+
+            yield return new object[] {userIdToComment, userRoleWhoGetComment, userEntityToComment, userIdFromComment, userEntityFromComment,
+                                        commentsEntities, userRoleWhoGetCommentId, userRoleCommentToId, userRoleCommentTo};
+        }
+
+        public static IEnumerable GetCommentsAndScoresAboutOtherUsers_ForSitterAboutClientTestCaseSource()
+        {
+            //1. Ситтер получает комменты о клиенте - 1 коммент
+
+            int userIdFromComment = 19;
+            UserEntity userEntityFromComment = new UserEntity
+            {
+                Id = 19,
+                UserRoleId = 119,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 119,
+                    Name = "Sitter"
+                }
+            };
+            int userIdToComment = 29;
+            UserEntity userEntityToComment = new UserEntity
+            {
+                Id = 29,
+                UserRoleId = 229,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 229,
+                    Name = "Client"
+                }
+            };
+            List<CommentEntity> commentsEntities = new List<CommentEntity>
+            {
+             new CommentEntity
+                 {
+                 Id = 79,
+                 Text = "79",
+                 Score = 3,
+                 Order = new OrderEntity
+                     {
+                     Id = 59,
+                     DateStart = new DateTime (2023-09-01),
+                     DateEnd = new DateTime (2023-09-02),
+                     },
+                 CommentFromUser = new UserEntity
+                    {
+                     Name = "Man9"
+                    }
+                 },
+            };
+            int userRoleWhoGetCommentId = 119;
+            UserRoleEntity userRoleWhoGetComment = new UserRoleEntity
+            {
+                Id = 119,
+                Name = "Sitter"
+            };
+            int userRoleCommentToId = 229;
+            UserRoleEntity userRoleCommentTo = new UserRoleEntity
+            {
+                Id = 229,
+                Name = "Client"
+            };
+            AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse> expected = new AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse>
+            {
+                AverageScore = 3,
+                Comments = new List<CommentsAboutOtherUsersResponse>
+                {
+                    new CommentsAboutOtherUsersResponse
+                    {
+                    Id = 79,
+                    Text = "79",
+                    Score = 3,
+                    CommentFromUser = new UserForCommentResponse
+                        {
+                          Name = "Man9"
+                        }
+                    }
+                }
+            };
+
+            yield return new object[] {userIdToComment, userEntityToComment, userIdFromComment, userEntityFromComment, commentsEntities, userRoleWhoGetCommentId,
+                                         userRoleWhoGetComment, userRoleCommentToId, userRoleCommentTo, expected };
+
+            //2. Ситтер получает комменты о клиенте - 2 коммента
+
+            userIdFromComment = 128;
+            userEntityFromComment = new UserEntity
+            {
+                Id = 128,
+                UserRoleId = 1128,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 1128,
+                    Name = "Sitter"
+                }
+            };
+            userIdToComment = 228;
+            userEntityToComment = new UserEntity
+            {
+                Id = 228,
+                UserRoleId = 2228,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 2228,
+                    Name = "Client"
+                }
+            };
+            commentsEntities = new List<CommentEntity>
+            {
+             new CommentEntity
+                 {
+                 Id = 728,
+                 Text = "728",
+                 Score = 2,
+                 Order = new OrderEntity
+                     {
+                     Id = 52,
+                     DateStart = new DateTime (2023-02-08),
+                     DateEnd = new DateTime (2023-02-09),
+                     },
+                 CommentFromUser = new UserEntity
+                    {
+                     Name = "Man28"
+                    }
+                 },
+             new CommentEntity
+                 {
+                 Id = 7218,
+                 Text = "7218",
+                 Score = 4,
+                 Order = new OrderEntity
+                     {
+                     Id = 521,
+                     DateStart = new DateTime (2023-01-08),
+                     DateEnd = new DateTime (2023-01-08),
+                     },
+                 CommentFromUser = new UserEntity
+                    {
+                     Name = "Man218"
+                    }
+                 },
+            };
+            userRoleWhoGetCommentId = 1128;
+            userRoleWhoGetComment = new UserRoleEntity
+            {
+                Id = 1128,
+                Name = "Sitter"
+            };
+            userRoleCommentToId = 2228;
+            userRoleCommentTo = new UserRoleEntity
+            {
+                Id = 2228,
+                Name = "Client"
+            };
+            expected = new AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse>
+            {
+                AverageScore = 3,
+                Comments = new List<CommentsAboutOtherUsersResponse>
+                {
+                    new CommentsAboutOtherUsersResponse
+                 {
+                 Id = 7218,
+                 Text = "7218",
+                 Score = 4,
+                 CommentFromUser = new UserForCommentResponse
+                    {
+                     Name = "Man218"
+                    }
+                 },
+                    new CommentsAboutOtherUsersResponse
+                    {
+                    Id = 728,
+                    Text = "728",
+                    Score = 2,
+                    CommentFromUser = new UserForCommentResponse
+                        {
+                          Name = "Man28"
+                        }
+                    }
+                }
+            };
+
+            yield return new object[] {userIdToComment, userEntityToComment, userIdFromComment, userEntityFromComment, commentsEntities, userRoleWhoGetCommentId,
+                                         userRoleWhoGetComment, userRoleCommentToId, userRoleCommentTo, expected };
+
+            // 3. Ситтер получает комменты о клиенте  - 0 комментов - пустой лист
+
+            userIdFromComment = 1237;
+            userEntityFromComment = new UserEntity
+            {
+                Id = 1237,
+                UserRoleId = 11237,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 11237,
+                    Name = "Sitter"
+                }
+            };
+            userIdToComment = 2237;
+            userEntityToComment = new UserEntity
+            {
+                Id = 2237,
+                UserRoleId = 22237,
+                UserRole = new UserRoleEntity
+                {
+                    Id = 22237,
+                    Name = "Client"
+                }
+            };
+            commentsEntities = new List<CommentEntity>();
+            userRoleWhoGetCommentId = 11237;
+            userRoleWhoGetComment = new UserRoleEntity
+            {
+                Id = 11237,
+                Name = "Sitter"
+            };
+            userRoleCommentToId = 22237;
+            userRoleCommentTo = new UserRoleEntity
+            {
+                Id = 22237,
+                Name = "Client"
+            };
+            expected = new AvgScoreCommentsResponse<CommentsAboutOtherUsersResponse>
+            {
+                AverageScore = 0,
+                Comments = new List<CommentsAboutOtherUsersResponse>()
+            };
+
+            yield return new object[] {userIdToComment, userEntityToComment, userIdFromComment, userEntityFromComment, commentsEntities, userRoleWhoGetCommentId,
+                                         userRoleWhoGetComment, userRoleCommentToId, userRoleCommentTo, expected };
+        }
+
     }
 }
