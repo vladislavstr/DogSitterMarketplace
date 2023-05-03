@@ -5,6 +5,7 @@ using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Pets.Request;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
@@ -27,7 +28,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet(Name = "GetAllNotDeletedPets")]
-        public async Task<ActionResult<List<PetResponseDto>>> GetAllPets()
+        [SwaggerOperation(Summary = "Get All Not Deleted Pets")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        public async Task<ActionResult<List<PetResponseDto>>> GetAllNotDeletedPets()
         {
             try
             {
@@ -38,12 +42,16 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(GetAllPets)}");
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(GetAllNotDeletedPets)}");
                 return BadRequest();
             }
         }
 
         [HttpGet("{id}", Name = "GetNotDeletedPetById")]
+        [SwaggerOperation(Summary = "Get Not Deleted Pet By Id")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<PetResponseDto>> GetPetById(int id)
         {
             try
@@ -65,6 +73,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeletePetById")]
+        [SwaggerOperation(Summary = "Delete Pet By Id")]
+        [SwaggerResponse(204, "No Content")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<IActionResult> DeletePetById(int id)
         {
             try
@@ -85,6 +97,9 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPost(Name = "AddPet")]
+        [SwaggerOperation(Summary = "Add Pet")]
+        [SwaggerResponse(201, "Created")]
+        [SwaggerResponse(400, "Bad Request")]
         public async Task<ActionResult<PetResponseDto>> AddPet(PetRequestDto addPet)
         {
             try
@@ -107,6 +122,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdatePet")]
+        [SwaggerOperation(Summary = "Update Pet")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<PetResponseDto>> UpdatePet(PetUpdateDto petUpdateDto)
         {
             try

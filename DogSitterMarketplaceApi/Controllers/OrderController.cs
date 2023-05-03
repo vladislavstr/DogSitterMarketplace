@@ -58,6 +58,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPost("addSeveralOrders", Name = "AddSeveralOrdersForOneClientFromOneSitter")]
+        [SwaggerOperation(Summary = "Add Several Orders For One Client From One Sitter")]
+        [SwaggerResponse(201, "Created")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<List<OrderResponseDto>>> AddSeveralOrdersForOneClientFromOneSitter(List<OrderCreateRequestDto> addOrders)
         {
             try
@@ -84,6 +88,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPatch("{id}", Name = "ChangeOrderStatus")]
+        [SwaggerOperation(Summary = "Change Order Status")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<OrderResponseDto>> ChangeOrderStatus(int id, [FromBody] int orderStatusId)
         {
             try
@@ -109,6 +117,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("{userId}/ordersUnderConsideration", Name = "GetAllOrdersUnderConsiderationBySitterId")]
+        [SwaggerOperation(Summary = "Get All Orders Under Consideration By Sitter Id")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<List<OrderResponseDto>>> GetAllOrdersUnderConsiderationBySitterId(int userId)
         {
             try
@@ -116,7 +128,7 @@ namespace DogSitterMarketplaceApi.Controllers
                 var ordersResponse = await _orderService.GetAllOrdersUnderConsiderationBySitterId(userId);
                 var ordersResponseDto = _mapper.Map<List<OrderResponseDto>>(ordersResponse);
 
-                return ordersResponseDto;
+                return Ok(ordersResponseDto);
             }
             catch (NotFoundException)
             {
@@ -134,6 +146,9 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet(Name = "GetAllNotDeletedOrders")]
+        [SwaggerOperation(Summary = "Get All Not Deleted Orders")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
         public async Task<ActionResult<List<OrderResponseDto>>> GetAllNotDeletedOrders()
         {
             try
@@ -151,6 +166,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("{id}", Name = "GetNotDeletedOrderById")]
+        [SwaggerOperation(Summary = "Get Not Deleted Order By Id")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<OrderResponseDto>> GetNotDeletedOrderById(int id)
         {
             try
@@ -172,6 +191,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteOrderById")]
+        [SwaggerOperation(Summary = "Delete Order By Id")]
+        [SwaggerResponse(204, "No Content")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<IActionResult> DeleteOrderById(int id)
         {
             try
@@ -191,6 +214,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateOrder")]
+        [SwaggerOperation(Summary = "Update Order")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<OrderResponseDto>> UpdateOrder(OrderUpdateDto orderUpdateDto)
         {
             try

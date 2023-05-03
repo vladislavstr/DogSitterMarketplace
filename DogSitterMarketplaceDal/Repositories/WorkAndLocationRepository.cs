@@ -108,9 +108,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
                 foreach (var id in sittersWorksId)
                 {
-                    //await result.Add(_context.SitterWorks.SingleAsync(sw => sw.Id == id));
-                    var sitterWork = await _context.SitterWorks.SingleAsync(sw => sw.Id == id);
-                    result.Add(sitterWork);
+                    result.Add(await _context.SitterWorks.SingleAsync(sw => sw.Id == id));
                 }
 
                 return result;

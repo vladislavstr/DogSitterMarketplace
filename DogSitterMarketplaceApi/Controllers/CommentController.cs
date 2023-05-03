@@ -8,6 +8,7 @@ using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceCore;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
@@ -37,6 +38,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("forClientAboutSitter/{userIdToComment}", Name = "GetCommentsAndScoresForClientAboutSitter")]
+        [SwaggerOperation(Summary = "Get Comments And Scores For Client About Sitter")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<AvgScoreCommentsAboutOtherUsersResponseDto>> GetCommentsAndScoresForClientAboutSitter(int userIdGetComment, int userIdToComment)
         {
             try
@@ -62,6 +67,11 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("forSitterAboutClient/{userIdToComment}", Name = "GetCommentsAndScoresForSitterAboutClient")]
+        [SwaggerOperation(Summary = "Get Comments And Scores For Sitter About Client")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
+
         public async Task<ActionResult<AvgScoreCommentsAboutOtherUsersResponseDto>> GetCommentsAndScoresForSitterAboutClient(int userIdGetComment, int userIdToComment)
         {
             try
@@ -87,6 +97,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("forClientAboutHim/{userId}", Name = "GetCommentsAndScoresForClientAboutHim")]
+        [SwaggerOperation(Summary = "Get Comments And Scores For Client About Him")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<AvgScoreCommentsResponseDto>> GetCommentsAndScoresForClientAboutHim(int userId)
         {
             try
@@ -112,6 +126,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("forSitterAboutHim/{userId}", Name = "GetCommentsAndScoresForSitterAboutHim")]
+        [SwaggerOperation(Summary = "Get Comments And Scores For Sitter About Him")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<AvgScoreCommentWithoutUserResponseDto>> GetCommentsAndScoresForSitterAboutHim(int userId)
         {
             try
@@ -137,6 +155,9 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet(Name = "GetAllNotDeletedComments")]
+        [SwaggerOperation(Summary = "Get All Not Deleted Comments")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
         public async Task<ActionResult<List<CommentOrderResponseDto>>> GetAllNotDeletedComments()
         {
             try
@@ -154,6 +175,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("{id}", Name = "GetNotDeletedCommentById")]
+        [SwaggerOperation(Summary = "Get Not Deleted Comment By Id")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<CommentOrderResponseDto>> GetCommentById(int id)
         {
             try
@@ -175,6 +200,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteCommentById")]
+        [SwaggerOperation(Summary = "Delete Comment By Id")]
+        [SwaggerResponse(204, "No Content")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<IActionResult> DeleteCommentById(int id)
         {
             try
@@ -195,6 +224,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPost(Name = "AddComment")]
+        [SwaggerOperation(Summary = "Add Comment")]
+        [SwaggerResponse(201, "Created")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<CommentOrderResponseDto>> AddComment(CommentRequestDto addCommentRequestDto)
         {
             var validationResult = _scoreValidator.Validate(addCommentRequestDto);
@@ -228,6 +261,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateComment")]
+        [SwaggerOperation(Summary = "Update Comment")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
         public async Task<ActionResult<CommentOrderResponseDto>> UpdateComment(CommentUpdateDto commentUpdatetDto)
         {
             var validationResult = _scoreUpdateValidator.Validate(commentUpdatetDto);
