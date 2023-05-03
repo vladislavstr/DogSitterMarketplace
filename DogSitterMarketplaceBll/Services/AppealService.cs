@@ -65,7 +65,7 @@ namespace DogSitterMarketplaceBll.Services
         public AppealResponse AddAppeal(AppealRequest appeal)
         {
             appeal.ResponseText = null;
-            appeal.DateOfCreate = DateTime.Now;
+            appeal.DateOfCreate = DateTime.UtcNow;
             appeal.DateOfResponse = null;
             appeal.StatusId = 1;
             var appealEntity = _mapper.Map<AppealEntity>(appeal);
