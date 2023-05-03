@@ -36,8 +36,9 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(petsResponseDto);
             }
-            catch (Exception )
+            catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(GetAllPets)}");
                 return BadRequest();
             }
         }
@@ -56,6 +57,11 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 return NotFound();
             }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(GetPetById)}");
+                return BadRequest();
+            }
         }
 
         [HttpDelete("{id}", Name = "DeletePetById")]
@@ -71,6 +77,11 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 return NotFound();
             }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(DeletePetById)}");
+                return BadRequest();
+            }
         }
 
         [HttpPost(Name = "AddPet")]
@@ -84,8 +95,13 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/Pet", UriKind.Relative), addPetResponseDto);
             }
-            catch (Exception)
+            catch (ArgumentException)
             {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(AddPet)}");
                 return BadRequest();
             }
         }
@@ -105,8 +121,9 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 return NotFound();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(UpdatePet)}");
                 return BadRequest();
             }
         }

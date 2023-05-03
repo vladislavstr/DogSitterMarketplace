@@ -56,7 +56,6 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                // _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForClientAboutSitter)}");
                 return BadRequest();
             }
@@ -82,7 +81,6 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                // _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForSitterAboutClient)}");
                 return BadRequest();
             }
@@ -108,7 +106,6 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                // _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForClientAboutHim)}");
                 return BadRequest();
             }
@@ -134,7 +131,6 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                // _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForSitterAboutHim)}");
                 return BadRequest();
             }
@@ -152,9 +148,8 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                // _logger.LogError($"{nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
-                return Problem();
+                return BadRequest();
             }
         }
 
@@ -172,6 +167,11 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 return NotFound();
             }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentById)}");
+                return BadRequest();
+            }
         }
 
         [HttpDelete("{id}", Name = "DeleteCommentById")]
@@ -186,6 +186,11 @@ namespace DogSitterMarketplaceApi.Controllers
             catch (NotFoundException)
             {
                 return NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(DeleteCommentById)}");
+                return BadRequest();
             }
         }
 
@@ -215,8 +220,9 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 return BadRequest();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(AddComment)}");
                 return BadRequest();
             }
         }
@@ -242,6 +248,15 @@ namespace DogSitterMarketplaceApi.Controllers
             catch (NotFoundException)
             {
                 return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(UpdateComment)}");
+                return BadRequest();
             }
         }
     }

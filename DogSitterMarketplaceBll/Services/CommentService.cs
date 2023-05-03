@@ -37,6 +37,7 @@ namespace DogSitterMarketplaceBll.Services
         public async Task<CommentOrderResponse> AddComment(CommentRequest addComment)
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(AddComment)}");
+
             var userCommentFrom = await CheckUserIsExistAndIsNotDeleted(addComment.CommentFromUserId);
             var userCommentTo = await CheckUserIsExistAndIsNotDeleted(addComment.CommentToUserId);
             var orderResponse = await _orderService.CheckOrderIsExistAndIsNotDeleted(addComment.OrderId);
@@ -62,6 +63,7 @@ namespace DogSitterMarketplaceBll.Services
                 var commentEntity = _mapper.Map<CommentEntity>(addComment);
                 var addCommentEntity = await _commentRepository.AddComment(commentEntity);
                 var addCommentResponse = _mapper.Map<CommentOrderResponse>(addCommentEntity);
+
                 _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(AddComment)}");
 
                 return addCommentResponse;
@@ -76,6 +78,7 @@ namespace DogSitterMarketplaceBll.Services
         public async Task<AvgScoreCommentsResponse<T>> GetCommentsAndScoresForUserAboutHim<T>(int userId, string role) where T : CommentResponse
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForUserAboutHim)}");
+
             var user = await CheckUserIsExistAndIsNotDeleted(userId);
             var sortDescCommentsEntities = await GetSortedDescComments(userId);
             var userRole = await _userRepository.GetUserRoleById(user.RoleId);
@@ -84,14 +87,14 @@ namespace DogSitterMarketplaceBll.Services
             {
                 var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
                 var resultComments = _mapper.Map<List<T>>(sortDescCommentsEntities);
-
-
                 var resultAvgComments = new AvgScoreCommentsResponse<T>
                 {
                     AverageScore = averageScore,
                     Comments = resultComments
                 };
+
                 _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresForUserAboutHim)}");
+
                 return resultAvgComments;
             }
             else
@@ -102,9 +105,10 @@ namespace DogSitterMarketplaceBll.Services
         }
 
         public async Task<AvgScoreCommentsResponse<T>> GetCommentsAndScoresAboutOtherUsers<T>(int userIdGetComment, string roleUserGetComment,
-                                                                                  int userIdToComment, string roleUserToComment) where T : CommentResponse
+                                                                                                int userIdToComment, string roleUserToComment) where T : CommentResponse
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresAboutOtherUsers)}");
+
             var commentUserToResponse = await CheckUserIsExistAndIsNotDeleted(userIdToComment);
             var userWhoGetCommentResponse = await CheckUserIsExistAndIsNotDeleted(userIdGetComment);
             var sortDescCommentsEntities = await GetSortedDescComments(userIdToComment);
@@ -120,7 +124,9 @@ namespace DogSitterMarketplaceBll.Services
                     AverageScore = averageScore,
                     Comments = resultComments
                 };
+
                 _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresAboutOtherUsers)}");
+
                 return resultAvgComments;
             }
             else
@@ -133,9 +139,11 @@ namespace DogSitterMarketplaceBll.Services
         public async Task<List<CommentOrderResponse>> GetAllNotDeletedComments()
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetAllNotDeletedComments)}");
+
             var allCommentsEntity = await _commentRepository.GetAllComments();
             var commentsEntity = allCommentsEntity.Where(c => !c.IsDeleted && !c.Order.IsDeleted);
             var commentsResponse = _mapper.Map<List<CommentOrderResponse>>(commentsEntity);
+
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetAllNotDeletedComments)}");
 
             return commentsResponse;
@@ -144,6 +152,7 @@ namespace DogSitterMarketplaceBll.Services
         public async Task<CommentOrderResponse> GetNotDeletedCommentById(int id)
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetNotDeletedCommentById)}");
+
             var commentEntity = await _commentRepository.GetCommentById(id);
 
             if (!commentEntity.IsDeleted)
@@ -155,7 +164,6 @@ namespace DogSitterMarketplaceBll.Services
             }
             else
             {
-                //_logger.LogDebug($"{nameof(CommentService)} {nameof(GetNotDeletedCommentById)} {nameof(CommentEntity)} with id {id} is deleted.");
                 _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetNotDeletedCommentById)} {nameof(CommentEntity)} with id {id} is deleted.");
                 throw new NotFoundException(id, nameof(commentEntity));
             }
@@ -164,19 +172,23 @@ namespace DogSitterMarketplaceBll.Services
         public async Task DeleteCommentById(int id)
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(DeleteCommentById)}");
+
             await _commentRepository.DeleteCommentById(id);
+
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(DeleteCommentById)}");
         }
 
         public async Task<CommentOrderResponse> UpdateComment(CommentUpdate commentUpdate)
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(UpdateComment)}");
+
             var commentEntity = _mapper.Map<CommentEntity>(commentUpdate);
             commentUpdate.OrderId = (await _orderRepository.GetOrderById(commentUpdate.OrderId)).Id;
             commentUpdate.CommentFromUserId = (await _userRepository.GetUserWithRoleById(commentUpdate.CommentFromUserId)).Id;
             commentUpdate.CommentToUserId = (await _userRepository.GetUserWithRoleById(commentUpdate.CommentToUserId)).Id;
             var updateCommentEntity = await _commentRepository.UpdateComment(commentEntity);
             var commentOrderResponse = _mapper.Map<CommentOrderResponse>(updateCommentEntity);
+
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(UpdateComment)}");
 
             return commentOrderResponse;

@@ -66,7 +66,6 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException)
             {
-                // _logger.LogDebug($"({nameof(CommentEntity)} with id {id} not found)");
                 _logger.Log(LogLevel.Debug, $"({nameof(CommentRepository)} {nameof(GetCommentById)} {nameof(CommentEntity)} with id {id} not found)");
                 throw new NotFoundException(id, nameof(CommentEntity));
             }
@@ -82,7 +81,6 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException)
             {
-                // _logger.LogDebug($"{nameof(CommentEntity)} with id {id} not found");
                 _logger.Log(LogLevel.Debug, $"({nameof(CommentRepository)} {nameof(DeleteCommentById)} {nameof(CommentEntity)} with id {id} not found)");
                 throw new NotFoundException(id, nameof(CommentEntity));
             }
@@ -100,7 +98,6 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception ex)
             {
-                //_logger.LogDebug($"{ex}, {nameof(CommentRepository)} {nameof(CommentEntity)} {nameof(AddComment)}");
                 _logger.Log(LogLevel.Debug, $"({ex}, {nameof(CommentRepository)} {nameof(AddComment)} {nameof(CommentEntity)}");
                 throw new ArgumentException();
             }
@@ -112,7 +109,6 @@ namespace DogSitterMarketplaceDal.Repositories
 
             if (commentDB == null)
             {
-                //_logger.LogDebug($"{nameof(CommentRepository)} {nameof(UpdateComment)} {(nameof(CommentEntity))} with id {comment.Id} not found");
                 _logger.Log(LogLevel.Debug, $"{nameof(CommentRepository)} {nameof(UpdateComment)} {(nameof(CommentEntity))} with id {comment.Id} not found");
                 throw new NotFoundException(comment.Id, nameof(CommentEntity));
             }

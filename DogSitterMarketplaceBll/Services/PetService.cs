@@ -30,9 +30,11 @@ namespace DogSitterMarketplaceBll.Services
         public async Task<List<PetResponse>> GetAllNotDeletedPets()
         {
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} start {nameof(GetAllNotDeletedPets)}");
+
             var allpetsEntitys = await _petRepository.GetAllPets();
             var petsEntitys = allpetsEntitys.Where(p => !p.IsDeleted && !p.User.IsDeleted);
             var petsResponse = _mapper.Map<List<PetResponse>>(petsEntitys);
+
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} end {nameof(GetAllNotDeletedPets)}");
 
             return petsResponse;
@@ -41,6 +43,7 @@ namespace DogSitterMarketplaceBll.Services
         public async Task<PetResponse> GetNotDeletedPetById(int id)
         {
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} start {nameof(GetNotDeletedPetById)}");
+
             var petEntity = await _petRepository.GetPetById(id);
 
             if (!petEntity.IsDeleted)
@@ -60,16 +63,20 @@ namespace DogSitterMarketplaceBll.Services
         public async Task DeletePetById(int id)
         {
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} start {nameof(DeletePetById)}");
+
             await _petRepository.DeletePetById(id);
+
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} end {nameof(DeletePetById)}");
         }
 
         public async Task<PetResponse> AddPet(PetRequest addPet)
         {
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} start {nameof(AddPet)}");
+
             var petEntity = _mapper.Map<PetEntity>(addPet);
             var addPetEntity = await _petRepository.AddPet(petEntity);
             var addPetResponse = _mapper.Map<PetResponse>(addPetEntity);
+
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} end {nameof(AddPet)}");
 
             return addPetResponse;
@@ -78,10 +85,12 @@ namespace DogSitterMarketplaceBll.Services
         public async Task<PetResponse> UpdatePet(PetUpdate petUpdate)
         {
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} start {nameof(UpdatePet)}");
+
             var petEntity = _mapper.Map<PetEntity>(petUpdate);
             petUpdate.UserId = (await _userRepository.GetUserWithRoleById(petUpdate.UserId)).Id;
             var updatePetEntity = await _petRepository.UpdatePet(petEntity);
             var updatePetResponse = _mapper.Map<PetResponse>(updatePetEntity);
+
             _logger.Log(LogLevel.Info, $"{nameof(PetService)} end {nameof(UpdatePet)}");
 
             return updatePetResponse;

@@ -95,7 +95,6 @@ namespace DogSitterMarketplaceDal.Repositories
 
                 petDB.Name = updatePet.Name;
                 petDB.Characteristics = updatePet.Characteristics;
-                //petDB.Type = updatePet.Type;
                 petDB.TypeId = updatePet.TypeId;
                 petDB.UserId = updatePet.UserId;
 

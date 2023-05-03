@@ -184,7 +184,7 @@ namespace DogSitterMarketplaceDal.Repositories
             {
                 return await _context.OrderStatuses.SingleAsync(o => o.Id == id); ;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(OrderStatusEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(OrderStatusEntity));
@@ -203,7 +203,7 @@ namespace DogSitterMarketplaceDal.Repositories
                                             && o.SitterWork.UserId == sitterId)
                                     .ToListAsync();
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(UserEntity)} with id {sitterId} not found.");
                 throw new NotFoundException(sitterId, nameof(UserEntity));

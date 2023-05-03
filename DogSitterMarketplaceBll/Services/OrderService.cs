@@ -41,6 +41,7 @@ namespace DogSitterMarketplaceBll.Services
         public async Task<OrderResponse> AddOrder(OrderCreateRequest newOrder)
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(AddOrder)}");
+
             var allPets = await _petRepository.GetPetsInOrderEntities(newOrder.Pets);
             var petsNotDeleted = allPets.Where(p => !p.IsDeleted).ToList();
 
@@ -99,6 +100,7 @@ namespace DogSitterMarketplaceBll.Services
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
             CheckPetsInOrderIsExist(allPets, newOrder.Pets, addOrderResponse);
             addOrderResponse.Messages.AddRange(messages);
+
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(AddOrder)}");
 
             return addOrderResponse;
@@ -106,6 +108,8 @@ namespace DogSitterMarketplaceBll.Services
 
         public async Task<OrderResponse> ChangeOrderStatus(int orderId, int orderStatusId)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(ChangeOrderStatus)}");
+
             var orderResponse = await CheckOrderIsExistAndIsNotDeleted(orderId);
             var changeOrderResponse = new OrderResponse();
             var orderStatus = await _orderRepository.GetOrderStatusById(orderStatusId);
@@ -128,12 +132,15 @@ namespace DogSitterMarketplaceBll.Services
                     throw new ArgumentException($"You can not change orderStatus to {orderStatusId}");
             }
 
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(ChangeOrderStatus)}");
+
             return changeOrderResponse;
         }
 
         public async Task<List<OrderResponse>> GetAllOrdersUnderConsiderationBySitterId(int userId)
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(GetAllOrdersUnderConsiderationBySitterId)}");
+
             var userEntity = await _userRepository.GetUserWithRoleById(userId);
             var allOrdersEntities = await _orderRepository.GetAllOrdersBySitterId(userId);
             var userRole = await _userRepository.GetUserRoleById(userEntity.UserRoleId);
@@ -156,6 +163,7 @@ namespace DogSitterMarketplaceBll.Services
         public async Task<List<OrderResponse>> GetAllNotDeletedOrders()
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(GetAllNotDeletedOrders)}");
+
             var allOrdersEntity = await _orderRepository.GetAllOrders();
             var ordersEntity = allOrdersEntity
                 .Where(o => !o.IsDeleted)
@@ -184,6 +192,7 @@ namespace DogSitterMarketplaceBll.Services
                 });
 
             var ordersResponse = _mapper.Map<List<OrderResponse>>(ordersEntity);
+
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(GetAllNotDeletedOrders)}");
 
             return ordersResponse;
@@ -192,6 +201,7 @@ namespace DogSitterMarketplaceBll.Services
         public async Task<OrderResponse> GetNotDeletedOrderById(int id)
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(GetNotDeletedOrderById)}");
+
             var orderEntity = await _orderRepository.GetOrderById(id);
 
             if (!orderEntity.IsDeleted)
@@ -199,6 +209,7 @@ namespace DogSitterMarketplaceBll.Services
                 orderEntity.Comments = orderEntity.Comments.Where(c => !c.IsDeleted).ToList();
                 orderEntity.Appeals = orderEntity.Appeals.Where(c => !c.IsDeleted).ToList();
                 var orderResponse = _mapper.Map<OrderResponse>(orderEntity);
+
                 _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(GetNotDeletedOrderById)}");
 
                 return orderResponse;
@@ -213,7 +224,9 @@ namespace DogSitterMarketplaceBll.Services
         public async Task DeleteOrderById(int id)
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(DeleteOrderById)}");
+
             await _orderRepository.DeleteOrderById(id);
+
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(DeleteOrderById)}");
         }
 
@@ -255,6 +268,8 @@ namespace DogSitterMarketplaceBll.Services
 
         public async Task<List<OrderResponse>> AddSeveralOrdersForOneClientFromOneSitter(List<OrderCreateRequest> orders)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(AddSeveralOrdersForOneClientFromOneSitter)}");
+
             if (orders.Count < 1)
             {
                 return new List<OrderResponse>();
@@ -268,12 +283,14 @@ namespace DogSitterMarketplaceBll.Services
             {
                 if (!await CheckSeveralSitterWorksWithSameSitter(orders))
                 {
+                    _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(AddSeveralOrdersForOneClientFromOneSitter)} You can add several orders with the same Sitter, but request List contains different sitters");
                     throw new ArgumentException("You can add several orders with the same Sitter, but request List contains different sitters");
                 }
                 else
                 {
                     if (!await CheckSeveralPetsBelongToSameClient(orders))
                     {
+                        _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(AddSeveralOrdersForOneClientFromOneSitter)} You can add several orders where pets belong to the same Client, but request List contains different clients");
                         throw new ArgumentException("You can add several orders where pets belong to the same Client, but request List contains different clients");
                     }
                     else
@@ -288,10 +305,13 @@ namespace DogSitterMarketplaceBll.Services
                                 result.Add(addOrderResponse);
                             }
 
+                            _logger.Log(LogLevel.Info, $"{nameof(OrderService)} end {nameof(AddSeveralOrdersForOneClientFromOneSitter)}");
+
                             return result;
                         }
                         else
                         {
+                            _logger.Log(LogLevel.Debug, $"{nameof(OrderService)} {nameof(AddSeveralOrdersForOneClientFromOneSitter)} DataTime one of the orders cross DataTime other order");
                             throw new ArgumentException("DataTime one of the orders cross DataTime other order");
                         }
                     }

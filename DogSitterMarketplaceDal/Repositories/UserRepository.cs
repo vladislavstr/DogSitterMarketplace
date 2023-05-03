@@ -5,6 +5,7 @@ using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
+using NLog;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -14,10 +15,13 @@ namespace DogSitterMarketplaceDal.Repositories
 
         private static WorkContext _contextWork;
 
-        public UserRepository(UserContext context, WorkContext contextWork)
+        private readonly ILogger _logger;
+
+        public UserRepository(UserContext context, WorkContext contextWork, ILogger nLogger)
         {
             _context = context;
             _contextWork = contextWork;
+            _logger = nLogger;
         }
 
         public List<UserEntity> GetAllUsers()
@@ -53,7 +57,6 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        //2 логгер оставить
         public async Task<UserEntity> GetUserWithRoleById(int id)
         {
             try
@@ -64,8 +67,7 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException)
             {
-                //  _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetExistAndNotDeletedUserById)} {nameof(UserEntity)} with id {id} not found.");
-                //_logger.Log(LogLevel.Debug, $"{nameof(PetRepository)} {nameof(GetUserById)} {nameof(UserEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $"{nameof(UserRepository)} {nameof(GetUserWithRoleById)} {nameof(UserEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(UserEntity));
             }
         }
@@ -134,7 +136,6 @@ namespace DogSitterMarketplaceDal.Repositories
         //    }
         //}
 
-        //2 логгер прописать
         public async Task<UserRoleEntity> GetUserRoleById(int id)
         {
             try
@@ -143,12 +144,11 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException)
             {
-                // _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
+                _logger.Log(LogLevel.Debug, $"{nameof(UserRepository)} {nameof(GetUserRoleById)} {(nameof(UserRoleEntity))} with id {id} not found");
                 throw new NotFoundException(id, nameof(UserRole));
             }
         }
 
-        //2 логгер прописать
         public async Task<UserEntity> GetExistAndNotDeletedUserById(int id)
         {
             try
@@ -159,13 +159,11 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException)
             {
-                //_logger.LogDebug($"{nameof(UserEntity)} with id {id} not found.");
-                // _logger.Log(LogLevel.Debug, $" {(nameof(UserEntity))} with id {id} not found");
+                _logger.Log(LogLevel.Debug, $"{nameof(UserRepository)} {nameof(GetExistAndNotDeletedUserById)} {(nameof(UserEntity))} with id {id} not found");
                 throw new NotFoundException(id, nameof(UserEntity));
             }
         }
 
-        //2 логгер прописать
         public async Task<List<UserEntity>> GetAllSittersByLocationId(int locationId)
         {
             try
@@ -174,7 +172,7 @@ namespace DogSitterMarketplaceDal.Repositories
 
                 if (location == null)
                 {
-                    // _logger.Log(LogLevel.Debug, $" {(nameof(LocationEntity))} with id {locationId} not found");
+                    _logger.Log(LogLevel.Debug, $"{nameof(UserRepository)} {nameof(GetAllSittersByLocationId)} {(nameof(LocationEntity))} with id {locationId} not found");
                     throw new NotFoundException(locationId, nameof(LocationEntity));
                 }
 
@@ -190,8 +188,7 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception ex)
             {
-                //_logger.LogDebug($"{ex}, {nameof(CommentRepository)} {nameof(CommentEntity)} {nameof(AddComment)}");
-                //_logger.Log(LogLevel.Debug, $"({ex}, {nameof(UserRepository)} {nameof(GetAllSittersByLocationId)} ");
+                _logger.Log(LogLevel.Debug, $"({ex}, {nameof(UserRepository)} {nameof(GetAllSittersByLocationId)} ");
                 throw new ArgumentException();
             }
         }

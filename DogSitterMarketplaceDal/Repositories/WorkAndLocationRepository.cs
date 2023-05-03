@@ -3,7 +3,7 @@ using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using NLog;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -11,9 +11,12 @@ namespace DogSitterMarketplaceDal.Repositories
     {
         private static WorkContext _context;
 
-        public WorkAndLocationRepository()
+        private readonly ILogger _logger;
+
+        public WorkAndLocationRepository(ILogger nLogger)
         {
             _context = new WorkContext();
+            _logger = nLogger;
         }
 
         public LocationWorkEntity GetLocationWorkByid(int id)
@@ -42,7 +45,6 @@ namespace DogSitterMarketplaceDal.Repositories
             return sitterWork;
         }
 
-        //прописать 2й логгер
         public async Task<SitterWorkEntity> GetNotDeletedSitterWorkById(int id)
         {
             try
@@ -51,10 +53,9 @@ namespace DogSitterMarketplaceDal.Repositories
                     .Include(sw => sw.LocationWork)
                     .SingleAsync(o => o.Id == id && !o.IsDeleted);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
-                // logger.LogDebug($"{nameof(SitterWorkEntity)} with id {id} not found.");
-                //  _logger.Log(LogLevel.Debug, $"{nameof(SitterWorkEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $"{nameof(WorkAndLocationRepository)} {nameof(GetNotDeletedSitterWorkById)} {nameof(SitterWorkEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(SitterWorkEntity));
             }
         }
@@ -70,7 +71,6 @@ namespace DogSitterMarketplaceDal.Repositories
                             .Where(sw => sw.User.Id == id).ToListAsync();
         }
 
-
         public List<SitterWorkEntity> GetSitterWorksByUserId(int id)
         {
             var result = _context.SitterWorks
@@ -82,7 +82,6 @@ namespace DogSitterMarketplaceDal.Repositories
             return result;
         }
 
-        // 2й логгер прописать
         public async Task<LocationEntity> GetLocationById(int id)
         {
             try
@@ -91,13 +90,11 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException ex)
             {
-                //_logger.LogDebug($"{nameof(LocationEntity)} with id {id} not found.");
-                // _logger.Log(LogLevel.Debug, $"{nameof(LocationEntity)} with id {id} not found.");
+                _logger.Log(LogLevel.Debug, $"{nameof(WorkAndLocationRepository)} {nameof(GetLocationById)} {nameof(LocationEntity)} with id {id} not found.");
                 throw new NotFoundException(id, nameof(LocationEntity));
             }
         }
 
-        // log
         public async Task<List<SitterWorkEntity>> GetSittersWorksByThemId(List<int> sittersWorksId)
         {
             try
@@ -120,6 +117,7 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (InvalidOperationException ex)
             {
+                _logger.Log(LogLevel.Debug, $"{nameof(WorkAndLocationRepository)} {nameof(GetSittersWorksByThemId)} {nameof(LocationEntity)} One or more id from {sittersWorksId} does not found");
                 throw new ArgumentException($"One or more id from {sittersWorksId} does not found");
             }
         }
