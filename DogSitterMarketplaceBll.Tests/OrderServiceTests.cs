@@ -75,7 +75,7 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.AddOrderTestCaseSource))]
-        public async Task AddOrderTest(List<int> petsId, List<PetEntity> allPets, List<string> messagesOfIsDeleted, OrderEntity orderEntity,
+        public async Task AddOrderTest(List<int> petsId, List<PetEntity> allPets, OrderEntity orderEntity,
                                 OrderEntity addOrderEntity, OrderCreateRequest newOrder, OrderResponse expected, int sitterId, SitterWorkEntity sitterWork,
                                 List<SitterWorkEntity> allSitterWorks, DateTime startDateOrder, List<OrderEntity> allOrdersBySitter, int sitterWorkId,
                                 OrderStatusEntity orderStatusUnderConsideration)
@@ -265,6 +265,49 @@ namespace DogSitterMarketplaceBll.Tests
             _mockUserRepo.Verify(u => u.GetUserWithRoleById(userId), Times.Once);
             _mockOrderRepo.Verify(o => o.GetAllOrdersBySitterId(userId), Times.Once);
             _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleId), Times.Once);
+        }
+
+        [TestCaseSource(typeof(OrderServiceTestCaseSource), nameof(OrderServiceTestCaseSource.AddSeveralOrdersForOneClientFromOneSitterTestCaseSource))]
+        public async Task AddSeveralOrdersForOneClientFromOneSitterTest(List<int> sittersWorksId, List<SitterWorkEntity> sittersWorks, List<int> allPetsId, List<PetEntity> allPetsEntity,
+                                                                        List<int> petsFirstId, List<PetEntity> allFirstPets, List<int> petsSecondId, List<PetEntity> allSecondPets,
+                                                                        List<OrderCreateRequest> orders, OrderEntity orderEntity, OrderEntity addOrderEntity, int sitterId,
+                                                                        SitterWorkEntity sitterWork, List<SitterWorkEntity> allSitterWorks, DateTime startDateOrder,
+                                                                        List<OrderEntity> allOrdersBySitter, int sitterWorkId, OrderStatusEntity orderStatusUnderConsideration,
+                                                                        OrderEntity orderEntity2, OrderEntity addOrderEntity2, int sitterId2, SitterWorkEntity sitterWork2,
+                                                                        List<SitterWorkEntity> allSitterWorks2, DateTime startDateOrder2, List<OrderEntity> allOrdersBySitter2,
+                                                                        int sitterWorkId2, OrderStatusEntity orderStatusUnderConsideration2, List<OrderResponse> expected)
+        {
+            _mockWorkLocationRepo.Setup(wl => wl.GetSittersWorksByThemId(sittersWorksId)).ReturnsAsync(sittersWorks);
+            _mockPetRepo.Setup(p => p.GetPetsInOrderEntities(allPetsId)).ReturnsAsync(allPetsEntity);
+            _mockPetRepo.Setup(p => p.GetPetsInOrderEntities(petsFirstId)).ReturnsAsync(allFirstPets);
+            _mockPetRepo.Setup(p => p.GetPetsInOrderEntities(petsSecondId)).ReturnsAsync(allSecondPets);
+            _mockWorkLocationRepo.Setup(o => o.GetNotDeletedSitterWorkById(sitterWorkId)).ReturnsAsync(sitterWork);
+            _mockWorkLocationRepo.Setup(o => o.GetAllSitterWorksByUserId(sitterId)).ReturnsAsync(allSitterWorks);
+            _mockOrderRepo.Setup(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder)).ReturnsAsync(allOrdersBySitter);
+            _mockOrderRepo.Setup(o => o.GetOrderStatusByName("under consideration")).ReturnsAsync(orderStatusUnderConsideration);
+            _mockOrderRepo.Setup(o => o.AddNewOrder(It.Is<OrderEntity>(o => Compare(o, orderEntity)))).ReturnsAsync(addOrderEntity);
+            _mockWorkLocationRepo.Setup(o => o.GetNotDeletedSitterWorkById(sitterWorkId2)).ReturnsAsync(sitterWork2);
+            _mockWorkLocationRepo.Setup(o => o.GetAllSitterWorksByUserId(sitterId2)).ReturnsAsync(allSitterWorks2);
+            _mockOrderRepo.Setup(o => o.GetOrdersAtWorkOnDateByUserId(sitterId2, startDateOrder2)).ReturnsAsync(allOrdersBySitter2);
+            _mockOrderRepo.Setup(o => o.GetOrderStatusByName("under consideration")).ReturnsAsync(orderStatusUnderConsideration2);
+            _mockOrderRepo.Setup(o => o.AddNewOrder(It.Is<OrderEntity>(o => Compare(o, orderEntity2)))).ReturnsAsync(addOrderEntity2);
+
+            List<OrderResponse> actual = await _orderService.AddSeveralOrdersForOneClientFromOneSitter(orders);
+
+            _mockWorkLocationRepo.Verify(wl => wl.GetSittersWorksByThemId(sittersWorksId), Times.Once);
+            _mockPetRepo.Verify(p => p.GetPetsInOrderEntities(allPetsId), Times.Once);
+            _mockPetRepo.Verify(p => p.GetPetsInOrderEntities(petsFirstId), Times.Once);
+            _mockPetRepo.Verify(p => p.GetPetsInOrderEntities(petsSecondId), Times.Once);
+            _mockWorkLocationRepo.Verify(wl => wl.GetNotDeletedSitterWorkById(sitterWorkId), Times.AtLeastOnce);
+            _mockWorkLocationRepo.Verify(o => o.GetAllSitterWorksByUserId(sitterId), Times.Between(1, 2, Moq.Range.Inclusive));
+            _mockOrderRepo.Verify(o => o.GetOrdersAtWorkOnDateByUserId(sitterId, startDateOrder), Times.Once);
+            _mockWorkLocationRepo.Verify(o => o.GetNotDeletedSitterWorkById(sitterWorkId2), Times.AtLeastOnce);
+            _mockWorkLocationRepo.Verify(o => o.GetAllSitterWorksByUserId(sitterId2), Times.Between(1, 2, Moq.Range.Inclusive));
+            _mockOrderRepo.Verify(o => o.GetOrdersAtWorkOnDateByUserId(sitterId2, startDateOrder2), Times.Once);
+            _mockOrderRepo.Verify(o => o.GetOrderStatusByName("under consideration"), Times.Exactly(2));
+            _mockOrderRepo.Verify(o => o.AddNewOrder(It.IsAny<OrderEntity>()), Times.Exactly(2));
+
+            actual.Should().BeEquivalentTo(expected);
         }
 
         private bool Compare(OrderEntity o, OrderEntity orderEntity)
