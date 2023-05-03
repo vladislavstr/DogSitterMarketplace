@@ -10,13 +10,13 @@
 
         public string Name { get; set; }
 
-        public bool IsDeleted { get; set; }
+        //public bool IsDeleted { get; set; }
 
-        public int PassportData { get; set; }
+        public int? UserPassportDataId { get; set; }
 
-        public int Role { get; set; }
+        public int UserRoleId { get; set; }
 
-        public int? Status { get; set; }
+        public int UserStatusId { get; set; }
 
         //public ICollection<PetRequestDto> Pets { get; set; }
     }

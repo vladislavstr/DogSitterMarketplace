@@ -64,10 +64,10 @@ namespace DogSitterMarketplaceBll.Services
 
         public AppealResponse AddAppeal(AppealRequest appeal)
         {
-            appeal.ResponseText = null;
-            appeal.DateOfCreate = DateTime.Now;
-            appeal.DateOfResponse = null;
-            appeal.StatusId = 1;
+            //appeal.ResponseText = null;
+            //appeal.DateOfCreate = DateTime.UtcNow;
+            //appeal.DateOfResponse = null;
+            //appeal.StatusId = 1;
             var appealEntity = _mapper.Map<AppealEntity>(appeal);
             var addAppealEntity = _appealRepository.AddAppeal(appealEntity);
             var addAppealResponse = _mapper.Map<AppealResponse>(addAppealEntity);
@@ -105,7 +105,7 @@ namespace DogSitterMarketplaceBll.Services
             if (stsusId == 1)
             {
 
-                appeal.DateOfResponse = DateTime.Now;
+                appeal.DateOfResponse = DateTime.UtcNow;
                 appeal.ResponseText = text;
                 appeal.StatusId = statusId;
                 var appealEntity = _mapper.Map<AppealEntity>(appeal);

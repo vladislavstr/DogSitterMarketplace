@@ -318,7 +318,7 @@ namespace DogSitterMarketplaceDal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("UserPassportDataId")
+                    b.Property<int?>("UserPassportDataId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserRoleId")
@@ -689,8 +689,7 @@ namespace DogSitterMarketplaceDal.Migrations
                     b.HasOne("DogSitterMarketplaceDal.Models.Users.UserPassportDataEntity", "UserPassportData")
                         .WithMany()
                         .HasForeignKey("UserPassportDataId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("DogSitterMarketplaceDal.Models.Users.UserRoleEntity", "UserRole")
                         .WithMany()

@@ -23,12 +23,6 @@ namespace DogSitterMarketplaceApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet("GrtPing")]
-        public IActionResult GrtPing()
-        {
-            return Ok();
-        }
-
         [HttpGet("GetAllUsers", Name = "GetAllUsers")]
         public ActionResult<List<UserResponseDto>> GetAllUsers()
         {
