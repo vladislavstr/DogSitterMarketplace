@@ -27,8 +27,8 @@ namespace DogSitterMarketplaceApi.Mappings
             CreateMap<UserRoleRequestDto, UserRoleRequest>();
 
             //Status 
-            CreateMap<UserStatusRequestDto, UserStatusResponseDto>();
             CreateMap<UserStatusResponse, UserStatusResponseDto>();
+            CreateMap<UserStatusRequestDto, UserStatusRequest>();
 
             //All 
             CreateMap<PetRequestDto, PetRequest>().ReverseMap();

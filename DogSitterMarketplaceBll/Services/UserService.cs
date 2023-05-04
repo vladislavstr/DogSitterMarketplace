@@ -5,6 +5,8 @@ using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Users;
+using ILogger = NLog.ILogger;
+using LogLevel = NLog.LogLevel;
 
 namespace DogSitterMarketplaceBll.Services
 {
@@ -12,77 +14,151 @@ namespace DogSitterMarketplaceBll.Services
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly ILogger _logger;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, ILogger nLogger)
         {
             _mapper = mapper;
             _userRepository = userRepository;
+            _logger = nLogger;
         }
 
         public List<UserResponse> GetAllUsers()
         {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(GetAllUsers)}");
+
             var allusersEntitys = _userRepository.GetAllUsers();
             var userResponse = _mapper.Map<List<UserResponse>>(allusersEntitys);
+
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(GetAllUsers)}");
 
             return userResponse;
         }
 
         public ICollection<UserResponse> GetAllNotDeletedUsers()
         {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(GetAllNotDeletedUsers)}");
+
             var allusersEntitys = _userRepository.GetAllUsers();
             var usersEntitys = allusersEntitys
                            .Where(u => !u.IsDeleted);
             var userResponse = _mapper.Map<ICollection<UserResponse>>(usersEntitys);
+
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(GetAllNotDeletedUsers)}");
 
             return userResponse;
         }
 
         public UserResponse GetUserById(int id)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(GetUserById)}");
+
             var usersEntitys = _userRepository.GetUserById(id);
             var userResponse = _mapper.Map<UserResponse>(usersEntitys);
+
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(GetUserById)}");
 
             return userResponse;
         }
 
         public UserResponse AddUser(UserRequest user)
         {
-            var userEntity = _mapper.Map<UserEntity>(user);
-            var addUserEntity = _userRepository.AddUser(userEntity);
-            var addUserResponse = _mapper.Map<UserResponse>(addUserEntity);
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(AddUser)}");
 
-            return addUserResponse;
+            List<UserResponse> usersResponse = new List<UserResponse>();
+            UserResponse userResponse = new UserResponse();
+            usersResponse = GetAllNotDeletedUsers().ToList();
+            userResponse = usersResponse.First(u => u.Email == user.Email);
+
+            if (usersResponse.Exists(u => u.Email == user.Email && u.UserStatus.Id == 2))
+            {
+                throw new ArgumentException($"User with Email {user.Email} is ,his status is banned Status.Id: {userResponse.UserStatus.Id}");
+            }
+            else if (usersResponse.Exists(u => u.Email == user.Email))
+            {
+                throw new ArgumentException($"User with Email {user.Email} is exist with Status.Id: {userResponse.UserStatus.Id}");
+            }
+            else
+            {
+                var userEntity = _mapper.Map<UserEntity>(user);
+                var addUserEntity = _userRepository.AddUser(userEntity);
+                var addUserResponse = _mapper.Map<UserResponse>(addUserEntity);
+
+                _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(AddUser)}");
+
+                return addUserResponse;
+            }
         }
 
         public UserPassportDataResponse AddUserPassportData(UserPassportDataRequest PassportData)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(AddUserPassportData)}");
+
             var userPassportDataEntity = _mapper.Map<UserPassportDataEntity>(PassportData);
             var addUserPassportDataEntity = _userRepository.AddUserPassportData(userPassportDataEntity);
             var addUserPassportDataResponse = _mapper.Map<UserPassportDataResponse>(addUserPassportDataEntity);
 
-            return addUserPassportDataResponse;
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(AddUserPassportData)}");
 
+            return addUserPassportDataResponse;
         }
 
-        //public UserResponse AddUser(UserRequest user)
-        //{
-        //    var userEntity = _mapper.Map<UserEntity, UserEntity>(user);
-        //    var addUserEntity = _userRepository.AddUser(userEntity);
-        //    var addUserResponse = _mapper.Map<UserResponse>(addUserEntity);
+        public UserStatusResponse AddUserStatus(UserStatusRequest userStatus)
+        {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(AddUserStatus)}");
 
-        //    return addUserResponse;
-        //}
-        //public Order Create(Order order)
-        //{
-        //    var orderDal = mapper.Map<Order, OrderDal>(order);
-        //    var resultDal = repository.Create(orderDal);
+            var userStatusEntity = _mapper.Map<UserStatusEntity>(userStatus);
+            var adduserStatusEntity = _userRepository.AddUserStatus(userStatusEntity);
+            var adduserStatusResponse = _mapper.Map<UserStatusResponse>(adduserStatusEntity);
 
-        //    return mapper.Map<OrderDal, Order>(resultDal);
-        //}
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(AddUserStatus)}");
+
+            return adduserStatusResponse;
+        }
 
         public void DeleteUserById(int id)
         {
             _userRepository.DeleteUserById(id);
+        }
+
+        public void BlockingUserById(int id)
+        {
+            _userRepository.BlockingUserById(id);
+        }
+
+        public UserResponse UpdateUserById(int id, int UserPassportDataId, int UserStatusId)
+        {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(UpdateUserById)}");
+
+            //UserResponse userResponse = new UserResponse();
+            //List<UserResponse> usersResponse = new List<UserResponse>();
+            //usersResponse = GetAllNotDeletedUsers().ToList();
+            //userResponse = usersResponse.Find(u => u.UserPassportData.Id == UserPassportDataId);
+            //foreach (UserResponse userResponseEntity in usersResponse)
+            //{
+            //    if (userResponseEntity.UserPassportData.Id == UserPassportDataId!)
+            //    {
+            //        throw new ArgumentException($"User{userResponse.Id} have UserPassportId {UserPassportDataId} = {userResponse.UserPassportData.PassportNumber}");
+            //        break;
+            //    }
+            //}
+            //if (usersResponse.Exists(u => u.UserPassportData.Id == UserPassportDataId))
+            //{
+            //    throw new ArgumentException($"User{userResponse.Id} have UserPassportId {UserPassportDataId} = {userResponse.UserPassportData.PassportNumber}");
+            //}
+            //else
+            //{
+
+            var userEntity = _userRepository.GetUserById(id);
+            userEntity.UserStatusId = UserStatusId;
+            userEntity.UserPassportDataId = UserPassportDataId;
+
+            var updateUserEntity = _userRepository.UpdateUserById(userEntity);
+            var updateUserResponse = _mapper.Map<UserResponse>(updateUserEntity);
+
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(UpdateUserById)}");
+
+            return updateUserResponse;
         }
 
         public async Task<List<UserShortLocationWorkResponse>> GetAllSittersByLocationId(int locationId)

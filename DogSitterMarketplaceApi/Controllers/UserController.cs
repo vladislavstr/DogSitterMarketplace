@@ -3,6 +3,7 @@ using DogSitterMarketplaceApi.Models.UsersDto.Request;
 using DogSitterMarketplaceApi.Models.UsersDto.Response;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Users.Request;
+using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using ILogger = NLog.ILogger;
@@ -35,6 +36,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(GetAllUsers)}");
                 return BadRequest(ex.Message);
             }
         }
@@ -48,25 +50,31 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(GetAllNotDeletedUsers)}");
                 return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("{id}", Name = "GetUserById")]
+        [HttpGet("{id:int}", Name = "GetUserById")]
         public ActionResult GetUserById(int id)
         {
             try
             {
                 return Ok(_userService.GetUserById(id));
             }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(GetUserById)}");
                 return BadRequest(ex.Message);
             }
         }
 
 
-        [HttpDelete("{id}", Name = "DeleteUserById")]
+        [HttpDelete("{id:int}", Name = "DeleteUserById")]
         public IActionResult DeleteUserById(int id)
         {
             try
@@ -74,10 +82,68 @@ namespace DogSitterMarketplaceApi.Controllers
                 _userService.DeleteUserById(id);
                 return NoContent();
             }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(DeleteUserById)}");
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPatch("Blocking/{id:int}", Name = "BlockingUserById")]
+        public IActionResult BlockingUserById(int id)
+        {
+            try
+            {
+                _userService.BlockingUserById(id);
+                return NoContent();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(BlockingUserById)}");
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("{id:int}", Name = "UpdateUserById")]
+        public IActionResult UpdateUserById(int id, int UserPassportDataId, int UserStatusId)
+        {
+            try
+            {
+                var addUserResponse = _userService.UpdateUserById(id, UserPassportDataId, UserStatusId);
+                var addUserResponseDto = _mapper.Map<UserResponseDto>(addUserResponse);
+
+                return Created(new Uri("api/User", UriKind.Relative), addUserResponseDto);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(UpdateUserById)}");
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpPost("AddUser", Name = "AddUser")]
@@ -91,8 +157,13 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/User", UriKind.Relative), addUserResponseDto);
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(AddUser)}");
                 return BadRequest(ex.Message);
             }
         }
@@ -108,13 +179,41 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/User", UriKind.Relative), addUserPassportDataResponseDto);
             }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(AddUserPassportData)}");
                 return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("allSittersByLocation/{locationId}", Name = "GetAllSittersByLocationId")]
+        [HttpPost("Status", Name = "AddUserStatus")]
+        public ActionResult<UserStatusResponseDto> AddUserStatus(UserStatusRequestDto userStatus)
+        {
+            try
+            {
+                var userStatusRequst = _mapper.Map<UserStatusRequest>(userStatus);
+                var addUserStatusResponse = _userService.AddUserStatus(userStatusRequst);
+                var addUserStatusResponseDto = _mapper.Map<UserStatusResponseDto>(addUserStatusResponse);
+
+                return Created(new Uri("api/User", UriKind.Relative), addUserStatusResponseDto);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+  
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(AddUserStatus)}");
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("allSittersByLocation/{locationId:int}", Name = "GetAllSittersByLocationId")]
         public async Task<ActionResult<List<UserShortLocationWorkResponseDto>>> GetAllSittersByLocationId(int locationId)
         {
             try
