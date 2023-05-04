@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceCore;
+using DogSitterMarketplaceCore;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;

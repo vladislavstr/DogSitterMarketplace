@@ -1,6 +1,7 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Works.Request;
+using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Works;
@@ -25,20 +26,15 @@ namespace DogSitterMarketplaceBll.Services
             _logger = logger;
         }
 
-        public bool AddNewTimeWork(int locationWorkId, List<TimingLocationWorkRequest> timing)
+        public async Task<List<TimingLocationWorkResponse>> AddNewTimeWork(int locationWorkId, List<TimingLocationWorkRequest> timing)
         {
-            bool result = false;
-
-            if (timing == null)
-            {
-                throw new ArgumentNullException("Schedule list is empty.");
-            }
-
-            var locationWorkDal = _workAndLocationRepository.GetLocationWorkByid(locationWorkId);
+            var result = new List<TimingLocationWorkResponse>();
+            var locationWorkDal = await _workAndLocationRepository.GetLocationWorkByid(locationWorkId);
 
             if (locationWorkDal == null)
             {
-                throw new FileNotFoundException("There is no such location.");
+                _logger.Log(LogLevel.Error, $"There is no such location work");
+                throw new FileNotFoundException("There is no such location work");
             }
 
             var newTimingsLocationDal = _mapper.Map<List<TimingLocationWorkEntity>>(timing);
@@ -56,28 +52,34 @@ namespace DogSitterMarketplaceBll.Services
 
             if (newTimingsLocationDal.Count != 0)
             {
-                result = _timeWorkRepository.AddNewTimingsLocation(newTimingsLocationDal);
+                result = _mapper.Map<List<TimingLocationWorkResponse>>(await _timeWorkRepository.AddNewTimingsLocation(newTimingsLocationDal));
             }
 
             if (dublicatedTimings.Count != 0)
             {
-                LogDublicateTiming(result, newTimingsLocationDal);
+                if (newTimingsLocationDal.Count != 0)
+                {
+                    string addTiming = "";
+                    foreach (var t in newTimingsLocationDal)
+                    {
+                        addTiming += $"{t.ToString()} ";
+                    }
+                    _logger.Log(LogLevel.Warn, $"one or more intervals intersect with existing ones, but this intervals are added {addTiming}");
+                    throw new InvalidWriteTimeException($"one or more intervals intersect with existing ones, but this intervals are added {addTiming}");
+                }
+                else
+                {
+                    _logger.Log(LogLevel.Error, $"one or more intervals intersect with existing ones, new intervals not Add ");
+                    throw new InvalidWriteTimeException("one or more intervals intersect with existing ones, new intervals not Add");
+                }
             }
 
             return result;
         }
 
-        public bool AddNewTimeWork(TimingLocationWorkRequest timing)
+        public async Task<TimingLocationWorkResponse> AddNewTimeWork(TimingLocationWorkRequest timing)
         {
-            bool result = false;
-
-            if (timing == null)
-            {
-                _logger.Log(LogLevel.Error, $"empty interval passed");
-                throw new ArgumentNullException("Schedule list is empty");
-            }
-
-            var locationWorkDal = _workAndLocationRepository.GetLocationWorkByid(timing.LocationWorkId);
+            var locationWorkDal = await _workAndLocationRepository.GetLocationWorkByid(timing.LocationWorkId);
 
             if (locationWorkDal == null)
             {
@@ -91,28 +93,21 @@ namespace DogSitterMarketplaceBll.Services
 
             if (dublicatedTiming != null)
             {
-                _logger.Log(LogLevel.Warn, $"This interval intersects with the existing {dublicatedTiming.ToString()}");
-                LogDublicateTiming();
+                _logger.Log(LogLevel.Error, $"one or more intervals intersect with existing ones, new intervals not Add ");
+                throw new InvalidWriteTimeException("one or more intervals intersect with existing ones, new intervals not Add");
             }
 
-            result = _timeWorkRepository.AddNewTimingLocation(newTimingLocationDal);
+            var result = _mapper.Map<TimingLocationWorkResponse>(await _timeWorkRepository.AddNewTimingLocation(newTimingLocationDal));
 
             return result;
         }
 
-        public bool UpdateTimeWork(TimingLocationWorkWithIdRequest timingUpdate)
+        public async Task<TimingLocationWorkResponse> UpdateTimeWork(TimingLocationWorkWithIdRequest timingUpdate)
         {
-            bool isUpdate = false;
-
-            if (timingUpdate == null)
-            {
-                _logger.Log(LogLevel.Error, $"empty interval passed");
-                throw new ArgumentNullException("Schedule list is empty(");
-            }
-
+            TimingLocationWorkResponse result = null;
             var timingUpdateDal = _mapper.Map<TimingLocationWorkEntity>(timingUpdate);
             CheckStartAndEndInterval(timingUpdateDal);
-            var oldTimings = _timeWorkRepository.GetAllTimigsByLocationWorkId(timingUpdateDal.LocationWorkId);
+            var oldTimings = await _timeWorkRepository.GetAllTimigsOfLocationWork(timingUpdateDal.LocationWorkId);
 
             if (oldTimings == null)
             {
@@ -134,15 +129,20 @@ namespace DogSitterMarketplaceBll.Services
 
             if (dublicateTiming != null)
             {
-                _logger.Log(LogLevel.Warn, $"This interval intersects with the existing {dublicateTiming.ToString()}");
-                LogDublicateTiming();
+                _logger.Log(LogLevel.Error, $"This interval intersects with the existing {dublicateTiming.ToString()}");
+                throw new InvalidWriteTimeException("one or more intervals intersect with existing ones, new intervals not Add");
             }
             else
             {
-                isUpdate = _timeWorkRepository.UpdateTimingLocation(timingUpdateDal);
+                result = _mapper.Map<TimingLocationWorkResponse>(await _timeWorkRepository.UpdateTimingLocation(timingUpdateDal));
             }
 
-            return isUpdate;
+            return result;
+        }
+
+        public async Task<bool> DeleteTiming(int id)
+        {
+            return await _timeWorkRepository.DeleteTiming(id);
         }
 
         private void CheckStartAndEndInterval(List<TimingLocationWorkEntity> timings)
@@ -152,7 +152,7 @@ namespace DogSitterMarketplaceBll.Services
             if (incorrectTimings.Count != 0)
             {
                 string invalidValueTiming = "";
-                foreach (var t in timings)
+                foreach (var t in incorrectTimings)
                 {
                     _logger.Log(LogLevel.Error, $"The start of the interval is above its end {t.ToString()} ");
                     invalidValueTiming += t.ToString();
@@ -204,28 +204,25 @@ namespace DogSitterMarketplaceBll.Services
             return result;
         }
 
-        private void LogDublicateTiming(bool newTimingAdd, List<TimingLocationWorkEntity> newTimings)
+        public TimingLocationWorkResponse GetTiming(int id)
         {
-            if (newTimingAdd is true)
-            {
-                string addTiming = "";
-                foreach (var t in newTimings)
-                {
-                    addTiming += $"{t.ToString()} ";
-                }
-                throw new InvalidWriteTimeException($"one or more intervals intersect with existing ones, but this intervals are added {addTiming}");
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, $"one or more intervals intersect with existing ones, new intervals not Add ");
-                throw new InvalidWriteTimeException("one or more intervals intersect with existing ones, new intervals not Add");
-            }
+            var result = _mapper.Map<TimingLocationWorkResponse>
+                (_timeWorkRepository.GetTiming(id));
+
+            return result;
         }
 
-        private void LogDublicateTiming()
+        public async Task<List<TimingLocationWorkResponse>> GetAllTimigsOfLocationWork(int locationId)
         {
-            _logger.Log(LogLevel.Error, $"one or more intervals intersect with existing ones, new intervals not Add ");
-            throw new InvalidWriteTimeException("one or more intervals intersect with existing ones, new intervals not Add");
+            var result = _mapper.Map<List<TimingLocationWorkResponse>>
+                (await _timeWorkRepository.GetAllTimigsOfLocationWork(locationId));
+
+            return result;
+        }
+
+        public async Task<List<DayOfWeekResponse>> GetDaysOfWeek()
+        {
+            return _mapper.Map<List<DayOfWeekResponse>>(await _timeWorkRepository.GetDaysOfWeek());
         }
     }
 }

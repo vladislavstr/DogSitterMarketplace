@@ -1,15 +1,24 @@
-﻿using DogSitterMarketplaceDal.Models.Works;
+﻿using DogSitterMarketplaceDal.Contexts;
+using DogSitterMarketplaceDal.Models.Works;
 
 namespace DogSitterMarketplaceDal.IRepositories
 {
     public interface ITimeWorkRepository
     {
-        public bool AddNewTimingsLocation(List<TimingLocationWorkEntity> timing);
+        public Task<List<TimingLocationWorkEntity>> AddNewTimingsLocation(List<TimingLocationWorkEntity> timings);
 
-        public bool AddNewTimingLocation(TimingLocationWorkEntity timing);
+        public Task<TimingLocationWorkEntity> AddNewTimingLocation(TimingLocationWorkEntity timing);
 
-        public bool UpdateTimingLocation(TimingLocationWorkEntity timing);
+        public Task<TimingLocationWorkEntity> UpdateTimingLocation(TimingLocationWorkEntity timing);
 
-        public List<TimingLocationWorkEntity> GetAllTimigsByLocationWorkId(int locationWorkId);
+        public Task<List<DayOfWeekEntity>> GetDaysOfWeek();
+
+        public TimingLocationWorkEntity GetTiming(int idTiming);
+
+        public Task<List<TimingLocationWorkEntity>> GetAllTimigsOfLocationWork(int locationWorkId);
+
+        public Task<bool> DeleteTiming(int id);
+
+        public Task<bool> DeleteTimingByLocationWork(int locationWorkId);
     }
 }

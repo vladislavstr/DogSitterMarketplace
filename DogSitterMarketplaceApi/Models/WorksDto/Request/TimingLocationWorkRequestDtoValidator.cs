@@ -8,6 +8,8 @@ namespace DogSitterMarketplaceApi.Models.WorksDto.Request
         private int _entMinute = 60;
         public TimingLocationWorkRequestDtoValidator()
         {
+            RuleFor(t => t.DayOfWeekId).GreaterThan(0);
+            RuleFor(t => t.LocationWorkId).GreaterThan(0);
             RuleFor(t => t.StartHour).GreaterThanOrEqualTo(0).LessThan(_entHour);
             RuleFor(t => t.StartMinut).GreaterThanOrEqualTo(0).LessThan(_entMinute);
             RuleFor(t => t.StopHour).GreaterThanOrEqualTo(0).LessThan(_entHour);

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Users.Request;
