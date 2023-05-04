@@ -5,6 +5,7 @@ using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -12,13 +13,13 @@ namespace DogSitterMarketplaceApi.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        //private readonly ILogger _logger;
+        private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService, IMapper mapper)//, ILogger logger)
+        public UserController(IUserService userService, IMapper mapper, ILogger logger)
         {
-            //_logger = logger;
+            _logger = logger;
             _mapper = mapper;
             _userService = userService;
         }
@@ -34,7 +35,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -47,7 +48,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -60,7 +61,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -75,7 +76,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -92,7 +93,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -109,7 +110,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
