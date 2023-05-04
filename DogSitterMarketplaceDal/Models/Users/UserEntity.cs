@@ -1,9 +1,8 @@
-using System;
+using DogSitterMarketplaceDal.Models.Pets;
+using DogSitterMarketplaceDal.Models.Works;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DogSitterMarketplaceDal.Models.Pets;
-using System.ComponentModel.DataAnnotations;
-using DogSitterMarketplaceDal.Models.Works;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DogSitterMarketplaceDal.Models.Users
 {
@@ -28,22 +27,20 @@ namespace DogSitterMarketplaceDal.Models.Users
         [Column(TypeName = "nvarchar(20)"),]
         public string Name { get; set; }
 
-        //[Required]
         public bool IsDeleted { get; set; }
 
-        //[Required]
+        [AllowNull]
         [ForeignKey(nameof(UserPassportDataId))]
-        public UserPassportDataEntity UserPassportData { get; set; }
+        public UserPassportDataEntity? UserPassportData { get; set; }
 
-        public int UserPassportDataId { get; set; }
+        [AllowNull]
+        public int? UserPassportDataId { get; set; }
 
-        //[Required]
         [ForeignKey(nameof(UserRoleId))]
         public UserRoleEntity UserRole { get; set; }
 
         public int UserRoleId { get; set; }
 
-        //[Required]
         [ForeignKey(nameof(UserStatusId))]
         public UserStatusEntity UserStatus { get; set; }
 
@@ -52,7 +49,5 @@ namespace DogSitterMarketplaceDal.Models.Users
         public ICollection<PetEntity>? Pets { get; set; }
 
         public List<SitterWorkEntity> SitterWorks { get; set; } = new List<SitterWorkEntity>();
-
-
     }
 }

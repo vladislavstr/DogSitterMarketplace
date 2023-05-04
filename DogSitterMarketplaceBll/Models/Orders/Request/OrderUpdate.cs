@@ -1,11 +1,4 @@
-﻿using DogSitterMarketplaceBll.Models.Appeals.Request;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DogSitterMarketplaceBll.Models.Orders.Request
+﻿namespace DogSitterMarketplaceBll.Models.Orders.Request
 {
     public class OrderUpdate
     {
@@ -13,7 +6,7 @@ namespace DogSitterMarketplaceBll.Models.Orders.Request
 
         public string? Comment { get; set; }
 
-       // public int OrderStatusId { get; set; }
+        // public int OrderStatusId { get; set; }
 
         public int SitterWorkId { get; set; }
 

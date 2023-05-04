@@ -10,7 +10,6 @@ using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceBll.Models.Works.Response;
-using DogSitterMarketplaceDal.Models.Orders;
 
 namespace DogSitterMarketplaceApi.Mappings
 {
@@ -26,7 +25,7 @@ namespace DogSitterMarketplaceApi.Mappings
             CreateMap<LocationResponse, LocationResponseDto>();
             CreateMap<OrderResponse, OrderResponseDto>();
             CreateMap<PetResponse, PetResponseDto>();
-            CreateMap<CommentResponse, CommentResponseDto>();
+            CreateMap<CommentWithUserShortResponse, CommentResponseDto>();
             CreateMap<AppealResponse, AppealResponseDto>();
             CreateMap<OrderUpdateDto, OrderUpdate>();
         }

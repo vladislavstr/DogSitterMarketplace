@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-
 using DogSitterMarketplaceApi.Models.UsersDto.Request;
 using DogSitterMarketplaceApi.Models.UsersDto.Response;
-using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceBll.IServices;
-using DogSitterMarketplaceApi.Models.OrdersDto.Response;
-using DogSitterMarketplaceBll.Services;
+using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceCore.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -15,21 +13,15 @@ namespace DogSitterMarketplaceApi.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        //private readonly ILogger _logger;
+        private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService, IMapper mapper)//, ILogger logger)
+        public UserController(IUserService userService, IMapper mapper, ILogger logger)
         {
-            //_logger = logger;
+            _logger = logger;
             _mapper = mapper;
             _userService = userService;
-        }
-
-        [HttpGet("GrtPing")]
-        public IActionResult GrtPing()
-        {
-            return Ok();
         }
 
         [HttpGet("GetAllUsers", Name = "GetAllUsers")]
@@ -43,7 +35,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -56,7 +48,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -69,7 +61,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -84,7 +76,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -101,17 +93,34 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("allSittersByLocation/{clientId}", Name = "GetAllSittersForClientByLocationId")]
-        public ActionResult<List<UserShortResponseDto>> GetAllSittersForClientByLocationId(int locationId, int clientId)
+        [HttpPost("PassportData", Name = "AddUserPassportData")]
+        public ActionResult<UserPassportDataResponseDto> AddUserPassportData(UserPassportDataRequestDto userPassportData)
         {
             try
             {
-                var allSittersResponse = _userService.GetAllSittersForClientByLocationId(locationId, clientId);
-                var allSittersResponseDto = _mapper.Map<List<UserShortResponseDto>>(allSittersResponse);
+                var userPassportDataRequst = _mapper.Map<UserPassportDataRequest>(userPassportData);
+                var addUserPassportDataResponse = _userService.AddUserPassportData(userPassportDataRequst);
+                var addUserPassportDataResponseDto = _mapper.Map<UserPassportDataResponseDto>(addUserPassportDataResponse);
+
+                return Created(new Uri("api/User", UriKind.Relative), addUserPassportDataResponseDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("allSittersByLocation/{locationId}", Name = "GetAllSittersByLocationId")]
+        public async Task<ActionResult<List<UserShortLocationWorkResponseDto>>> GetAllSittersByLocationId(int locationId)
+        {
+            try
+            {
+                var allSittersResponse = await _userService.GetAllSittersByLocationId(locationId);
+                var allSittersResponseDto = _mapper.Map<List<UserShortLocationWorkResponseDto>>(allSittersResponse);
 
                 return Ok(allSittersResponseDto);
             }
@@ -126,7 +135,7 @@ namespace DogSitterMarketplaceApi.Controllers
             catch (Exception ex)
             {
                 // _logger.LogError(ex, $"{nameof(OrderController)} {nameof(GetAllNotDeletedOrders)}");
-                //_logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(GetAllSittersForClientByLocationId)}");
+                //_logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(GetAllSittersByLocationId)}");
                 return BadRequest();
             }
         }

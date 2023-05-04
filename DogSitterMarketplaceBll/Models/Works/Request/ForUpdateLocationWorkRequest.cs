@@ -1,5 +1,3 @@
-using DogSitterMarketplaceBll.Models.Works.Response;
-
 namespace DogSitterMarketplaceBll.Models.Works.Request
 {
     public class ForUpdateLocationWorkRequest

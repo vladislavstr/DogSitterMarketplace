@@ -2,7 +2,7 @@
 {
     public class TimingLocationWorkResponse
     {
-        public int Id { get;set; }
+        public int Id { get; set; }
 
         public DayOfWeekResponse DayOfWeek { get; set; }
 

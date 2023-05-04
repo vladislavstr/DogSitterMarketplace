@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-
-using DogSitterMarketplaceBll.IServices;
-using DogSitterMarketplaceApi.Models.AppealsDto.Response;
-using DogSitterMarketplaceApi.Models.UsersDto.Response;
-using DogSitterMarketplaceApi.Models.UsersDto.Request;
-using DogSitterMarketplaceBll.Models.Users.Request;
-using DogSitterMarketplaceBll.Services;
-using DogSitterMarketplaceBll.Models.Appeals.Request;
 using DogSitterMarketplaceApi.Models.AppealsDto.Request;
+using DogSitterMarketplaceApi.Models.AppealsDto.Response;
+using DogSitterMarketplaceBll.IServices;
+using DogSitterMarketplaceBll.Models.Appeals.Request;
+using Microsoft.AspNetCore.Mvc;
+using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -16,52 +12,45 @@ namespace DogSitterMarketplaceApi.Controllers
     [Route("api/[controller]")]
     public class AppealController : ControllerBase
     {
-        //private readonly ILogger _logger;
+        private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IAppealService _appealService;
 
-        public AppealController(IAppealService appealService, IMapper mapper)//, ILogger logger)
+        public AppealController(IAppealService appealService, IMapper mapper, ILogger logger)
         {
-            //_logger = logger;
+            _logger = logger;
             _mapper = mapper;
             _appealService = appealService;
+            _logger = logger;
         }
 
-        [HttpGet("GrtPing")]
-        public IActionResult GrtPing()
-        {
-            return Ok();
-        }
-
-        [HttpGet("GetAllAppeals", Name = "GetAllAppeals")]
+        [HttpGet(Name = "GetAllAppeals")]
         public ActionResult<IEnumerable<AppealResponseDto>> GetAllAppeals()
         {
             try
             {
-                //var allAppeals = _appealService.GetAllAppeals();
-                //var allAppealsDto = _mapper.Map<IEnumerable<AppealResponseDto>>(allAppeals);
                 return Ok(_appealService.GetAllAppeals());
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("GetAllNotDeletedAppeals", Name = "GetAllNotDeletedAppeals")]
-        public ActionResult GetAllNotDeletedAppeals()
+        [HttpGet("NotAnswered", Name = "GetAllNotAnsweredAppeals")]
+        public ActionResult GetAllNotAnsweredAppeals()
         {
             try
             {
-                return Ok(_appealService.GetAllNotDeletedAppeals());
+                return Ok(_appealService.GetAllNotAnsweredAppeals());
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("{id}", Name = "GetAppealById")]
+        [HttpGet("{id:int}", Name = "GetAppealById")]
         public ActionResult GetAppealById(int id)
         {
             try
@@ -70,30 +59,72 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpDelete("{id}", Name = "DeleteAppealById")]
-        public IActionResult DeleteAppealById(int id)
+        [HttpGet("Statuses", Name = "GetAllAppealStatuses")]
+        public ActionResult<IEnumerable<AppealStatusResponseDto>> GetAllAppealStatuses()
         {
             try
             {
-                _appealService.DeleteAppealById(id);
-                return NoContent();
+                return Ok(_appealService.GetAllAppealStatuses());
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpPost("AddAppeal", Name = "AddAppeal")]
+        [HttpGet("Types", Name = "GetAllAppealTypes")]
+        public ActionResult<IEnumerable<AppealTypeResponseDto>> GetAllAppealTypes()
+        {
+            try
+            {
+                return Ok(_appealService.GetAllAppealTypes());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("ToWhom/{id:int}", Name = "GetAppealByUserIdToWhom")]
+        public ActionResult GetAppealByUserIdToWhom(int id)
+        {
+            try
+            {
+                return Ok(_appealService.GetAppealByUserIdToWhom(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("FromWhom/{id:int}", Name = "GetAppealByUserIdFromWhom")]
+        public ActionResult GetAppealByUserIdFromWhom(int id)
+        {
+            try
+            {
+                return Ok(_appealService.GetAppealByUserIdFromWhom(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost(Name = "AddAppeal")]
         public ActionResult<AppealResponseDto> AddAppeal(AppealRequestDto appeal)
         {
             try
             {
                 var appealRequst = _mapper.Map<AppealRequest>(appeal);
+
+                appealRequst.DateOfCreate = DateTime.UtcNow;
+                appealRequst.StatusId = 1;
+
                 var addAppealResponse = _appealService.AddAppeal(appealRequst);
                 var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
 
@@ -101,11 +132,11 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpPost("AddAppealStatus", Name = "AddAppealStatus")]
+        [HttpPost("Status", Name = "AddAppealStatus")]
         public ActionResult<AppealStatusResponseDto> AddAppealStatus(AppealStatusRequestDto appealStatus)
         {
             try
@@ -118,11 +149,11 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpPost("AddAppealType", Name = "AddAppealType")]
+        [HttpPost("Type", Name = "AddAppealType")]
         public ActionResult<AppealTypeResponseDto> AddAppealType(AppealTypeRequestDto appealType)
         {
             try
@@ -135,8 +166,54 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("Status/{AppealId:int}", Name = "UpdateAppealStatusById")]
+        public IActionResult UpdateAppealStatusById(int AppealId, int StatusId)
+        {
+            try
+            {
+                _appealService.UpdateAppealStatusById(AppealId, StatusId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("ResponseText/{id:int}", Name = "DoResponseTextById")]
+        public ActionResult<AppealUpdateDto> DoResponseTextByAppealId(int id, string text, int statusId)
+        {
+            try
+            {
+                if (statusId != 1)
+                {
+                    if(text is not null)
+                    {
+
+                    var addAppealResponse = _appealService.DoResponseTextByAppeal(id,text,statusId);
+                    var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
+
+                    return Created(new Uri("api/Appeal", UriKind.Relative), addAppealResponseDto);
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Appeal text of response must be filled in");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException($"Appeal with stsrus id {statusId} can't exist");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
 }
+

@@ -1,9 +1,7 @@
 ﻿using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
-using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
-using DogSitterMarketplaceDal.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
@@ -13,8 +11,6 @@ namespace DogSitterMarketplaceDal.Repositories
     {
         private static OrdersAndPetsAndCommentsContext _context;
 
-        //private readonly ILogger<IPetRepository> _logger;
-
         private readonly ILogger _logger;
 
         public PetRepository(OrdersAndPetsAndCommentsContext context, ILogger nLogger)
@@ -23,141 +19,124 @@ namespace DogSitterMarketplaceDal.Repositories
             _logger = nLogger;
         }
 
-        public List<PetEntity> GetAllPets()
+        public async Task<List<PetEntity>> GetAllPets()
         {
-            return _context.Pets
-                .Include(p => p.Type)
-                .Include(p => p.User)
-                .AsNoTracking()
-                .ToList();
-        }
-
-        public PetEntity GetPetById(int id)
-        {
-            try
-            {
-                return _context.Pets
+            return await _context.Pets
                         .Include(p => p.Type)
                         .Include(p => p.User)
-                        .Single(p => p.Id == id);
+                        .ThenInclude(u => u.UserRole)
+                        .AsNoTracking()
+                        .ToListAsync();
+        }
+
+        public async Task<PetEntity> GetPetById(int id)
+        {
+            try
+            {
+                return await _context.Pets
+                            .Include(p => p.Type)
+                            .Include(p => p.User)
+                            .ThenInclude(u => u.UserRole)
+                            .SingleAsync(p => p.Id == id);
             }
             catch (InvalidOperationException ex)
             {
-                // _logger.LogDebug($"{nameof(PetEntity)} with id {id} not found");
                 _logger.Log(LogLevel.Debug, $"{nameof(PetEntity)} with id {id} not found");
                 throw new NotFoundException(id, nameof(PetEntity));
             }
         }
 
-        public void DeletePetById(int id)
+        public async Task DeletePetById(int id)
         {
             try
             {
-                var petDB = _context.Pets.Single(p => !p.IsDeleted && p.Id == id);
+                var petDB = await _context.Pets.SingleAsync(p => !p.IsDeleted && p.Id == id);
                 petDB.IsDeleted = true;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (InvalidOperationException ex)
             {
-                //  _logger.LogDebug($"{nameof(PetEntity)} with id {id} not found");
                 _logger.Log(LogLevel.Debug, $"{nameof(PetEntity)} with id {id} not found");
                 throw new NotFoundException(id, nameof(PetEntity));
             }
         }
 
-        public PetEntity AddPet(PetEntity addPet)
+        public async Task<PetEntity> AddPet(PetEntity addPet)
         {
             try
             {
-                _context.Pets.Add(addPet);
-                _context.SaveChanges();
+                await _context.Pets.AddAsync(addPet);
+                await _context.SaveChangesAsync();
 
-                return _context.Pets
-                    .Include(p => p.Type)
-                    .Include(p => p.User)
-                    .Single(p => !p.IsDeleted && p.Id == addPet.Id);
+                return await _context.Pets
+                            .Include(p => p.Type)
+                            .Include(p => p.User)
+                            .ThenInclude(u => u.UserRole)
+                            .SingleAsync(p => !p.IsDeleted && p.Id == addPet.Id);
             }
             catch (Exception ex)
             {
-                // _logger.LogDebug($"{ex}, {nameof(PetRepository)} {nameof(PetEntity)} {nameof(AddPet)}");
                 _logger.Log(LogLevel.Debug, $"{ex}, {nameof(PetRepository)} {nameof(PetEntity)} {nameof(AddPet)}");
                 throw new ArgumentException();
             }
         }
 
-        public PetEntity UpdatePet(PetEntity updatePet)
+        public async Task<PetEntity> UpdatePet(PetEntity updatePet)
         {
             try
             {
-                var petDB = _context.Pets.SingleOrDefault(p => !p.IsDeleted && p.Id == updatePet.Id);
+                var petDB = await _context.Pets.SingleOrDefaultAsync(p => !p.IsDeleted && p.Id == updatePet.Id);
 
                 if (petDB == null)
                 {
-                    // _logger.LogDebug($"{nameof(PetEntity)} with id {updatePet.Id} not found");
                     _logger.Log(LogLevel.Debug, $"{nameof(PetEntity)} with id {updatePet.Id} not found");
                     throw new NotFoundException(updatePet.Id, nameof(PetEntity));
                 }
 
                 petDB.Name = updatePet.Name;
                 petDB.Characteristics = updatePet.Characteristics;
-                petDB.Type = updatePet.Type;
                 petDB.TypeId = updatePet.TypeId;
                 petDB.UserId = updatePet.UserId;
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
-                return petDB;
+                return await _context.Pets
+                                 .Include(p => p.Type)
+                                 .Include(p => p.User)
+                                 .ThenInclude(u => u.UserRole)
+                                 .SingleAsync(p => p.Id == updatePet.Id);
             }
             catch (Exception ex)
             {
-                // _logger.LogDebug($"{ex}, {nameof(PetRepository)} {nameof(PetEntity)} {nameof(AddPet)}");
                 _logger.Log(LogLevel.Debug, $"{ex}, {nameof(PetRepository)} {nameof(PetEntity)} {nameof(AddPet)}");
                 throw new ArgumentException();
             }
         }
 
-        public List<PetEntity> GetPetsInOrderEntities(List<int> pets)
+        public async Task<List<PetEntity>> GetPetsInOrderEntities(List<int> pets)
         {
             if (!pets.Any())
             {
                 return new List<PetEntity>();
             }
 
-            return _context.Pets
+            return await _context.Pets
                             .Include(p => p.Type)
                             .Include(p => p.User)
-                            .Where(p => pets.Contains(p.Id)).ToList();
+                            .Where(p => pets.Contains(p.Id)).ToListAsync();
         }
 
-        public AnimalTypeEntity GetAnimalTypeById(int id)
+        public async Task<AnimalTypeEntity> GetAnimalTypeById(int id)
         {
             try
             {
-                return _context.AnimalsTypes.Single(at => at.Id == id && !at.IsDeleted);
+                return await _context.AnimalsTypes.SingleAsync(at => at.Id == id && !at.IsDeleted);
             }
             catch (InvalidOperationException)
             {
-                // _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetAnimalTypeById)} {nameof(AnimalTypeEntity)} with id {id} not found");
                 _logger.Log(LogLevel.Debug, $"{nameof(PetRepository)} {nameof(GetAnimalTypeById)} {nameof(AnimalTypeEntity)} with id {id} not found");
                 throw new NotFoundException(id, nameof(AnimalTypeEntity));
             }
         }
-
-        // перенести в Юзера
-        //public UserEntity GetUserById(int id)
-        //{
-        //    try
-        //    {
-        //        return _context.Users
-        //            .Include(u => u.UserRole)
-        //            .Single(u => u.Id == id && !u.IsDeleted);
-        //    }
-        //    catch (InvalidOperationException)
-        //    {
-        //        //  _logger.LogDebug($"{nameof(PetRepository)} {nameof(GetExistAndNotDeletedUserById)} {nameof(UserEntity)} with id {id} not found.");
-        //        _logger.Log(LogLevel.Debug, $"{nameof(PetRepository)} {nameof(GetUserById)} {nameof(UserEntity)} with id {id} not found.");
-        //        throw new NotFoundException(id, nameof(UserEntity));
-        //    }
-        //}
     }
 }

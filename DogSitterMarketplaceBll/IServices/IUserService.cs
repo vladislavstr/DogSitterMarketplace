@@ -1,5 +1,6 @@
 ﻿using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceBll.Models.Users.Response;
+using DogSitterMarketplaceDal.Models.Users;
 
 namespace DogSitterMarketplaceBll.IServices
 {
@@ -13,8 +14,10 @@ namespace DogSitterMarketplaceBll.IServices
 
         public UserResponse AddUser(UserRequest user);
 
+        public UserPassportDataResponse AddUserPassportData(UserPassportDataRequest PassportData);
+
         public void DeleteUserById(int id);
 
-        public List<UserShortResponse> GetAllSittersForClientByLocationId(int locationId, int clientId);
+        public Task<List<UserShortLocationWorkResponse>> GetAllSittersByLocationId(int locationId);
     }
 }

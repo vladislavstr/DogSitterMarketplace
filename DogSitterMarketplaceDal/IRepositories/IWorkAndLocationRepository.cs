@@ -6,10 +6,15 @@ namespace DogSitterMarketplaceDal.IRepositories
     {
         public Task<LocationWorkEntity> AddNewLocationWork(LocationWorkEntity locationWork);
 
+        public Task<SitterWorkEntity> GetNotDeletedSitterWorkById(int id);
         public Task<LocationWorkEntity> UpdateLocationWork(LocationWorkEntity updateLocationWork);
 
+        public Task<List<SitterWorkEntity>> GetAllSitterWorksByUserId(int id);
         public Task<bool> DeleteLocationWork(int locationworkId);
 
+        public Task<LocationEntity> GetLocationById(int id);
+
+        public Task<List<SitterWorkEntity>> GetSittersWorksByThemId(List<int> sitersWorksId);
         public List<LocationWorkEntity> GetAllLocationWork(bool? isNotActive = null);
 
         public Task<LocationWorkEntity> GetLocationWorkByid(int id);

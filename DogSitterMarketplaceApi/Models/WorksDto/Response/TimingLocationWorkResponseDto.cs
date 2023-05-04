@@ -1,6 +1,4 @@
-﻿using DogSitterMarketplaceBll.Models.Works.Response;
-
-namespace DogSitterMarketplaceApi.Models.WorksDto.Response
+﻿namespace DogSitterMarketplaceApi.Models.WorksDto.Response
 {
     public class TimingLocationWorkResponseDto
     {

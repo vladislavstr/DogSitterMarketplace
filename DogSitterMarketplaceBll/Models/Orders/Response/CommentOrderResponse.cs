@@ -10,7 +10,7 @@ namespace DogSitterMarketplaceBll.Models.Orders.Response
 
         public int Score { get; set; }
 
-       // public double AverageScore { get; set; }
+        // public double AverageScore { get; set; }
 
         public OrderResponse Order { get; set; }
 

@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using DogSitterMarketplaceBll.Models.Appeals.Response;
+﻿using DogSitterMarketplaceBll.Models.Appeals.Response;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets.Response;
@@ -9,13 +8,7 @@ using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DogSitterMarketplaceBll.Tests.TestCaseSource
 {
@@ -44,7 +37,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment",
                 SitterWorkId = 10,
-                Summ = 100,
                 DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
                 DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
                 LocationId = 1000,
@@ -112,7 +104,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 },
                 SitterWork = new SitterWorkEntity
                 {
-                    Id = 10
+                    Id = 10,
+                    LocationWork = new List<LocationWorkEntity>
+                    {
+                        new LocationWorkEntity
+                        {
+                            SitterWorkId = 10,
+                            LocationId = 1000
+                        }
+                    }
                 },
                 Location = new LocationEntity
                 {
@@ -143,7 +143,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     }
                 }
             };
-            List<string> messagesOfIsDeleted = new List<string>();
             OrderResponse expected = new OrderResponse
             {
                 Id = 1,
@@ -164,7 +163,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 1000
                 },
-                Comments = new List<CommentResponse>(),
+                Comments = new List<CommentWithUserShortResponse>(),
                 Appeals = new List<AppealResponse>(),
                 Pets = petsResponse,
                 Messages = new List<string>()
@@ -197,6 +196,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 101,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 1000,
+                     SitterWorkId = 10,
+                     Price = 100
+                    }
+                },
                 IsDeleted = false,
             };
             List<SitterWorkEntity> allSitterWorks = new List<SitterWorkEntity>
@@ -239,7 +247,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 IsDeleted = false
             };
 
-            yield return new object[] {  petsId, allPets, messagesOfIsDeleted, orderEntity, addOrderEntity, newOrder,
+            yield return new object[] {  petsId, allPets, orderEntity, addOrderEntity, newOrder,
                                      expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId,
                                      orderStatusUnderConsideration};
 
@@ -250,7 +258,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment2",
                 SitterWorkId = 102,
-                Summ = 1002,
                 DateStart = new DateTime(2023, 04, 18, 12, 30, 00),
                 DateEnd = new DateTime(2023, 04, 18, 13, 30, 00),
                 LocationId = 10002,
@@ -398,7 +405,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         }
                     }
             };
-            messagesOfIsDeleted = new List<string>();
             expected = new OrderResponse
             {
                 Id = 12,
@@ -419,7 +425,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 10002
                 },
-                Comments = new List<CommentResponse>(),
+                Comments = new List<CommentWithUserShortResponse>(),
                 Appeals = new List<AppealResponse>(),
                 Pets = petsResponse,
                 Messages = new List<string>()
@@ -452,6 +458,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 1012,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 10002,
+                     SitterWorkId = 102,
+                     Price = 1002
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -494,7 +509,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 IsDeleted = false
             };
 
-            yield return new object[] {  petsId, allPets, messagesOfIsDeleted, orderEntity, addOrderEntity, newOrder,
+            yield return new object[] {  petsId, allPets, orderEntity, addOrderEntity, newOrder,
                                      expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId, orderStatusUnderConsideration};
 
             //3. Внутри Ордера передан 1 корректный, неудаленный пет и 2 -удаленный (он не добавился, вывелось сообщение); ордер попадает в расписание и других заказов в работе в этот день нет
@@ -504,7 +519,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment23",
                 SitterWorkId = 1023,
-                Summ = 10023,
+                //Summ = 10023,
                 DateStart = new DateTime(2023, 04, 19, 14, 30, 00),
                 DateEnd = new DateTime(2023, 04, 19, 15, 30, 00),
                 LocationId = 100023,
@@ -665,10 +680,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                         }
                     },
             };
-            messagesOfIsDeleted = new List<string>
-                {
-                "Pet with id 223 is deleted."
-                };
             expected = new OrderResponse
             {
                 Id = 123,
@@ -689,7 +700,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 100023
                 },
-                Comments = new List<CommentResponse>(),
+                Comments = new List<CommentWithUserShortResponse>(),
                 Appeals = new List<AppealResponse>(),
                 Pets = petsResponse,
                 Messages = new List<string>
@@ -725,6 +736,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 10123,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 100023,
+                     SitterWorkId = 1023,
+                     Price = 10023
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -767,7 +787,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 IsDeleted = false
             };
 
-            yield return new object[] {  petsId, allPets, messagesOfIsDeleted, orderEntity, addOrderEntity, newOrder,
+            yield return new object[] {  petsId, allPets, orderEntity, addOrderEntity, newOrder,
                                      expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId, orderStatusUnderConsideration};
 
             //4. Внутри Ордера передан корректный, неудаленный пет; ордер попадает в расписание и есть другой заказ в этот день(но они не пересекаются)
@@ -777,7 +797,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment4",
                 SitterWorkId = 104,
-                Summ = 1004,
                 DateStart = new DateTime(2023, 04, 20, 12, 10, 00),
                 DateEnd = new DateTime(2023, 04, 20, 12, 50, 00),
                 LocationId = 10004,
@@ -876,7 +895,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     }
                 }
             };
-            messagesOfIsDeleted = new List<string>();
             expected = new OrderResponse
             {
                 Id = 14,
@@ -897,7 +915,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 10004
                 },
-                Comments = new List<CommentResponse>(),
+                Comments = new List<CommentWithUserShortResponse>(),
                 Appeals = new List<AppealResponse>(),
                 Pets = petsResponse,
                 Messages = new List<string>()
@@ -930,6 +948,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 1014,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 10004,
+                     SitterWorkId = 104,
+                     Price = 1004
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -999,7 +1026,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 IsDeleted = false
             };
 
-            yield return new object[] {  petsId, allPets, messagesOfIsDeleted, orderEntity, addOrderEntity, newOrder,
+            yield return new object[] {  petsId, allPets, orderEntity, addOrderEntity, newOrder,
                                      expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId, orderStatusUnderConsideration};
 
             //5. Внутри Ордера передан корректный, неудаленный пет; Ордер захватывает два дня(вечер пт-ночь сб), ордер попадает в расписание и есть другой заказ в 2 день(но они не пересекаются)
@@ -1009,7 +1036,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment45",
                 SitterWorkId = 1045,
-                Summ = 10045,
+                //Summ = 10045,
                 DateStart = new DateTime(2023, 04, 21, 23, 10, 00),
                 DateEnd = new DateTime(2023, 04, 22, 01, 50, 00),
                 LocationId = 100045,
@@ -1108,7 +1135,6 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     }
                 }
             };
-            messagesOfIsDeleted = new List<string>();
             expected = new OrderResponse
             {
                 Id = 145,
@@ -1129,7 +1155,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 100045
                 },
-                Comments = new List<CommentResponse>(),
+                Comments = new List<CommentWithUserShortResponse>(),
                 Appeals = new List<AppealResponse>(),
                 Pets = petsResponse,
                 Messages = new List<string>()
@@ -1162,6 +1188,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 10145,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 100045,
+                     SitterWorkId = 1045,
+                     Price = 10045
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -1249,7 +1284,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 IsDeleted = false
             };
 
-            yield return new object[] {  petsId, allPets, messagesOfIsDeleted, orderEntity, addOrderEntity, newOrder,
+            yield return new object[] {  petsId, allPets, orderEntity, addOrderEntity, newOrder,
                                      expected, sitterId, sitterWork, allSitterWorks, startDateOrder, allOrdersBySitter, sitterWorkId, orderStatusUnderConsideration};
         }
 
@@ -1262,7 +1297,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment6",
                 SitterWorkId = 106,
-                Summ = 1006,
+                // Summ = 1006,
                 DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
                 DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
                 LocationId = 10006,
@@ -1317,7 +1352,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment67",
                 SitterWorkId = 1067,
-                Summ = 10067,
+                // Summ = 10067,
                 DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
                 DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
                 LocationId = 100067,
@@ -1402,7 +1437,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment679",
                 SitterWorkId = 10679,
-                Summ = 100679,
+                // Summ = 100679,
                 DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
                 DateEnd = new DateTime(2023, 04, 16, 13, 00, 00),
                 LocationId = 1000679,
@@ -1457,7 +1492,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment6798",
                 SitterWorkId = 106798,
-                Summ = 1006798,
+                //Summ = 1006798,
                 DateStart = new DateTime(2023, 04, 03, 13, 00, 00),
                 DateEnd = new DateTime(2023, 04, 03, 14, 00, 00),
                 LocationId = 10006798,
@@ -1525,6 +1560,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 101458,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 10006798,
+                     SitterWorkId = 106798,
+                     Price = 1006798
+                    }
+                },
                 IsDeleted = false,
             };
             List<SitterWorkEntity> allSitterWorks = new List<SitterWorkEntity>
@@ -1568,7 +1612,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment67987",
                 SitterWorkId = 1067987,
-                Summ = 10067987,
+                //Summ = 10067987,
                 DateStart = new DateTime(2023, 04, 07, 18, 00, 00),
                 DateEnd = new DateTime(2023, 04, 07, 19, 00, 00),
                 LocationId = 100067987,
@@ -1635,6 +1679,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "type1014587",
                     IsDeleted = false
                 },
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                    LocationId = 100067987,
+                    SitterWorkId = 1067987,
+                    Price = 10067987
+                    }
+                },
                 WorkTypeId = 1014587,
                 IsDeleted = false,
             };
@@ -1679,7 +1732,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment679876",
                 SitterWorkId = 10679876,
-                Summ = 100679876,
+                // Summ = 100679876,
                 DateStart = new DateTime(2023, 04, 07, 17, 00, 00),
                 DateEnd = new DateTime(2023, 04, 07, 18, 00, 00),
                 LocationId = 6,
@@ -1747,6 +1800,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 10145876,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                    LocationId = 6,
+                    SitterWorkId = 10679876,
+                    Price = 100679876
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -1793,7 +1855,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment67985",
                 SitterWorkId = 1067985,
-                Summ = 10067985,
+                // Summ = 10067985,
                 DateStart = new DateTime(2023, 04, 03, 12, 00, 00),
                 DateEnd = new DateTime(2023, 04, 03, 13, 00, 00),
                 LocationId = 100067985,
@@ -1861,6 +1923,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 1014585,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                    LocationId = 100067985,
+                    SitterWorkId = 1067985,
+                    Price = 10067985
+                    }
+                },
                 IsDeleted = false,
             };
             List<SitterWorkEntity> allSitterWorks = new List<SitterWorkEntity>
@@ -1932,7 +2003,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment679854",
                 SitterWorkId = 10679854,
-                Summ = 100679854,
+                //Summ = 100679854,
                 DateStart = new DateTime(2023, 04, 08, 14, 00, 00),
                 DateEnd = new DateTime(2023, 04, 08, 15, 00, 00),
                 LocationId = 1000679854,
@@ -2000,6 +2071,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 10145854,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                    LocationId = 1000679854,
+                    SitterWorkId = 10679854,
+                    Price = 100679854
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -2071,7 +2151,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 Comment = "comment6798543",
                 SitterWorkId = 43,
-                Summ = 1006798543,
+                //Summ = 1006798543,
                 DateStart = new DateTime(2023, 04, 15, 23, 00, 00),
                 DateEnd = new DateTime(2023, 04, 16, 01, 00, 00),
                 LocationId = 798543,
@@ -2139,6 +2219,15 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     IsDeleted = false
                 },
                 WorkTypeId = 101458543,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                    LocationId = 798543,
+                    SitterWorkId = 43,
+                    Price = 1006798543
+                    }
+                },
                 IsDeleted = false,
             };
             allSitterWorks = new List<SitterWorkEntity>
@@ -2773,6 +2862,533 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             };
 
             yield return new object[] { userId, userEntity, allOrdersEntities, userRoleId, userRoleEntity };
+        }
+
+        public static IEnumerable AddSeveralOrdersForOneClientFromOneSitterTestCaseSource()
+        {
+            //1. Переданы два заказа, которые не пересекаются между собой по времени; все другие проверки тоже пройдены - в 1 заказе один Пет, во 2 заказе - один Пет (они оба принадлежат одному клиенту)
+
+            List<int> allPetsId = new List<int> { 1, 2 };
+            List<OrderCreateRequest> orders = new List<OrderCreateRequest>
+            {
+                new OrderCreateRequest
+                {
+                    Comment = "comment",
+                    SitterWorkId = 10,
+                    DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
+                    DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
+                    LocationId = 1000,
+                    Pets = new List<int>{ 1 }
+                },
+                new OrderCreateRequest
+                {
+                    Comment = "comment2",
+                    SitterWorkId = 10,
+                    DateStart = new DateTime(2023, 04, 17, 13, 10, 00),
+                    DateEnd = new DateTime(2023, 04, 17, 14, 00, 00),
+                    LocationId = 1000,
+                    Pets = new List<int>{ 2 }
+                }
+            };
+            List<PetEntity> allPetsEntity = new List<PetEntity>
+            {
+                new PetEntity
+                {
+                    Id =1,
+                    Name = "name",
+                    Characteristics = "height",
+                    Type = new AnimalTypeEntity
+                                {
+                                    Id =30,
+                                    Name= "nameType",
+                                    Parameters = "param",
+                                    IsDeleted = false
+                                },
+                    TypeId = 30,
+                    User = new UserEntity
+                    {
+                        Id = 11,
+                        Email = "email",
+                        PhoneNumber= "1234567890",
+                        Name= "name",
+                        Password = "password",
+                        Pets = new List<PetEntity>(),
+                        UserRole = new UserRoleEntity
+                                    {
+                                        Id = 9,
+                                        Name = "9"
+                                    }
+                    },
+                    UserId = 11,
+                    IsDeleted = false
+                },
+                new PetEntity
+                {
+                    Id = 2,
+                    Name = "name2",
+                    Characteristics = "height",
+                    Type = new AnimalTypeEntity
+                                {
+                                    Id =30,
+                                    Name= "nameType",
+                                    Parameters = "param",
+                                    IsDeleted = false
+                                },
+                    TypeId = 30,
+                    User = new UserEntity
+                    {
+                        Id = 11,
+                        Email = "email",
+                        PhoneNumber= "1234567890",
+                        Name= "name",
+                        Password = "password",
+                        Pets = new List<PetEntity>(),
+                        UserRole = new UserRoleEntity
+                                    {
+                                        Id = 9,
+                                        Name = "9"
+                                    }
+                    },
+                    UserId = 11,
+                    IsDeleted = false
+                },
+            };
+            List<int> petsFirstId = new List<int> { 1 };
+            List<PetEntity> allFirstPets = new List<PetEntity>
+            {
+            new PetEntity
+                {
+                    Id =1,
+                    Name = "name",
+                    Characteristics = "height",
+                    Type = new AnimalTypeEntity
+                                {
+                                    Id =30,
+                                    Name= "nameType",
+                                    Parameters = "param",
+                                    IsDeleted = false
+                                },
+                    TypeId = 30,
+                    User = new UserEntity
+                    {
+                        Id = 11,
+                        Email = "email",
+                        PhoneNumber= "1234567890",
+                        Name= "name",
+                        Password = "password",
+                        Pets = new List<PetEntity>(),
+                        UserRole = new UserRoleEntity
+                                    {
+                                        Id = 9,
+                                        Name = "9"
+                                    }
+                    },
+                    UserId = 11,
+                    IsDeleted = false
+                }
+            };
+            List<int> petsSecondId = new List<int> { 2 };
+            List<PetEntity> allSecondPets = new List<PetEntity>
+            {
+            new PetEntity
+                {
+                    Id = 2,
+                    Name = "name2",
+                    Characteristics = "height",
+                    Type = new AnimalTypeEntity
+                                {
+                                    Id =30,
+                                    Name= "nameType",
+                                    Parameters = "param",
+                                    IsDeleted = false
+                                },
+                    TypeId = 30,
+                    User = new UserEntity
+                    {
+                        Id = 11,
+                        Email = "email",
+                        PhoneNumber= "1234567890",
+                        Name= "name",
+                        Password = "password",
+                        Pets = new List<PetEntity>(),
+                        UserRole = new UserRoleEntity
+                                    {
+                                        Id = 9,
+                                        Name = "9"
+                                    }
+                    },
+                    UserId = 11,
+                    IsDeleted = false
+                }
+            };
+
+            OrderEntity orderEntity = new OrderEntity
+            {
+                Comment = "comment",
+                OrderStatusId = 3,
+                SitterWorkId = 10,
+                Summ = 100,
+                DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
+                DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
+                LocationId = 1000
+            };
+            orderEntity.Pets.AddRange(allFirstPets);
+            OrderEntity addOrderEntity = new OrderEntity
+            {
+                Id = 1,
+                Comment = "comment",
+                OrderStatusId = 3,
+                SitterWorkId = 10,
+                Summ = 100,
+                DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
+                DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
+                LocationId = 1000,
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 3,
+                    Name = "3",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 10,
+                    LocationWork = new List<LocationWorkEntity>
+                    {
+                        new LocationWorkEntity
+                        {
+                            SitterWorkId = 10,
+                            LocationId = 1000
+                        }
+                    }
+                },
+                Location = new LocationEntity
+                {
+                    Id = 1000
+                }
+            };
+            addOrderEntity.Pets.AddRange(allFirstPets);
+            List<PetResponse> petsResponse = new List<PetResponse>
+            {
+            new PetResponse
+                {
+                    Id =1,
+                    Name = "name",
+                    Characteristics = "height",
+                    Type = new AnimalTypeResponse
+                                {
+                                    Id =30,
+                                    Name= "nameType",
+                                    Parameters = "param"
+                                },
+                    User = new UserShortResponse
+                    {
+                        Id = 11,
+                        Email = "email",
+                        PhoneNumber= "1234567890",
+                        Name= "name",
+                        RoleId = 9
+                    }
+                }
+            };            
+            int sitterId = 11;
+            int sitterWorkId = 10;
+            SitterWorkEntity sitterWork = new SitterWorkEntity
+            {
+                Id = 10,
+                Comment = "comment",
+                User = new UserEntity
+                {
+                    Id = 11,
+                    Email = "email",
+                    PhoneNumber = "1234567890",
+                    Name = "name",
+                    Password = "password",
+                    Pets = new List<PetEntity>(),
+                    UserRole = new UserRoleEntity
+                    {
+                        Id = 9,
+                        Name = "9"
+                    }
+                },
+                UserId = 11,
+                WorkType = new WorkTypeEntity
+                {
+                    Id = 101,
+                    Name = "type101",
+                    IsDeleted = false
+                },
+                WorkTypeId = 101,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 1000,
+                     SitterWorkId = 10,
+                     Price = 100
+                    }
+                },
+                IsDeleted = false,
+            };
+            List<SitterWorkEntity> allSitterWorks = new List<SitterWorkEntity>
+            {
+                new SitterWorkEntity
+                {
+                LocationWork = new List<LocationWorkEntity>
+                    {
+                      new LocationWorkEntity
+                      {
+                       LocationId = 1000
+                      }
+                    }
+                }
+            };
+            allSitterWorks[0].LocationWork.First().TimingLocationWorks.Add(
+                                     new TimingLocationWorkEntity
+                                     {
+                                         Id = 11,
+                                         Start = new TimeSpan(10, 00, 00),
+                                         Stop = new TimeSpan(16, 00, 00),
+                                         DayOfWeek = new DayOfWeekEntity
+                                         {
+                                             Id = 1,
+                                             Name = "Monday"
+                                         },
+                                         DayOfWeekId = 1,
+                                         LocationWork = new LocationWorkEntity
+                                         {
+                                             Id = 117
+                                         },
+                                         LocationWorkId = 117
+                                     });
+            DateTime startDateOrder = new DateTime(2023, 04, 17, 12, 00, 00);
+            List<OrderEntity> allOrdersBySitter = new List<OrderEntity>();
+            OrderStatusEntity orderStatusUnderConsideration = new OrderStatusEntity
+            {
+                Id = 3,
+                Name = "under consideration",
+                IsDeleted = false
+            };
+
+            OrderEntity orderEntity2 = new OrderEntity
+            {
+                Comment = "comment2",
+                OrderStatusId = 3,
+                SitterWorkId = 10,
+                Summ = 100,
+                DateStart = new DateTime(2023, 04, 17, 13, 10, 00),
+                DateEnd = new DateTime(2023, 04, 17, 14, 00, 00),
+                LocationId = 1000
+            };
+            orderEntity2.Pets.AddRange(allSecondPets);
+            OrderEntity addOrderEntity2 = new OrderEntity
+            {
+                Id = 2,
+                Comment = "comment2",
+                OrderStatusId = 3,
+                SitterWorkId = 10,
+                Summ = 100,
+                DateStart = new DateTime(2023, 04, 17, 13, 10, 00),
+                DateEnd = new DateTime(2023, 04, 17, 14, 00, 00),
+                LocationId = 1000,
+                OrderStatus = new OrderStatusEntity
+                {
+                    Id = 3,
+                    Name = "3",
+                },
+                SitterWork = new SitterWorkEntity
+                {
+                    Id = 10,
+                    LocationWork = new List<LocationWorkEntity>
+                    {
+                        new LocationWorkEntity
+                        {
+                            SitterWorkId = 10,
+                            LocationId = 1000
+                        }
+                    }
+                },
+                Location = new LocationEntity
+                {
+                    Id = 1000
+                }
+            };
+            addOrderEntity2.Pets.AddRange(allSecondPets);
+            List<PetResponse> petsResponse2 = new List<PetResponse>
+            {
+            new PetResponse
+                {
+                    Id = 2,
+                    Name = "name2",
+                    Characteristics = "height",
+                    Type = new AnimalTypeResponse
+                                {
+                                    Id =30,
+                                    Name= "nameType",
+                                    Parameters = "param"
+                                },
+                    User = new UserShortResponse
+                    {
+                        Id = 11,
+                        Email = "email",
+                        PhoneNumber= "1234567890",
+                        Name= "name",
+                        RoleId = 9
+                    }
+                }
+            };
+            int sitterId2 = 11;
+            int sitterWorkId2 = 10;
+            SitterWorkEntity sitterWork2 = new SitterWorkEntity
+            {
+                Id = 10,
+                Comment = "comment",
+                User = new UserEntity
+                {
+                    Id = 11,
+                    Email = "email",
+                    PhoneNumber = "1234567890",
+                    Name = "name",
+                    Password = "password",
+                    Pets = new List<PetEntity>(),
+                    UserRole = new UserRoleEntity
+                    {
+                        Id = 9,
+                        Name = "9"
+                    }
+                },
+                UserId = 11,
+                WorkType = new WorkTypeEntity
+                {
+                    Id = 101,
+                    Name = "type101",
+                    IsDeleted = false
+                },
+                WorkTypeId = 101,
+                LocationWork = new List<LocationWorkEntity>
+                {
+                new LocationWorkEntity
+                    {
+                     LocationId = 1000,
+                     SitterWorkId = 10,
+                     Price = 100
+                    }
+                },
+                IsDeleted = false,
+            };
+            List<SitterWorkEntity> allSitterWorks2 = new List<SitterWorkEntity>
+            {
+                new SitterWorkEntity
+                {
+                LocationWork = new List<LocationWorkEntity>
+                    {
+                      new LocationWorkEntity
+                      {
+                       LocationId = 1000
+                      }
+                    }
+                }
+            };
+            allSitterWorks2[0].LocationWork.First().TimingLocationWorks.Add(
+                                     new TimingLocationWorkEntity
+                                     {
+                                         Id = 11,
+                                         Start = new TimeSpan(10, 00, 00),
+                                         Stop = new TimeSpan(16, 00, 00),
+                                         DayOfWeek = new DayOfWeekEntity
+                                         {
+                                             Id = 1,
+                                             Name = "Monday"
+                                         },
+                                         DayOfWeekId = 1,
+                                         LocationWork = new LocationWorkEntity
+                                         {
+                                             Id = 117
+                                         },
+                                         LocationWorkId = 117
+                                     });
+            DateTime startDateOrder2 = new DateTime(2023, 04, 17, 13, 10, 00);
+            List<OrderEntity> allOrdersBySitter2 = new List<OrderEntity>();
+            OrderStatusEntity orderStatusUnderConsideration2 = new OrderStatusEntity
+            {
+                Id = 3,
+                Name = "under consideration",
+                IsDeleted = false
+            };
+
+            List<int> sittersWorksId = new List<int> { 10 };
+            List<SitterWorkEntity> sittersWorks = new List<SitterWorkEntity>
+            {
+                new SitterWorkEntity
+                {
+                    Id = 10,
+                    LocationWork = new List<LocationWorkEntity>
+                        {
+                            new LocationWorkEntity
+                            {
+                                SitterWorkId = 10,
+                                LocationId = 1000
+                            }
+                        }
+                }
+            };
+            List<OrderResponse> expected = new List<OrderResponse>
+            {
+                new OrderResponse
+                {
+                    Id = 1,
+                    Comment = "comment",
+                    OrderStatus = new OrderStatusResponse
+                    {
+                        Id = 3,
+                        Name = "3",
+                    },
+                    SitterWork = new SitterWorkResponse
+                    {
+                        Id = 10
+                    },
+                    Summ = 100,
+                    DateStart = new DateTime(2023, 04, 17, 12, 00, 00),
+                    DateEnd = new DateTime(2023, 04, 17, 13, 00, 00),
+                    Location = new LocationResponse
+                    {
+                        Id = 1000
+                    },
+                    Comments = new List<CommentWithUserShortResponse>(),
+                    Appeals = new List<AppealResponse>(),
+                    Pets = petsResponse,
+                    Messages = new List<string>()
+                },
+                new OrderResponse
+                {
+                    Id = 2,
+                    Comment = "comment2",
+                    OrderStatus = new OrderStatusResponse
+                    {
+                        Id = 3,
+                        Name = "3",
+                    },
+                    SitterWork = new SitterWorkResponse
+                    {
+                        Id = 10
+                    },
+                    Summ = 100,
+                    DateStart = new DateTime(2023, 04, 17, 13, 10, 00),
+                    DateEnd = new DateTime(2023, 04, 17, 14, 00, 00),
+                    Location = new LocationResponse
+                    {
+                        Id = 1000
+                    },
+                    Comments = new List<CommentWithUserShortResponse>(),
+                    Appeals = new List<AppealResponse>(),
+                    Pets = petsResponse2,
+                    Messages = new List<string>()
+                },
+             };
+
+            yield return new object[] { sittersWorksId, sittersWorks, allPetsId, allPetsEntity, petsFirstId,  allFirstPets,
+                                        petsSecondId, allSecondPets, orders,orderEntity, addOrderEntity,  sitterId,  sitterWork,
+                                        allSitterWorks,  startDateOrder,  allOrdersBySitter,  sitterWorkId, orderStatusUnderConsideration,
+                                        orderEntity2, addOrderEntity2,  sitterId2,  sitterWork2, allSitterWorks2,  startDateOrder2,  
+                                        allOrdersBySitter2, sitterWorkId2, orderStatusUnderConsideration2, expected };
         }
     }
 }

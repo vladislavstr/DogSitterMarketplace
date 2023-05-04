@@ -10,10 +10,6 @@ namespace DogSitterMarketplaceApi.Models.OrdersDto.Response
 
         public int Score { get; set; }
 
-      //  public double AverageScore { get; set; }
-
         public UserShortResponseDto CommentFromUser { get; set; }
-
-      //  public UserShortResponseDto CommentToUser { get; set; }
     }
 }

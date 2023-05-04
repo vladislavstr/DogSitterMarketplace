@@ -2,13 +2,10 @@
 using DogSitterMarketplaceBll.Models.Appeals.Response;
 using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceBll.Models.Orders.Response;
-using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceDal.Models.Appeals;
 using DogSitterMarketplaceDal.Models.Orders;
-using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Works;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace DogSitterMarketplaceBll.Mappings
 {
@@ -26,7 +23,7 @@ namespace DogSitterMarketplaceBll.Mappings
             CreateMap<SitterWorkEntity, SitterWorkResponse>();
             CreateMap<WorkTypeEntity, WorkTypeResponse>();
             CreateMap<LocationEntity, LocationResponse>();
-            CreateMap<CommentEntity, CommentResponse>();
+            CreateMap<CommentEntity, CommentWithUserShortResponse>();
             CreateMap<AppealEntity, AppealResponse>();
             CreateMap<AppealTypeEntity, AppealTypeResponse>();
             CreateMap<AppealStatusEntity, AppealStatusResponse>();

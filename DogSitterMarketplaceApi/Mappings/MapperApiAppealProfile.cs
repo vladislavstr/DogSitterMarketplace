@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
-
-using DogSitterMarketplaceApi.Models.AppealsDto.Response;
 using DogSitterMarketplaceApi.Models.AppealsDto.Request;
-using DogSitterMarketplaceBll.Models.Appeals.Response;
+using DogSitterMarketplaceApi.Models.AppealsDto.Response;
 using DogSitterMarketplaceBll.Models.Appeals.Request;
+using DogSitterMarketplaceBll.Models.Appeals.Response;
 
 namespace DogSitterMarketplaceApi.Mappings
 {
     public class MapperApiAppealProfile : Profile
     {
-        public MapperApiAppealProfile() 
+        public MapperApiAppealProfile()
         {
             //Appeal
             CreateMap<AppealResponse, AppealResponseDto>();
@@ -20,6 +19,10 @@ namespace DogSitterMarketplaceApi.Mappings
             //AppealType
             CreateMap<AppealTypeResponse, AppealTypeResponseDto>();
             CreateMap<AppealTypeRequestDto, AppealTypeRequest>();
+            //AppealUpdate
+            CreateMap<AppealUpdateDto, AppealUpdate>();
+            CreateMap<AppealResponse, AppealUpdate>();
+
         }
     }
 }

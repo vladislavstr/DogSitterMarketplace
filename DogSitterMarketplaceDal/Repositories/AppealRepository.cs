@@ -1,8 +1,9 @@
 ﻿using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceDal.Models.Users;
 using Microsoft.EntityFrameworkCore;
+using ILogger = NLog.ILogger;
+using LogLevel = NLog.LogLevel;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -10,10 +11,12 @@ namespace DogSitterMarketplaceDal.Repositories
     {
 
         private static AppealContext _context;
+        private static ILogger _logger;
 
-        public AppealRepository(AppealContext context)
+        public AppealRepository(AppealContext context, ILogger logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IEnumerable<AppealEntity> GetAllAppeals()
@@ -46,12 +49,34 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{id} - отсутствует");
+                _logger.Log(LogLevel.Error, $"Appeal with id {id} not found");
+                throw new FileNotFoundException($"Appeal with id {id} not found");
             }
         }
 
-        public AppealEntity GetAppealByUserId(int id)
+        public IEnumerable<AppealStatusEntity> GetAllAppealStatuses()
+        {
+            var result = new List<AppealStatusEntity>();
+
+            result = _context.AppealsStatuses
+                .AsNoTracking()
+                .ToList();
+
+            return result;
+        }
+
+        public IEnumerable<AppealTypeEntity> GetAllAppealTypes()
+        {
+            var result = new List<AppealTypeEntity>();
+
+            result = _context.AppealsTypes
+                .AsNoTracking()
+                .ToList();
+
+            return result;
+        }
+
+        public AppealEntity GetAppealByUserIdToWhom(int id)
         {
             try
             {
@@ -61,20 +86,40 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(a => a.Order)
                 .Include(a => a.AppealFromUser)
                 .Include(a => a.AppealToUser)
-                .Single(a => a.Id == id);
+                .Single(a => a.AppealToUserId == id);
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{id} - отсутствует");
+                _logger.Log(LogLevel.Error, $"Appeal to user id {id} not found");
+                throw new FileNotFoundException($"Appeal to user id {id} not found");
+            }
+        }
+
+        public AppealEntity GetAppealByUserIdFromWhom(int id)
+        {
+            try
+            {
+                return _context.Appeals
+                .Include(a => a.Type)
+                .Include(a => a.Status)
+                .Include(a => a.Order)
+                .Include(a => a.AppealFromUser)
+                .Include(a => a.AppealToUser)
+                .Single(a => a.AppealFromUserId == id);
+            }
+            catch (Exception exception)
+            {
+                _logger.Log(LogLevel.Error, $"Appeal from user id {id} not found");
+                throw new FileNotFoundException($"Appeal from user id {id} not found");
             }
         }
 
         public AppealEntity AddAppeal(AppealEntity appeal)
         {
-            appeal.IsDeleted = false;
             _context.Appeals.Add(appeal);
             _context.SaveChanges();
+
+            _logger.Log(LogLevel.Info, $"Add new Appeal {appeal.ToString()}");
 
             return _context.Appeals
                 .Include(a => a.Type)
@@ -90,6 +135,8 @@ namespace DogSitterMarketplaceDal.Repositories
             _context.AppealsStatuses.Add(appealStatus);
             _context.SaveChanges();
 
+            _logger.Log(LogLevel.Info, $"Add new AppealStatus {appealStatus.ToString()}");
+
             return appealStatus;
         }
 
@@ -98,21 +145,42 @@ namespace DogSitterMarketplaceDal.Repositories
             _context.AppealsTypes.Add(appealType);
             _context.SaveChanges();
 
+            _logger.Log(LogLevel.Info, $"Add new AppealType {appealType.ToString()}");
+
             return appealType;
         }
 
-        public void DeleteAppealById(int id)
+        public void UpdateAppealStatusById(int AppealId, int StatusId)
         {
             try
             {
-                var appeal = _context.Appeals.Single(a => !a.IsDeleted && a.Id == id);
-                appeal.IsDeleted = true;
+                var appeal = _context.Appeals.Single(a => a.Id == AppealId);
+                appeal.StatusId = StatusId;
                 _context.SaveChanges();
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{id} - отсутствует");
+                _logger.Log(LogLevel.Error, $"Appeal with id {AppealId} not found");
+                throw new FileNotFoundException($"Appeal with id {AppealId} not found");
+            }
+        }
+
+        public AppealEntity DoResponseTextByAppeal(AppealEntity appeal)
+        {
+            try
+            {
+                var appealDb = _context.Appeals.Single(a => a.Id == appeal.Id);
+                appealDb.ResponseText = appeal.ResponseText;
+                appealDb.StatusId = appeal.StatusId;
+                appealDb.DateOfResponse = appeal.DateOfResponse;
+                _context.SaveChanges();
+
+                return appealDb;
+            }
+            catch (Exception exception)
+            {
+                _logger.Log(LogLevel.Error, $"Appeal with id {appeal.Id} not found");
+                throw new FileNotFoundException($"TAppeal with id {appeal.Id} not found");
             }
         }
     }

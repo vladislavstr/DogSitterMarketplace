@@ -1,18 +1,11 @@
 ﻿using AutoMapper;
-using DogSitterMarketplaceApi.Models.OrdersDto.Response;
 using DogSitterMarketplaceApi.Models.PetsDto.Request;
 using DogSitterMarketplaceApi.Models.PetsDto.Response;
 using DogSitterMarketplaceBll.IServices;
-using DogSitterMarketplaceBll.Models.Orders.Request;
-using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets.Request;
-using DogSitterMarketplaceBll.Models.Pets.Response;
-using DogSitterMarketplaceBll.Services;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Threading.Tasks;
-using NLog;
+using Swashbuckle.AspNetCore.Annotations;
 using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
@@ -35,29 +28,35 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet(Name = "GetAllNotDeletedPets")]
-        public ActionResult<List<PetResponseDto>> GetAllPets()
+        [SwaggerOperation(Summary = "Get All Not Deleted Pets")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        public async Task<ActionResult<List<PetResponseDto>>> GetAllNotDeletedPets()
         {
             try
             {
-                var petsResponse = _petService.GetAllNotDeletedPets();
+                var petsResponse = await _petService.GetAllNotDeletedPets();
                 var petsResponseDto = _mapper.Map<List<PetResponseDto>>(petsResponse);
 
                 return Ok(petsResponseDto);
             }
             catch (Exception ex)
             {
-                //_logger.LogError(ex, $"{nameof(PetController)} {nameof(GetAllPets)}");
-                _logger.Log(NLog.LogLevel.Error, $"({ex}, {nameof(PetController)} {nameof(GetAllPets)}");
-                return Problem();
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(GetAllNotDeletedPets)}");
+                return BadRequest();
             }
         }
 
         [HttpGet("{id}", Name = "GetNotDeletedPetById")]
-        public ActionResult<PetResponseDto> GetPetById(int id)
+        [SwaggerOperation(Summary = "Get Not Deleted Pet By Id")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
+        public async Task<ActionResult<PetResponseDto>> GetPetById(int id)
         {
             try
             {
-                var petResponse = _petService.GetNotDeletedPetById(id);
+                var petResponse = await _petService.GetNotDeletedPetById(id);
                 var petResponseDto = _mapper.Map<PetResponseDto>(petResponse);
 
                 return Ok(petResponseDto);
@@ -66,14 +65,23 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 return NotFound();
             }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(GetPetById)}");
+                return BadRequest();
+            }
         }
 
         [HttpDelete("{id}", Name = "DeletePetById")]
-        public IActionResult DeletePetById(int id)
+        [SwaggerOperation(Summary = "Delete Pet By Id")]
+        [SwaggerResponse(204, "No Content")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
+        public async Task<IActionResult> DeletePetById(int id)
         {
             try
             {
-                _petService.DeletePetById(id);
+                await _petService.DeletePetById(id);
 
                 return NoContent();
             }
@@ -81,32 +89,49 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 return NotFound();
             }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(DeletePetById)}");
+                return BadRequest();
+            }
         }
 
         [HttpPost(Name = "AddPet")]
-        public ActionResult<PetResponseDto> AddPet(PetRequestDto addPet)
+        [SwaggerOperation(Summary = "Add Pet")]
+        [SwaggerResponse(201, "Created")]
+        [SwaggerResponse(400, "Bad Request")]
+        public async Task<ActionResult<PetResponseDto>> AddPet(PetRequestDto addPet)
         {
             try
             {
                 var petRequst = _mapper.Map<PetRequest>(addPet);
-                var addPetResponse = _petService.AddPet(petRequst);
+                var addPetResponse = await _petService.AddPet(petRequst);
                 var addPetResponseDto = _mapper.Map<PetResponseDto>(addPetResponse);
 
                 return Created(new Uri("api/Pet", UriKind.Relative), addPetResponseDto);
             }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(AddPet)}");
                 return BadRequest();
             }
         }
 
         [HttpPut("{id}", Name = "UpdatePet")]
-        public ActionResult<PetResponseDto> UpdatePet(PetUpdateDto petUpdateDto)
+        [SwaggerOperation(Summary = "Update Pet")]
+        [SwaggerResponse(200, "Ok")]
+        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse(404, "Not Found")]
+        public async Task<ActionResult<PetResponseDto>> UpdatePet(PetUpdateDto petUpdateDto)
         {
             try
             {
                 var petUpdate = _mapper.Map<PetUpdate>(petUpdateDto);
-                var petResponse = _petService.UpdatePet(petUpdate);
+                var petResponse = await _petService.UpdatePet(petUpdate);
                 var petResponseDto = _mapper.Map<PetResponseDto>(petResponse);
 
                 return Ok(petResponseDto);
@@ -117,6 +142,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(PetController)} {nameof(UpdatePet)}");
                 return BadRequest();
             }
         }

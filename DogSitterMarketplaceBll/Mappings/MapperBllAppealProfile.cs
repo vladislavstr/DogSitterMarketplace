@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-
-using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceBll.Models.Appeals.Response;
 using DogSitterMarketplaceBll.Models.Appeals.Request;
+using DogSitterMarketplaceBll.Models.Appeals.Response;
+using DogSitterMarketplaceDal.Models.Appeals;
 
 namespace DogSitterMarketplaceBll.Mappings
 {
@@ -19,6 +18,8 @@ namespace DogSitterMarketplaceBll.Mappings
             //AppealType
             CreateMap<AppealTypeEntity, AppealTypeResponse>();
             CreateMap<AppealTypeRequest, AppealTypeEntity>();
+            //AppealUpdate
+            CreateMap<AppealUpdate, AppealEntity>().ReverseMap();
         }
     }
 }

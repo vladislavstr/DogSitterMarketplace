@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceDal.Models.Users;
+using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +22,7 @@ namespace DogSitterMarketplaceDal.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSitterMarketplaceDBConnect"));
+            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSitterDBConnect"));
         }
     }
 }

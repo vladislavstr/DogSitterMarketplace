@@ -1,8 +1,8 @@
-﻿using DogSitterMarketplaceDal.Models.Orders;
+using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Users;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DogSitterMarketplaceDal.Models.Appeals
 {
@@ -36,10 +36,11 @@ namespace DogSitterMarketplaceDal.Models.Appeals
 
         public int StatusId { get; set; }
 
-
+        [AllowNull]
         [ForeignKey(nameof(OrderId))]
         public OrderEntity? Order { get; set; }
 
+        [AllowNull]
         public int? OrderId { get; set; }
 
         [Required]
@@ -54,6 +55,6 @@ namespace DogSitterMarketplaceDal.Models.Appeals
         public int? AppealToUserId { get; set; }
 
         [NotMapped]
-        public bool IsDeleted { get; set; } 
+        public bool IsDeleted { get; set; }
     }
 }

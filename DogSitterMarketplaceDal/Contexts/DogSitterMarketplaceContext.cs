@@ -1,17 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-
 using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Orders;
-using DogSitterMarketplaceDal.Models.Works;
 using DogSitterMarketplaceDal.Models.Pets;
-using Microsoft.Extensions.Options;
+using DogSitterMarketplaceDal.Models.Users;
+using DogSitterMarketplaceDal.Models.Works;
+using Microsoft.EntityFrameworkCore;
 
 namespace DogSitterMarketplaceDal.Contexts
 {
     public class DogSitterMarketplaceContext : DbContext
     {
-        
+
         public DbSet<AppealEntity> Appeals { get; set; }
 
         public DbSet<AppealStatusEntity> AppealsStatuses { get; set; }
@@ -50,7 +48,7 @@ namespace DogSitterMarketplaceDal.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSitterMarketplaceDBConnect"));
+            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSitterDBConnect"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -70,8 +68,8 @@ namespace DogSitterMarketplaceDal.Contexts
                     isDeletedProp.SetDefaultValue(false);
                 }
             }
-            
-            modelBuilder.Entity<LocationWorkEntity>().Property(lw => lw.IsNotActive).HasDefaultValue(false);     
+
+            modelBuilder.Entity<LocationWorkEntity>().Property(lw => lw.IsNotActive).HasDefaultValue(false);
         }
     }
 }

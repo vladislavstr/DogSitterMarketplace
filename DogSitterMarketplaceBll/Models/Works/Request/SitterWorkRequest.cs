@@ -1,4 +1,4 @@
-﻿namespace DogSitterMarketplaceBll.Models.Works.Request
+namespace DogSitterMarketplaceBll.Models.Works.Request
 { 
     public class SitterWorkRequest:SitterWorkBaseRequest
     {

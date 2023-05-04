@@ -1,11 +1,4 @@
-﻿using DogSitterMarketplaceBll.Models.Pets.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DogSitterMarketplaceBll.Models.Users.Response
+﻿namespace DogSitterMarketplaceBll.Models.Users.Response
 {
     public class UserShortResponse
     {

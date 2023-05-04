@@ -1,8 +1,6 @@
 using DogSitterMarketplaceBll.Models.Appeals.Response;
 using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceBll.Models.Works.Response;
-using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceDal.Models.Orders;
 
 namespace DogSitterMarketplaceBll.Models.Orders.Response
 {
@@ -24,7 +22,7 @@ namespace DogSitterMarketplaceBll.Models.Orders.Response
 
         public LocationResponse Location { get; set; }
 
-        public List<CommentResponse> Comments { get; set; } = new();
+        public List<CommentWithUserShortResponse> Comments { get; set; } = new();
 
         public List<AppealResponse> Appeals { get; set; } = new();
 

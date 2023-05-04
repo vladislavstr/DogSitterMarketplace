@@ -1,8 +1,3 @@
-using DogSitterMarketplaceBll.Models.Appeals.Request;
-using DogSitterMarketplaceBll.Models.Pets.Request;
-using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceDal.Models.Orders;
-
 namespace DogSitterMarketplaceBll.Models.Orders.Request
 {
     public class OrderRequest

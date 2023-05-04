@@ -1,5 +1,4 @@
 ﻿using DogSitterMarketplaceApi.Models.OrdersDto.Request;
-using DogSitterMarketplaceBll.Models.Orders.Request;
 using FluentValidation;
 
 namespace DogSitterMarketplaceApi.Validations

@@ -7,10 +7,7 @@ using DogSitterMarketplaceCore;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Orders;
-using DogSitterMarketplaceDal.Models.Pets;
-using DogSitterMarketplaceDal.Repositories;
 using NLog;
-using System.Xml.Linq;
 
 namespace DogSitterMarketplaceBll.Services
 {
@@ -37,23 +34,24 @@ namespace DogSitterMarketplaceBll.Services
             _mapper = mapper;
             _logger = nLogger;
         }
-        public CommentOrderResponse AddComment(CommentRequest addComment)
+        public async Task<CommentOrderResponse> AddComment(CommentRequest addComment)
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(AddComment)}");
-            var userCommentFrom = CheckUserIsExistAndIsNotDeleted(addComment.CommentFromUserId);
-            var userCommentTo = CheckUserIsExistAndIsNotDeleted(addComment.CommentToUserId);
-            var orderResponse = _orderService.CheckOrderIsExistAndIsNotDeleted(addComment.OrderId);
-            var userRoleCommentFrom = _userRepository.GetUserRoleById(userCommentFrom.RoleId);
-            var userRoleCommentTo = _userRepository.GetUserRoleById(userCommentTo.RoleId);
+
+            var userCommentFrom = await CheckUserIsExistAndIsNotDeleted(addComment.CommentFromUserId);
+            var userCommentTo = await CheckUserIsExistAndIsNotDeleted(addComment.CommentToUserId);
+            var orderResponse = await _orderService.CheckAndGetOrderIsExistAndIsNotDeleted(addComment.OrderId);
+            var userRoleCommentFrom = await _userRepository.GetUserRoleById(userCommentFrom.RoleId);
+            var userRoleCommentTo = await _userRepository.GetUserRoleById(userCommentTo.RoleId);
 
             if (userRoleCommentFrom.Name == UserRole.Sitter && userRoleCommentTo.Name == UserRole.Client
-                && !CheckOrderBetweenSitterAndClient(userCommentFrom.Id, userCommentTo.Id, orderResponse.Id))
+                && !await CheckOrderBetweenSitterAndClient(userCommentFrom.Id, userCommentTo.Id, orderResponse.Id))
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(AddComment)} Order between users with id {userRoleCommentFrom.Id} and id {userRoleCommentTo.Id} not found");
                 throw new ArgumentException("Order between users with id {userRoleCommentFrom.Id} and id {userRoleCommentTo.Id} not found");
             }
             else if (userRoleCommentFrom.Name == UserRole.Client && userRoleCommentTo.Name == UserRole.Sitter
-                && !CheckOrderBetweenSitterAndClient(userCommentTo.Id, userCommentFrom.Id, orderResponse.Id))
+                && !await CheckOrderBetweenSitterAndClient(userCommentTo.Id, userCommentFrom.Id, orderResponse.Id))
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(AddComment)} Order between users with id {userRoleCommentFrom.Id} and id {userRoleCommentTo.Id} not found");
                 throw new ArgumentException("Order between users with id {userRoleCommentFrom.Id} and id {userRoleCommentTo.Id} not found");
@@ -63,8 +61,9 @@ namespace DogSitterMarketplaceBll.Services
                 || userRoleCommentFrom.Name == UserRole.Client && userRoleCommentTo.Name == UserRole.Sitter)
             {
                 var commentEntity = _mapper.Map<CommentEntity>(addComment);
-                var addCommentEntity = _commentRepository.AddComment(commentEntity);
+                var addCommentEntity = await _commentRepository.AddComment(commentEntity);
                 var addCommentResponse = _mapper.Map<CommentOrderResponse>(addCommentEntity);
+
                 _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(AddComment)}");
 
                 return addCommentResponse;
@@ -76,129 +75,85 @@ namespace DogSitterMarketplaceBll.Services
             }
         }
 
-        public AvgScoreCommentsAboutSitterForClientResponse GetCommentsAndScoresForClientAboutSitter(int userIdGetComment, int userIdToComment)
+        public async Task<AvgScoreCommentsResponse<T>> GetCommentsAndScoresForUserAboutHim<T>(int userId, string role) where T : CommentResponse
         {
-            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForClientAboutSitter)}");
-            var commentUserToResponse = CheckUserIsExistAndIsNotDeleted(userIdToComment);
-            var userWhoGetCommentResponse = CheckUserIsExistAndIsNotDeleted(userIdGetComment);
-            var sortDescCommentsEntities = SortDescComments(userIdToComment);
-            var userRoleWhoGetComment = _userRepository.GetUserRoleById(userWhoGetCommentResponse.RoleId);
-            var userRoleCommentTo = _userRepository.GetUserRoleById(commentUserToResponse.RoleId);
+            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForUserAboutHim)}");
 
-            if (userRoleWhoGetComment.Name == UserRole.Client && userRoleCommentTo.Name == UserRole.Sitter)
+            var user = await CheckUserIsExistAndIsNotDeleted(userId);
+            var sortDescCommentsEntities = await GetSortedDescComments(userId);
+            var userRole = await _userRepository.GetUserRoleById(user.RoleId);
+
+            if (userRole.Name == role)
             {
                 var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
-                var resultComments = _mapper.Map<List<CommentAboutSitterForClientResponse>>(sortDescCommentsEntities);
-                var resultAvgComments = new AvgScoreCommentsAboutSitterForClientResponse
-                {
-                    AverageScore = averageScore,
-                    CommentsAboutSitterForClient = resultComments
-                };
-                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresForClientAboutSitter)}");
-                return resultAvgComments;
-            }
-            else
-            {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresForClientAboutSitter)} {nameof(CommentEntity)} One or more of users has not got necessity UserRole for getComments");
-                throw new ArgumentException("One or more of users has not got necessity UserRole for getComments");
-            }
-        }
-
-        public AvgScoreCommentAboutClientForSitterResponse GetCommentsAndScoresForSitterAboutClient(int userIdGetComment, int userIdToComment)
-        {
-            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForSitterAboutClient)}");
-            var commentUserToResponse = CheckUserIsExistAndIsNotDeleted(userIdToComment);
-            var userWhoGetCommentResponse = CheckUserIsExistAndIsNotDeleted(userIdGetComment);
-            var sortDescCommentsEntities = SortDescComments(userIdToComment);
-            var userRoleWhoGetComment = _userRepository.GetUserRoleById(userWhoGetCommentResponse.RoleId);
-            var userRoleCommentTo = _userRepository.GetUserRoleById(commentUserToResponse.RoleId);
-
-            if (userRoleWhoGetComment.Name == UserRole.Sitter && userRoleCommentTo.Name == UserRole.Client)
-            {
-                var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
-                var resultComments = _mapper.Map<List<CommentAboutClientsForSitterResponse>>(sortDescCommentsEntities);
-                var resultAvgComments = new AvgScoreCommentAboutClientForSitterResponse
-                {
-                    AverageScore = averageScore,
-                    CommentsAboutClientForSitter = resultComments
-                };
-                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresForSitterAboutClient)}");
-                return resultAvgComments;
-            }
-            else
-            {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresForSitterAboutClient)} {nameof(CommentEntity)} One or more of users has not got necessity UserRole for getComments");
-                throw new ArgumentException("One or more of users has not got necessity UserRole for getComments");
-            }
-        }
-
-        public AvgScoreCommentResponse GetCommentsAndScoresForClientAboutHim(int userId)
-        {
-            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForClientAboutHim)}");
-            var user = CheckUserIsExistAndIsNotDeleted(userId);
-            var sortDescCommentsEntities = SortDescComments(userId);
-            var userRole = _userRepository.GetUserRoleById(user.RoleId);
-
-            if (userRole.Name == UserRole.Client)
-            {
-                var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
-                var resultComments = _mapper.Map<List<CommentResponse>>(sortDescCommentsEntities);
-                var resultAvgComments = new AvgScoreCommentResponse
+                var resultComments = _mapper.Map<List<T>>(sortDescCommentsEntities);
+                var resultAvgComments = new AvgScoreCommentsResponse<T>
                 {
                     AverageScore = averageScore,
                     Comments = resultComments
                 };
-                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresForClientAboutHim)}");
+
+                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresForUserAboutHim)}");
+
                 return resultAvgComments;
             }
             else
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresForClientAboutHim)} {nameof(CommentEntity)} User has not got necessity UserRole for getComments");
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresForUserAboutHim)} {nameof(CommentEntity)} User has not got necessity UserRole for getComments");
                 throw new ArgumentException("User has not got necessity UserRole for getComments");
             }
         }
 
-        public AvgScoreCommentWithoutUserResponse GetCommentsAndScoresForSitterAboutHim(int userId)
+        public async Task<AvgScoreCommentsResponse<T>> GetCommentsAndScoresAboutOtherUsers<T>(int userIdGetComment, string roleUserGetComment,
+                                                                                                int userIdToComment, string roleUserToComment) where T : CommentResponse
         {
-            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresForSitterAboutHim)}");
-            var user = CheckUserIsExistAndIsNotDeleted(userId);
-            var sortDescCommentsEntities = SortDescComments(userId);
-            var userRole = _userRepository.GetUserRoleById(user.RoleId);
+            _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetCommentsAndScoresAboutOtherUsers)}");
 
-            if (userRole.Name == UserRole.Sitter)
+            var commentUserToResponse = await CheckUserIsExistAndIsNotDeleted(userIdToComment);
+            var userWhoGetCommentResponse = await CheckUserIsExistAndIsNotDeleted(userIdGetComment);
+            var sortDescCommentsEntities = await GetSortedDescComments(userIdToComment);
+            var userRoleWhoGetComment = await _userRepository.GetUserRoleById(userWhoGetCommentResponse.RoleId);
+            var userRoleCommentTo = await _userRepository.GetUserRoleById(commentUserToResponse.RoleId);
+
+            if (userRoleWhoGetComment.Name == roleUserGetComment && userRoleCommentTo.Name == roleUserToComment)
             {
                 var averageScore = GetAverageScoreForSortedDescComments(sortDescCommentsEntities);
-                var resultComments = _mapper.Map<List<CommentWithoutUserResponse>>(sortDescCommentsEntities);
-                var resultAvgComments = new AvgScoreCommentWithoutUserResponse
+                var resultComments = _mapper.Map<List<T>>(sortDescCommentsEntities);
+                var resultAvgComments = new AvgScoreCommentsResponse<T>
                 {
                     AverageScore = averageScore,
-                    CommentsWithoutUser = resultComments
+                    Comments = resultComments
                 };
-                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresForSitterAboutHim)}");
+
+                _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetCommentsAndScoresAboutOtherUsers)}");
+
                 return resultAvgComments;
             }
             else
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresForSitterAboutHim)} {nameof(CommentEntity)} User has not got necessity UserRole for getComments");
-                throw new ArgumentException("User has not got necessity UserRole for getComments");
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetCommentsAndScoresAboutOtherUsers)} {nameof(CommentEntity)} One or more of users has not got necessity UserRole for getComments");
+                throw new ArgumentException("One or more of users has not got necessity UserRole for getComments");
             }
         }
 
-        public List<CommentOrderResponse> GetAllNotDeletedComments()
+        public async Task<List<CommentOrderResponse>> GetAllNotDeletedComments()
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetAllNotDeletedComments)}");
-            var allCommentsEntity = _commentRepository.GetAllComments();
+
+            var allCommentsEntity = await _commentRepository.GetAllComments();
             var commentsEntity = allCommentsEntity.Where(c => !c.IsDeleted && !c.Order.IsDeleted);
             var commentsResponse = _mapper.Map<List<CommentOrderResponse>>(commentsEntity);
+
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(GetAllNotDeletedComments)}");
 
             return commentsResponse;
         }
 
-        public CommentOrderResponse GetNotDeletedCommentById(int id)
+        public async Task<CommentOrderResponse> GetNotDeletedCommentById(int id)
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(GetNotDeletedCommentById)}");
-            var commentEntity = _commentRepository.GetCommentById(id);
+
+            var commentEntity = await _commentRepository.GetCommentById(id);
 
             if (!commentEntity.IsDeleted)
             {
@@ -209,44 +164,47 @@ namespace DogSitterMarketplaceBll.Services
             }
             else
             {
-                //_logger.LogDebug($"{nameof(CommentService)} {nameof(GetNotDeletedCommentById)} {nameof(CommentEntity)} with id {id} is deleted.");
                 _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetNotDeletedCommentById)} {nameof(CommentEntity)} with id {id} is deleted.");
                 throw new NotFoundException(id, nameof(commentEntity));
             }
         }
 
-        public void DeleteCommentById(int id)
+        public async Task DeleteCommentById(int id)
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(DeleteCommentById)}");
-            _commentRepository.DeleteCommentById(id);
+
+            await _commentRepository.DeleteCommentById(id);
+
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(DeleteCommentById)}");
         }
 
-        public CommentOrderResponse UpdateComment(CommentUpdate commentUpdate)
+        public async Task<CommentOrderResponse> UpdateComment(CommentUpdate commentUpdate)
         {
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} start {nameof(UpdateComment)}");
+
             var commentEntity = _mapper.Map<CommentEntity>(commentUpdate);
-            commentUpdate.OrderId = _orderRepository.GetOrderById(commentUpdate.OrderId).Id;
-            commentUpdate.CommentFromUserId = _userRepository.GetUserWithRoleById(commentUpdate.CommentFromUserId).Id;
-            commentUpdate.CommentToUserId = _userRepository.GetUserWithRoleById(commentUpdate.CommentToUserId).Id;
-            var updateCommentEntity = _commentRepository.UpdateComment(commentEntity);
+            commentUpdate.OrderId = (await _orderRepository.GetOrderById(commentUpdate.OrderId)).Id;
+            commentUpdate.CommentFromUserId = (await _userRepository.GetUserWithRoleById(commentUpdate.CommentFromUserId)).Id;
+            commentUpdate.CommentToUserId = (await _userRepository.GetUserWithRoleById(commentUpdate.CommentToUserId)).Id;
+            var updateCommentEntity = await _commentRepository.UpdateComment(commentEntity);
             var commentOrderResponse = _mapper.Map<CommentOrderResponse>(updateCommentEntity);
+
             _logger.Log(LogLevel.Info, $"{nameof(CommentService)} end {nameof(UpdateComment)}");
 
             return commentOrderResponse;
         }
 
-        private UserShortResponse CheckUserIsExistAndIsNotDeleted(int userId)
+        private async Task<UserShortResponse> CheckUserIsExistAndIsNotDeleted(int userId)
         {
-            var userEntity = _userRepository.GetExistAndNotDeletedUserById(userId);
+            var userEntity = await _userRepository.GetExistAndNotDeletedUserById(userId);
             var userResponse = _mapper.Map<UserShortResponse>(userEntity);
 
             return userResponse;
         }
 
-        private List<CommentEntity> SortDescComments(int userIdToComment)
+        private async Task<List<CommentEntity>> GetSortedDescComments(int userIdToComment)
         {
-            var commentsEntities = _commentRepository.GetAllCommentsAndScoresByUserId(userIdToComment);
+            var commentsEntities = await _commentRepository.GetAllCommentsAndScoresByUserId(userIdToComment);
             var sortDescCommentsEntities = commentsEntities.OrderByDescending(c => c.Order.DateStart).ToList();
 
             return sortDescCommentsEntities;
@@ -274,9 +232,9 @@ namespace DogSitterMarketplaceBll.Services
             return average;
         }
 
-        private bool CheckOrderBetweenSitterAndClient(int sitterId, int clientId, int orderId)
+        private async Task<bool> CheckOrderBetweenSitterAndClient(int sitterId, int clientId, int orderId)
         {
-            var allOrders = _orderRepository.GetOrdersBySitterIdAndClientId(sitterId, clientId);
+            var allOrders = await _orderRepository.GetOrdersBySitterIdAndClientId(sitterId, clientId);
 
             return allOrders.Any(o => o.Id == orderId);
         }

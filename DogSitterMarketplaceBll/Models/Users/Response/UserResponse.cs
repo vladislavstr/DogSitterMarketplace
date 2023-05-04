@@ -1,5 +1,3 @@
-using DogSitterMarketplaceBll.Models.Pets.Response;
-
 namespace DogSitterMarketplaceBll.Models.Users.Response
 {
     public class UserResponse

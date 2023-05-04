@@ -1,8 +1,3 @@
-using DogSitterMarketplaceApi.Models.AppealsDto.Request;
-using DogSitterMarketplaceApi.Models.PetsDto.Request;
-using DogSitterMarketplaceDal.Models.Appeals;
-using DogSitterMarketplaceDal.Models.Orders;
-
 namespace DogSitterMarketplaceApi.Models.OrdersDto.Request
 {
     public class OrderRequestDto
