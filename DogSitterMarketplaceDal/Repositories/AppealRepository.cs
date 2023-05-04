@@ -53,6 +53,29 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new FileNotFoundException($"Appeal with id {id} not found");
             }
         }
+
+        public IEnumerable<AppealStatusEntity> GetAllAppealStatuses()
+        {
+            var result = new List<AppealStatusEntity>();
+
+            result = _context.AppealsStatuses
+                .AsNoTracking()
+                .ToList();
+
+            return result;
+        }
+
+        public IEnumerable<AppealTypeEntity> GetAllAppealTypes()
+        {
+            var result = new List<AppealTypeEntity>();
+
+            result = _context.AppealsTypes
+                .AsNoTracking()
+                .ToList();
+
+            return result;
+        }
+
         public AppealEntity GetAppealByUserIdToWhom(int id)
         {
             try

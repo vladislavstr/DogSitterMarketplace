@@ -63,6 +63,30 @@ namespace DogSitterMarketplaceBll.Services
             return appealResponse;
         }
 
+        public IEnumerable<AppealStatusResponse> GetAllAppealStatuses()
+        {
+            _logger.Log(LogLevel.Info, $"{nameof(AppealService)} start {nameof(GetAllAppealStatuses)}");
+
+            var allappealsStatusesEntitys = _appealRepository.GetAllAppealStatuses();
+            var appealStatusesResponse = _mapper.Map<IEnumerable<AppealStatusResponse>>(allappealsStatusesEntitys);
+
+            _logger.Log(LogLevel.Info, $"{nameof(AppealService)} end {nameof(GetAllAppealStatuses)}");
+
+            return appealStatusesResponse;
+        }
+
+        public IEnumerable<AppealTypeResponse> GetAllAppealTypes()
+        {
+            _logger.Log(LogLevel.Info, $"{nameof(AppealService)} start {nameof(GetAllAppealTypes)}");
+
+            var allappealsTypesEntitys = _appealRepository.GetAllAppealTypes();
+            var appealTypesResponse = _mapper.Map<IEnumerable<AppealTypeResponse>>(allappealsTypesEntitys);
+
+            _logger.Log(LogLevel.Info, $"{nameof(AppealService)} end {nameof(GetAllAppealTypes)}");
+
+            return appealTypesResponse;
+        }
+
         public AppealResponse GetAppealByUserIdToWhom(int id)
         {
             _logger.Log(LogLevel.Info, $"{nameof(AppealService)} start {nameof(GetAppealByUserIdToWhom)}");

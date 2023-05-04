@@ -63,6 +63,32 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
+        [HttpGet("Statuses", Name = "GetAllAppealStatuses")]
+        public ActionResult<IEnumerable<AppealStatusResponseDto>> GetAllAppealStatuses()
+        {
+            try
+            {
+                return Ok(_appealService.GetAllAppealStatuses());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("Types", Name = "GetAllAppealTypes")]
+        public ActionResult<IEnumerable<AppealTypeResponseDto>> GetAllAppealTypes()
+        {
+            try
+            {
+                return Ok(_appealService.GetAllAppealTypes());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("ToWhom/{id:int}", Name = "GetAppealByUserIdToWhom")]
         public ActionResult GetAppealByUserIdToWhom(int id)
         {
