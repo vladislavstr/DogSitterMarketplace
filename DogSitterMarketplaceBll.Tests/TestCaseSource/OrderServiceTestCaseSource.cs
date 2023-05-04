@@ -3109,7 +3109,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "type101",
                     IsDeleted = false
                 },
-                WorkTypeId = 101
+                WorkTypeId = 101,
                 IsDeleted = false,
             };
             List<SitterWorkEntity> allSitterWorks = new List<SitterWorkEntity>
