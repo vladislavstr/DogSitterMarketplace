@@ -1,5 +1,6 @@
 ﻿using DogSitterMarketplaceBll.Models.Appeals.Request;
 using DogSitterMarketplaceBll.Models.Appeals.Response;
+using DogSitterMarketplaceDal.Models.Appeals;
 
 namespace DogSitterMarketplaceBll.IServices
 {
@@ -10,6 +11,10 @@ namespace DogSitterMarketplaceBll.IServices
         public IEnumerable<AppealResponse> GetAllNotAnsweredAppeals();
 
         public AppealResponse GetAppealById(int id);
+
+        public IEnumerable<AppealStatusResponse> GetAllAppealStatuses();
+
+        public IEnumerable<AppealTypeResponse> GetAllAppealTypes();
 
         public AppealResponse GetAppealByUserIdToWhom(int id);
 

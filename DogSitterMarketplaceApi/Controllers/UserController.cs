@@ -5,6 +5,7 @@ using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -12,21 +13,15 @@ namespace DogSitterMarketplaceApi.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        //private readonly ILogger _logger;
+        private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService, IMapper mapper)//, ILogger logger)
+        public UserController(IUserService userService, IMapper mapper, ILogger logger)
         {
-            //_logger = logger;
+            _logger = logger;
             _mapper = mapper;
             _userService = userService;
-        }
-
-        [HttpGet("GrtPing")]
-        public IActionResult GrtPing()
-        {
-            return Ok();
         }
 
         [HttpGet("GetAllUsers", Name = "GetAllUsers")]
@@ -40,7 +35,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -53,7 +48,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -66,7 +61,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -81,7 +76,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -98,7 +93,24 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("PassportData", Name = "AddUserPassportData")]
+        public ActionResult<UserPassportDataResponseDto> AddUserPassportData(UserPassportDataRequestDto userPassportData)
+        {
+            try
+            {
+                var userPassportDataRequst = _mapper.Map<UserPassportDataRequest>(userPassportData);
+                var addUserPassportDataResponse = _userService.AddUserPassportData(userPassportDataRequst);
+                var addUserPassportDataResponseDto = _mapper.Map<UserPassportDataResponseDto>(addUserPassportDataResponse);
+
+                return Created(new Uri("api/User", UriKind.Relative), addUserPassportDataResponseDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

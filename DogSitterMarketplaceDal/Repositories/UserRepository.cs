@@ -5,7 +5,8 @@ using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
-using NLog;
+using ILogger = NLog.ILogger;
+using LogLevel = NLog.LogLevel;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -74,23 +75,30 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public UserEntity AddUser(UserEntity user)
         {
-            try
-            {
                 _context.Users.Add(user);
                 _context.SaveChanges();
 
-                return _context.Users
+            _logger.Log(LogLevel.Info, $"Add new User {user.ToString()}");
+
+            return _context.Users
                 .Include(u => u.UserPassportData)
                 .Include(u => u.UserRole)
                 .Include(u => u.UserStatus)
                     //.Include(u => u.Pets)
                     .Single(u => u.Id == user.Id);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-                throw new ArgumentException();
-            }
+
+        }
+
+        public UserPassportDataEntity AddUserPassportData(UserPassportDataEntity PassportData)
+        {
+                _context.UsersPassportData.Add(PassportData);
+                _context.SaveChanges();
+
+            _logger.Log(LogLevel.Info, $"Add new UserPassportData {PassportData.ToString()}");
+
+            return _context.UsersPassportData
+                    .Single(upd => upd.Id == PassportData.Id);
+           
         }
 
         public void DeleteUserById(int id)
@@ -103,8 +111,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{id} - отсутствует");
+                _logger.Log(LogLevel.Error, $"User with id {id} not found");
+                throw new FileNotFoundException($"User with id {id} not found");
             }
         }
 

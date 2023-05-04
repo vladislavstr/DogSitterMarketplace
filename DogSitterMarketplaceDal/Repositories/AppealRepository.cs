@@ -2,7 +2,8 @@
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Appeals;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using ILogger = NLog.ILogger;
+using LogLevel = NLog.LogLevel;
 
 namespace DogSitterMarketplaceDal.Repositories
 {
@@ -10,10 +11,12 @@ namespace DogSitterMarketplaceDal.Repositories
     {
 
         private static AppealContext _context;
+        private static ILogger _logger;
 
-        public AppealRepository(AppealContext context)
+        public AppealRepository(AppealContext context, ILogger logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IEnumerable<AppealEntity> GetAllAppeals()
@@ -46,10 +49,33 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{id} - отсутствует");
+                _logger.Log(LogLevel.Error, $"Appeal with id {id} not found");
+                throw new FileNotFoundException($"Appeal with id {id} not found");
             }
         }
+
+        public IEnumerable<AppealStatusEntity> GetAllAppealStatuses()
+        {
+            var result = new List<AppealStatusEntity>();
+
+            result = _context.AppealsStatuses
+                .AsNoTracking()
+                .ToList();
+
+            return result;
+        }
+
+        public IEnumerable<AppealTypeEntity> GetAllAppealTypes()
+        {
+            var result = new List<AppealTypeEntity>();
+
+            result = _context.AppealsTypes
+                .AsNoTracking()
+                .ToList();
+
+            return result;
+        }
+
         public AppealEntity GetAppealByUserIdToWhom(int id)
         {
             try
@@ -64,8 +90,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{id} - отсутствует");
+                _logger.Log(LogLevel.Error, $"Appeal to user id {id} not found");
+                throw new FileNotFoundException($"Appeal to user id {id} not found");
             }
         }
 
@@ -83,8 +109,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{id} - отсутствует");
+                _logger.Log(LogLevel.Error, $"Appeal from user id {id} not found");
+                throw new FileNotFoundException($"Appeal from user id {id} not found");
             }
         }
 
@@ -92,6 +118,8 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             _context.Appeals.Add(appeal);
             _context.SaveChanges();
+
+            _logger.Log(LogLevel.Info, $"Add new Appeal {appeal.ToString()}");
 
             return _context.Appeals
                 .Include(a => a.Type)
@@ -107,6 +135,8 @@ namespace DogSitterMarketplaceDal.Repositories
             _context.AppealsStatuses.Add(appealStatus);
             _context.SaveChanges();
 
+            _logger.Log(LogLevel.Info, $"Add new AppealStatus {appealStatus.ToString()}");
+
             return appealStatus;
         }
 
@@ -114,6 +144,8 @@ namespace DogSitterMarketplaceDal.Repositories
         {
             _context.AppealsTypes.Add(appealType);
             _context.SaveChanges();
+
+            _logger.Log(LogLevel.Info, $"Add new AppealType {appealType.ToString()}");
 
             return appealType;
         }
@@ -128,8 +160,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{AppealId} - отсутствует");
+                _logger.Log(LogLevel.Error, $"Appeal with id {AppealId} not found");
+                throw new FileNotFoundException($"Appeal with id {AppealId} not found");
             }
         }
 
@@ -147,8 +179,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{appeal.Id} - отсутствует");
+                _logger.Log(LogLevel.Error, $"Appeal with id {appeal.Id} not found");
+                throw new FileNotFoundException($"TAppeal with id {appeal.Id} not found");
             }
         }
     }
