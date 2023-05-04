@@ -68,14 +68,17 @@ namespace DogSitterMarketplaceBll.Services
             _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(AddUser)}");
 
             List<UserResponse> usersResponse = new List<UserResponse>();
+            UserResponse userResponse = new UserResponse();
             usersResponse = GetAllNotDeletedUsers().ToList();
+            userResponse = usersResponse.First(u => u.Email == user.Email);
+
             if (usersResponse.Exists(u => u.Email == user.Email && u.UserStatus.Id == 2))
             {
-                throw new ArgumentException($"User with Email {user.Email} is banned");
+                throw new ArgumentException($"User with Email {user.Email} is ,his status is banned Status.Id: {userResponse.UserStatus.Id}");
             }
             else if (usersResponse.Exists(u => u.Email == user.Email)) 
             {
-                throw new ArgumentException($"User with Email {user.Email} is exist");
+                throw new ArgumentException($"User with Email {user.Email} is exist with Status.Id: {userResponse.UserStatus.Id}");
             }
             else 
             { 
