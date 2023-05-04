@@ -145,42 +145,6 @@ namespace DogSitterMarketplaceDal.Repositories
             return sitterWorks;
         }
 
-        public SitterWorkEntity GetNotDeletedSitterWorkById(int id)
-        {
-            try
-            {
-                return _workContext.SitterWorks.Single(o => o.Id == id && !o.IsDeleted);
-            }
-            catch (InvalidOperationException ex)
-            {
-                // logger.LogDebug($"{nameof(SitterWorkEntity)} with id {id} not found.");
-                //  _logger.Log(LogLevel.Debug, $"{nameof(SitterWorkEntity)} with id {id} not found.");
-                throw new NotFoundException(id, nameof(SitterWorkEntity));
-            }
-        }
-
-        //public async Task<List<LocationWorkEntity>> GetLocationsWorkBySitterWorkAndStatus(int sitterWorkId, bool isNotActive = false)
-        //{
-        //    if (!await _workContext.SitterWorks.AnyAsync(sw => sw.Id == sitterWorkId))
-        //    {
-        //        _logger.Log(LogLevel.Warn, $"Sitter Work  for id {sitterWorkId} not found");
-        //        throw new FileNotFoundException($"Sitter Work  for id {sitterWorkId} not found");
-        //    }
-
-        //    var sitterWorks = await _workContext.LocationWorks
-        //        .Include(sw => sw.Location)
-        //        .Include(sw => sw.TimingLocationWorks)
-        //        .ThenInclude(sw => sw.DayOfWeek)
-        //        .Where(sw => sw.SitterWorkId == sitterWorkId && sw.IsNotActive == isNotActive).ToListAsync();
-
-        //    if (sitterWorks == null)
-        //    {
-        //        _logger.Log(LogLevel.Warn, $"No Time interval for sitter work {sitterWorkId}");
-        //    }
-
-        //    return sitterWorks;
-        //}
-
         public async Task<List<LocationWorkEntity>> GetAllLocationWorkByLocation(int locationId, bool? IsNotActive = null)
         {
             if (!await _workContext.Locations.AnyAsync(sw => sw.Id == locationId))
@@ -206,21 +170,6 @@ namespace DogSitterMarketplaceDal.Repositories
             return sitter;
         }
 
-        // 2й логгер прописать
-        public LocationEntity GetLocationById(int id)
-        {
-            try
-            {
-                return _workContext.Locations.Single(o => o.Id == id && !o.IsDeleted);
-            }
-            catch (InvalidOperationException ex)
-            {
-                //_logger.LogDebug($"{nameof(LocationEntity)} with id {id} not found.");
-                // _logger.Log(LogLevel.Debug, $"{nameof(LocationEntity)} with id {id} not found.");
-                throw new NotFoundException(id, nameof(LocationEntity));
-            }
-        }
-
         public async Task<List<LocationEntity>> GetAllLocation(bool? IsDeleted = null)
         {
             var result = await _workContext.Locations.
@@ -228,54 +177,6 @@ namespace DogSitterMarketplaceDal.Repositories
 
             return result;
         }
-
-        //public async Task<List<LocationEntity>> GetAllLocationByStatus(bool isDelete = false)
-        //{
-        //    var result = await _workContext.Locations
-        //        .Where(l => l.IsDeleted == isDelete)
-        //        .ToListAsync();
-
-        //    return result;
-        //}
-
-        //public async Task<List<LocationWorkEntity>> GetAllLocationsWorkByLocationAndStatus(int locationId, bool isNotActive = false)
-        //{
-        //    if (!await _workContext.Locations.AnyAsync(sw => sw.Id == locationId))
-        //    {
-        //        _logger.Log(LogLevel.Warn, $"Location by id {locationId} not found");
-        //        throw new FileNotFoundException($"Location by id {locationId} not found");
-        //    }
-
-        //    var LocationsWorks = await _workContext.LocationWorks
-        //        .Include(sw => sw.Location)
-        //        .Include(sw => sw.TimingLocationWorks)
-        //        .ThenInclude(sw => sw.DayOfWeek)
-        //        .Include(sw => sw.SitterWork)
-        //        .Where(sw => sw.LocationId == locationId && sw.IsNotActive == isNotActive).ToListAsync();
-
-        //    if (LocationsWorks.Count==0)
-        //    {
-        //        _logger.Log(LogLevel.Warn, $"Location work by location {locationId} not found");
-        //    }
-
-        //    return LocationsWorks;
-        //}
-
-        //public async Task<List<LocationWorkEntity>> GetAllLocationWorkbyActiveStatus(bool isNotActive = false)
-        //{
-        //    var locationsWorks = await _workContext.LocationWorks
-        //        .Include(sw => sw.Location)
-        //        .Include(sw => sw.TimingLocationWorks)
-        //        .ThenInclude(sw => sw.DayOfWeek)
-        //        .Where(sw => sw.IsNotActive == isNotActive).ToListAsync();
-
-        //    if (locationsWorks.Count == 0)
-        //    {
-        //        _logger.Log(LogLevel.Warn, $"Location work not found by status isNotActive = {isNotActive}");
-        //    }
-
-        //    return locationsWorks;
-        //}
 
         public async Task<SitterWorkEntity> AddSitterWork(SitterWorkEntity sitterWork)
         {
@@ -381,52 +282,6 @@ namespace DogSitterMarketplaceDal.Repositories
             return sitterWork;
         }
 
-        public List<SitterWorkEntity> GetAllSitterWorksByUserId(int id)
-        {
-            var sitterWorks = _workContext.SitterWorks
-                .Include(sw => sw.WorkType)
-                .Include(sw => sw.User)
-                .Include(sw => sw.LocationsWork)
-                .ThenInclude(lw => lw.TimingLocationWorks)
-                .ThenInclude(tlw => tlw.DayOfWeek)
-                .Include(sw => sw.LocationsWork)
-                .ThenInclude(tlw => tlw.Location)
-                .Where(sw => sw.User.Id == id).ToList();
-
-            if (sitterWorks.Count==0)
-            {
-                _logger.Log(LogLevel.Warn, $"sitter services with user id {id} no");
-            }
-
-            return sitterWorks;
-        }
-
-        //public List<SitterWorkEntity> GetAllSitterWorksByUserId(int id,bool? workIsDeleted = null)
-        //{
-        //    if (!_workContext.Users.Any(u => u.Id == id))
-        //    {
-        //        throw FileNotFoundException
-        //    }
-
-        //    var sitterWorks = _workContext.SitterWorks
-        //        .Include(sw => sw.WorkType)
-        //        .Include(sw => sw.User)
-        //        .Include(sw => sw.LocationsWork)
-        //        .ThenInclude(lw => lw.TimingLocationWorks)
-        //        .ThenInclude(tlw => tlw.DayOfWeek)
-        //        .Include(sw => sw.LocationsWork)
-        //        .ThenInclude(tlw => tlw.Location)
-        //        .Where(sw => (sw.User.Id == id && workIsDeleted == null)
-        //        ||(sw.User.Id == id && sw.IsDeleted == workIsDeleted)).ToList();
-
-        //    if (sitterWorks.Count == 0)
-        //    {
-        //        _logger.Log(LogLevel.Warn, $"sitter services with user id {id} no");
-        //    }
-
-        //    return sitterWorks;
-        //}
-
         public List<SitterWorkEntity> GetSitterWorksUser(int userId, bool? isDeleted = null)
         {
              if (!_workContext.Users.Any(u => u.Id == userId))
@@ -449,32 +304,6 @@ namespace DogSitterMarketplaceDal.Repositories
 
             return sitterWorks;
         }
-
-        public List<SitterWorkEntity> get()
-        {
-            var t = new List<SitterWorkEntity>();
-
-            t = _workContext.SitterWorks.ToList();
-
-            return t;
-
-        }
-
-        //public List<SitterWorkEntity> GetSitterWorks()
-        //{
-        //    var sitterWorks = _workContext.SitterWorks
-        //            .Include(sw => sw.WorkType)
-        //            .Include(sw => sw.User)
-        //            .Include(sw => sw.LocationsWork).ToList();
-
-        //    if (sitterWorks.Count == 0)
-        //    {
-        //        _logger.Log(LogLevel.Warn, $"No sitter service");
-        //        //throw new FileNotFoundException($"No sitter service");
-        //    }
-
-        //    return sitterWorks;
-        //}
 
         public async Task<List<SitterWorkEntity>> GetSitterWorks(bool? isDeleted = null)
         {
