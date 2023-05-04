@@ -92,7 +92,7 @@ namespace DogSitterMarketplaceApi.Controllers
         [SwaggerResponse(200, "Ok")]
         [SwaggerResponse(400, "Bad Request")]
         [SwaggerResponse(404, "Not Found")]
-        public async Task<ActionResult<OrderResponseDto>> ChangeOrderStatus(int id, [FromBody] int orderStatusId)
+        public async Task<ActionResult<OrderResponseDto>> ChangeOrderStatus(int id, int orderStatusId)
         {
             try
             {
