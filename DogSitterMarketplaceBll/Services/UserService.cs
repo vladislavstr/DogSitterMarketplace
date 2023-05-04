@@ -62,7 +62,15 @@ namespace DogSitterMarketplaceBll.Services
             var addUserPassportDataResponse = _mapper.Map<UserPassportDataResponse>(addUserPassportDataEntity);
 
             return addUserPassportDataResponse;
+        }
 
+        public UserStatusResponse AddUserStatus(UserStatusRequest userStatus)
+        {
+            var userStatusEntity = _mapper.Map<UserStatusEntity>(userStatus);
+            var adduserStatusEntity = _userRepository.AddUserStatus(userStatusEntity);
+            var adduserStatusResponse = _mapper.Map<UserStatusResponse>(adduserStatusEntity);
+
+            return adduserStatusResponse;
         }
 
         //public UserResponse AddUser(UserRequest user)

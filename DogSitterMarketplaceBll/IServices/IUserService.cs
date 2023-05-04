@@ -16,6 +16,8 @@ namespace DogSitterMarketplaceBll.IServices
 
         public UserPassportDataResponse AddUserPassportData(UserPassportDataRequest PassportData);
 
+        public UserStatusResponse AddUserStatus(UserStatusRequest userStatus);
+
         public void DeleteUserById(int id);
 
         public Task<List<UserShortLocationWorkResponse>> GetAllSittersByLocationId(int locationId);

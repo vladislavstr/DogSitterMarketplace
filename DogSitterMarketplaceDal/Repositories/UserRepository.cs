@@ -86,19 +86,28 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Include(u => u.UserStatus)
                     //.Include(u => u.Pets)
                     .Single(u => u.Id == user.Id);
-
         }
 
-        public UserPassportDataEntity AddUserPassportData(UserPassportDataEntity PassportData)
+        public UserPassportDataEntity AddUserPassportData(UserPassportDataEntity passportData)
         {
-                _context.UsersPassportData.Add(PassportData);
+                _context.UsersPassportData.Add(passportData);
                 _context.SaveChanges();
 
-            _logger.Log(LogLevel.Info, $"Add new UserPassportData {PassportData.ToString()}");
+            _logger.Log(LogLevel.Info, $"Add new UserPassportData {passportData.ToString()}");
 
             return _context.UsersPassportData
-                    .Single(upd => upd.Id == PassportData.Id);
-           
+                    .Single(upd => upd.Id == passportData.Id);   
+        }
+
+        public UserStatusEntity AddUserStatus(UserStatusEntity userStatus)
+        {
+            _context.UsersStatuses.Add(userStatus);
+            _context.SaveChanges();
+
+            _logger.Log(LogLevel.Info, $"Add new UserStatus {userStatus.ToString()}");
+
+            return _context.UsersStatuses
+                    .Single(us => us.Id == userStatus.Id);
         }
 
         public void DeleteUserById(int id)
