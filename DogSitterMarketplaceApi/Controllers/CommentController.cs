@@ -51,18 +51,18 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(result);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForClientAboutSitter)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -81,18 +81,18 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(result);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForSitterAboutClient)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -110,18 +110,18 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(result);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForClientAboutHim)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -139,18 +139,18 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(result);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentsAndScoresForSitterAboutHim)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -170,7 +170,7 @@ namespace DogSitterMarketplaceApi.Controllers
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetAllNotDeletedComments)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -188,14 +188,14 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(commentResponseDto);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(GetCommentById)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -212,14 +212,14 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return NoContent();
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(DeleteCommentById)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -245,18 +245,18 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/Comment", UriKind.Relative), addCommentResponseDto);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(AddComment)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -282,18 +282,18 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(commentResponseDto);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $"{ex} {nameof(CommentController)} {nameof(UpdateComment)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
     }

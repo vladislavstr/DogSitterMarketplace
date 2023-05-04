@@ -2,7 +2,6 @@
 using DogSitterMarketplaceBll.Models.Orders.Response;
 using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceBll.Models.Users.Response;
-using DogSitterMarketplaceCore;
 using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;

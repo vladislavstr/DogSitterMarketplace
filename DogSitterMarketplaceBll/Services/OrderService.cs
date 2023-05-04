@@ -10,7 +10,6 @@ using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Repositories;
 using NLog;
-using System.Collections.Generic;
 
 namespace DogSitterMarketplaceBll.Services
 {
@@ -65,12 +64,12 @@ namespace DogSitterMarketplaceBll.Services
 
             var sitterWork = await _workAndLocationRepository.GetNotDeletedSitterWorkById(newOrder.SitterWorkId);
 
-            if (sitterWork.LocationWork == null)
+            if (sitterWork.LocationsWork == null)
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddOrder)},LocationWork is null");
                 throw new ArgumentException("LocationWork is null");
             }
-            var summ = sitterWork.LocationWork.SingleOrDefault(lw => lw.SitterWorkId == newOrder.SitterWorkId && lw.LocationId == newOrder.LocationId)?.Price;
+            var summ = sitterWork.LocationsWork.SingleOrDefault(lw => lw.SitterWorkId == newOrder.SitterWorkId && lw.LocationId == newOrder.LocationId)?.Price;
 
             if (!summ.HasValue || summ == 0)
             {
@@ -97,7 +96,7 @@ namespace DogSitterMarketplaceBll.Services
             orderEntity.Pets.AddRange(petsNotDeleted);
             var orderStatusUnderConsideration = await _orderRepository.GetOrderStatusByName(OrderStatus.UnderConsideration);
             orderEntity.OrderStatusId = orderStatusUnderConsideration.Id;
-            orderEntity.Summ = summ.Value;
+            orderEntity.Summ = summ.Value * petsNotDeleted.Count;
 
             var addOrderEntity = await _orderRepository.AddNewOrder(orderEntity);
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
@@ -350,7 +349,7 @@ namespace DogSitterMarketplaceBll.Services
                     if (match == null)
                     {
                         messages.Add($"Pet with id {petId} not found now.");
-                    }                    
+                    }
                 }
             }
 
@@ -383,7 +382,7 @@ namespace DogSitterMarketplaceBll.Services
                 {
                     foreach (var sitterWork in allSitterWorks)
                     {
-                        foreach (var locationWork in sitterWork.LocationWork)
+                        foreach (var locationWork in sitterWork.LocationsWork)
                         {
                             if (locationWork.LocationId == locationId)
                             {

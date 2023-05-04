@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceDal.Contexts;
+using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Works;
 using Microsoft.EntityFrameworkCore;
@@ -9,46 +9,56 @@ namespace DogSitterMarketplaceDal.Repositories
 {
     public class TimeWorkRepository : ITimeWorkRepository
     {
-        private static WorkContext _context;
+        private static WorkContext _workContext;
         private static ILogger _logger;
 
-        public TimeWorkRepository(ILogger logger)
+        public TimeWorkRepository(ILogger logger, WorkContext context)
         {
-            _context = new WorkContext();
+            _workContext = context;
             _logger = logger;
         }
 
-
-        public bool AddNewTimingsLocation(List<TimingLocationWorkEntity> timing)
+        public async Task<List<TimingLocationWorkEntity>> AddNewTimingsLocation(List<TimingLocationWorkEntity> timings)
         {
-            _context.TimingLocationWorks.AddRange(timing);
-            _context.SaveChanges();
+            await _workContext.TimingLocationWorks.AddRangeAsync(timings);
+            await _workContext.SaveChangesAsync();
+            List<TimingLocationWorkEntity> result = new List<TimingLocationWorkEntity>();
 
-            foreach (var t in timing)
+            foreach (var t in timings)
             {
-                _logger.Log(LogLevel.Info, $"Add new timings {t.ToString()}");
+                _logger.Log(LogLevel.Debug, $"Add new timings {t.ToString()}");
             }
 
-            return true;
+            foreach (var t in timings)
+            {
+                result.Add(await _workContext.TimingLocationWorks
+                    .Include(tl => tl.LocationWork)
+                    .Include(tl => tl.DayOfWeek)
+                    .SingleOrDefaultAsync(tl => tl.Id == t.Id));
+            }
+
+            return result;
         }
 
-        public bool AddNewTimingLocation(TimingLocationWorkEntity timing)
+        public async Task<TimingLocationWorkEntity> AddNewTimingLocation(TimingLocationWorkEntity timing)
         {
-            _context.TimingLocationWorks.Add(timing);
-            _context.SaveChanges();
-            _logger.Log(LogLevel.Info, $"Add new timings {timing.ToString()}");
+            await _workContext.TimingLocationWorks.AddAsync(timing);
+            await _workContext.SaveChangesAsync();
+            _logger.Log(LogLevel.Debug, $"Add new timings {timing.ToString()}");
+            var result = await _workContext.TimingLocationWorks
+                    .Include(tl => tl.LocationWork)
+                    .Include(tl => tl.DayOfWeek)
+                    .SingleOrDefaultAsync(tl => tl.Id == timing.Id);
 
-            return true;
+            return result;
         }
 
-        public bool UpdateTimingLocation(TimingLocationWorkEntity timing)
+        public async Task<TimingLocationWorkEntity> UpdateTimingLocation(TimingLocationWorkEntity timing)
         {
-            bool timingUpdate = false;
-
-            var updateTiming = _context.TimingLocationWorks
+            var updateTiming = await _workContext.TimingLocationWorks
                 .Include(tl => tl.DayOfWeek)
                 .Include(tl => tl.LocationWork)
-                .SingleOrDefault(tl => tl.Id == timing.Id);
+                .SingleOrDefaultAsync(tl => tl.Id == timing.Id);
 
             if (updateTiming != null)
             {
@@ -56,9 +66,8 @@ namespace DogSitterMarketplaceDal.Repositories
                 updateTiming.Stop = timing.Stop;
                 updateTiming.DayOfWeekId = timing.DayOfWeekId;
                 updateTiming.LocationWorkId = timing.LocationWorkId;
-                _context.SaveChanges();
-                timingUpdate = true;
-                _logger.Log(LogLevel.Info, $"Update timings {updateTiming.ToString()}");
+                await _workContext.SaveChangesAsync();
+                _logger.Log(LogLevel.Debug, $"Update timings {updateTiming.ToString()}");
             }
             else
             {
@@ -66,38 +75,97 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new FileNotFoundException($"Time interval with id {timing.Id} not found");
             }
 
-            return timingUpdate;
+            return updateTiming;
         }
 
-        public List<TimingLocationWorkEntity> GetAllTimigsByLocationWorkId(int locationWorkId)
+        public async Task<List<DayOfWeekEntity>> GetDaysOfWeek()
         {
-            List<TimingLocationWorkEntity> oldTimings = null;
+            var result = new List<DayOfWeekEntity>();
+            result = await _workContext.DaysOfWeek.ToListAsync();
+            result.Sort();
+            return result;
+        }
 
-            oldTimings = _context.TimingLocationWorks
+        public TimingLocationWorkEntity GetTiming(int idTiming)
+        {
+            var timing = _workContext.TimingLocationWorks
+                .Include(t => t.DayOfWeek)
+                .Include(t => t.LocationWork)
+                .SingleOrDefault(t => t.Id == idTiming);
+
+            if (timing == null)
+            {
+                _logger.Log(LogLevel.Error, $"Time interval with id {timing.Id} not found");
+                throw new FileNotFoundException($"Time interval with id {timing.Id} not found");
+            }
+
+            return timing;
+        }
+
+        public async Task<List<TimingLocationWorkEntity>> GetAllTimigsOfLocationWork(int locationWorkId)
+        {
+            if (!await _workContext.LocationWorks.AnyAsync(lw => lw.Id == locationWorkId))
+            {
+                _logger.Log(LogLevel.Error, $"Location work by id {locationWorkId} not found");
+                throw new FileNotFoundException($"Location work by id {locationWorkId} not found");
+            }
+
+            List<TimingLocationWorkEntity> oldTimings = new List<TimingLocationWorkEntity>();
+
+            oldTimings = await _workContext.TimingLocationWorks
                 .Include(t => t.LocationWork)
                 .Include(t => t.DayOfWeek)
-                .Where(t => t.LocationWorkId == locationWorkId).ToList();
+                .Where(t => t.LocationWorkId == locationWorkId).ToListAsync();
 
             return oldTimings;
         }
 
-        public bool DeleteTiming(int id)
+        public async Task<bool> DeleteTiming(int id)
         {
             bool isDelete = false;
 
-            var deleteTiming = _context.TimingLocationWorks
-                .SingleOrDefault(t => t.Id == id);
+            var deleteTiming = await _workContext.TimingLocationWorks
+                .SingleOrDefaultAsync(t => t.Id == id);
 
             if (deleteTiming != null)
             {
-                _context.TimingLocationWorks.Remove(deleteTiming);
-                _logger.Log(LogLevel.Info, $"Time interval with id {id} not found");
+                _workContext.TimingLocationWorks.Remove(deleteTiming);
+                await _workContext.SaveChangesAsync();
+                _logger.Log(LogLevel.Debug, $"Time interval with id {id} is delete complete");
                 isDelete = true;
             }
             else
             {
                 _logger.Log(LogLevel.Error, $"Time interval with id {id} not found");
                 throw new FileNotFoundException($"Time interval with id {id} not found");
+            }
+
+            return isDelete;
+        }
+
+        public async Task<bool> DeleteTimingByLocationWork(int locationWorkId)
+        {
+            if (!await _workContext.LocationWorks.AnyAsync(lw => lw.Id == locationWorkId))
+            {
+                _logger.Log(LogLevel.Error, $"Time interval with location work id {locationWorkId} not found");
+                throw new FileNotFoundException($"Time interval location work id {locationWorkId} not found");
+            }
+
+            bool isDelete = false;
+
+            var deleteTiming = await _workContext.TimingLocationWorks
+                .Where(t => t.LocationWorkId == locationWorkId).ToListAsync();
+
+            if (deleteTiming != null)
+            {
+                _workContext.TimingLocationWorks.RemoveRange(deleteTiming);
+                await _workContext.SaveChangesAsync();
+                _logger.Log(LogLevel.Info, $"Time interval with location work id {locationWorkId} is delete");
+                isDelete = true;
+            }
+            else
+            {
+                _logger.Log(LogLevel.Warn, $"Time interval with location work id {locationWorkId} not found");
             }
 
             return isDelete;

@@ -1,17 +1,7 @@
-﻿using DogSitterMarketplaceBll.Models.Users.Response;
-
-namespace DogSitterMarketplaceBll.Models.Works.Response
+﻿namespace DogSitterMarketplaceBll.Models.Works.Response
 {
-    public class SitterWorkResponse
+    public class SitterWorkResponse : SitterWorkBaseResponse
     {
-        public int Id { get; set; }
-
-        public string? Comment { get; set; }
-
-        public UserShortResponse User { get; set; }
-
-        public WorkTypeResponse WorkType { get; set; }
-
-        public List<LocationWorkResponse> LocationsWorks { get; set; }
+        public List<LocationWorkBaseResponse> LocationsWork { get; set; }
     }
 }

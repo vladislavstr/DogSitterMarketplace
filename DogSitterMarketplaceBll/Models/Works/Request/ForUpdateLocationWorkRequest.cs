@@ -1,8 +1,8 @@
 namespace DogSitterMarketplaceBll.Models.Works.Request
 {
-    public class LocationWorkRequest
+    public class ForUpdateLocationWorkRequest
     {
-        public int Price { get; set; }
+        public decimal Price { get; set; }
 
         public int SitterWorkId { get; set; }
 

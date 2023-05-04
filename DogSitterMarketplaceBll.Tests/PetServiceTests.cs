@@ -23,7 +23,7 @@ namespace DogSitterMarketplaceBll.Tests
 
         private Mock<IUserRepository> _mockUserRepo;
 
-      //  private Mock<IWorkAndLocationRepository> _mockWorkLocationRepo;
+        //  private Mock<IWorkAndLocationRepository> _mockWorkLocationRepo;
 
         private IMapper _mapper;
 
@@ -36,7 +36,7 @@ namespace DogSitterMarketplaceBll.Tests
                 cfg.AddProfile<MapperBllPetProfile>();
             }).CreateMapper();
             var logger = LogManager.Setup().GetCurrentClassLogger();
-           // _mockOrderRepo = new Mock<IOrderRepository>();
+            // _mockOrderRepo = new Mock<IOrderRepository>();
             _mockPetRepo = new Mock<IPetRepository>();
             _mockUserRepo = new Mock<IUserRepository>();
             //_mockWorkLocationRepo = new Mock<IWorkAndLocationRepository>();

@@ -42,18 +42,18 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/Order", UriKind.Relative), addOrderResponseDto);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(AddOrder)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -72,18 +72,18 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/Order", UriKind.Relative), addOrdersResponseDto);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(AddSeveralOrdersForOneClientFromOneSitter)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -101,18 +101,18 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(updateOrderResponseDto);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(ChangeOrderStatus)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -130,18 +130,18 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(ordersResponseDto);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(GetAllOrdersUnderConsiderationBySitterId)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -161,7 +161,7 @@ namespace DogSitterMarketplaceApi.Controllers
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(GetAllNotDeletedOrders)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -179,14 +179,14 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Ok(orderResponseDto);
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(GetNotDeletedOrderById)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -202,14 +202,14 @@ namespace DogSitterMarketplaceApi.Controllers
                 await _orderService.DeleteOrderById(id);
                 return NoContent();
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(DeleteOrderById)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -229,14 +229,14 @@ namespace DogSitterMarketplaceApi.Controllers
                 return Ok(orderResponseDto);
 
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(OrderController)} {nameof(UpdateOrder)}");
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
     }

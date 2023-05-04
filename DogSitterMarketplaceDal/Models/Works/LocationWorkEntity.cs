@@ -15,10 +15,10 @@ namespace DogSitterMarketplaceDal.Models.Works
         [ForeignKey(nameof(LocationId))]
         public LocationEntity Location { get; set; }
 
-        public int? LocationId { get; set; }
+        public int LocationId { get; set; }
 
         [Required]
-        public List<TimingLocationWorkEntity> TimingLocationWorks { get; } = new List<TimingLocationWorkEntity>();
+        public List<TimingLocationWorkEntity> TimingLocationWorks { get; set; } = new List<TimingLocationWorkEntity>();
 
         [Required]
         public bool IsNotActive { get; set; }
@@ -28,5 +28,10 @@ namespace DogSitterMarketplaceDal.Models.Works
         public SitterWorkEntity SitterWork { get; set; }
 
         public int SitterWorkId { get; set; }
+
+        public override string ToString()
+        {
+            return $"Location for work id:{Id} Price {Price} Location {LocationId}";
+        }
     }
 }

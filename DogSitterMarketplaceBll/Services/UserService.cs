@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-
+using AutoMapper;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceBll.Models.Users.Response;
@@ -162,39 +161,25 @@ namespace DogSitterMarketplaceBll.Services
             return updateUserResponse;
         }
 
-
-        //добавить логгер
         public async Task<List<UserShortLocationWorkResponse>> GetAllSittersByLocationId(int locationId)
         {
-            //var userEntity = _userRepository.GetUserWithRoleById(clientId);
-            //var userRole = userEntity.UserRole;
-
-            //if (userRole.Name == UserRole.Client)
-            //{
             var allSittersEntity = await _userRepository.GetAllSittersByLocationId(locationId);
-            var allSittersIsActiveEntity = allSittersEntity.Where(s => s.SitterWorks.Any(sw => sw.LocationWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))).ToList();
-            //    var usersShortsResponse = _mapper.Map<List<UserShortLocationWorkResponse>>(allSittersIsActiveEntity);
+            var allSittersIsActiveEntity = allSittersEntity.Where(s => s.SitterWorks.Any(sw => sw.LocationsWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))).ToList();
             var usersShortsResponse = allSittersIsActiveEntity.Select(s => new UserShortLocationWorkResponse
             {
                 Id = s.Id,
                 Email = s.Email,
                 PhoneNumber = s.PhoneNumber,
                 Name = s.Name,
-                WorkTypesPrices = s.SitterWorks.Where(sw => sw.LocationWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))
+                WorkTypesPrices = s.SitterWorks.Where(sw => sw.LocationsWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))
                 .Select(sw => new WorkTypePriceResponse
                 {
-                    Price = sw.LocationWork.First(l => l.LocationId == locationId).Price,
+                    Price = sw.LocationsWork.First(l => l.LocationId == locationId).Price,
                     WorkType = _mapper.Map<WorkTypeResponse>(sw.WorkType)
                 }).ToList()
             }).ToList();
 
             return usersShortsResponse;
-            //}
-            //else
-            //{
-            //    // _logger.Log(LogLevel.Debug, $"{nameof(UserService)} {nameof(GetAllSittersByLocationId)} User with id {clientId} does not have nessety role for get List os Sitters");
-            //    throw new ArgumentException($"User with id {clientId} does not have nessety role for get List os Sitters");
-            //}
         }
     }
 }

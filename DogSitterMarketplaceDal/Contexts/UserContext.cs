@@ -14,7 +14,6 @@ namespace DogSitterMarketplaceDal.Contexts
 
         public DbSet<UserStatusEntity> UsersStatuses { get; set; }
 
-        // Локейшн и Ситтер НЕ УДАЛЯТЬ!
         public DbSet<LocationWorkEntity> LocationWorks { get; set; }
 
         public DbSet<SitterWorkEntity> SitterWorks { get; set; }

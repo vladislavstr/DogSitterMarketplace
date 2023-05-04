@@ -9,17 +9,21 @@ namespace DogSitterMarketplaceBll.Mappings
     {
         public MapperBllWorkProfile()
         {
-            CreateMap<DayOfWeekRequest, DayOfWeekEntity>();
             CreateMap<DayOfWeekEntity, DayOfWeekResponse>();
-            CreateMap<LocationRequest, LocationEntity>();
+            CreateMap<DayOfWeekRequest, DayOfWeekEntity>();
             CreateMap<LocationEntity, LocationResponse>();
-            CreateMap<LocationWorkRequest, LocationWorkEntity>();
+            CreateMap<LocationRequest, LocationEntity>();
             CreateMap<LocationWorkEntity, LocationWorkResponse>();
+            CreateMap<LocationWorkBaseRequest, LocationWorkEntity>();
+            CreateMap<LocationWorkUpdateRequest, LocationWorkEntity>();
             CreateMap<SitterWorkRequest, SitterWorkEntity>();
+            CreateMap<SitterWorkEntity, SitterWorkBaseResponse>();
             CreateMap<SitterWorkEntity, SitterWorkResponse>();
-            CreateMap<TimingLocationWorkRequest, TimingLocationWorkEntity>();
             CreateMap<TimingLocationWorkEntity, TimingLocationWorkResponse>();
+            CreateMap<TimingLocationWorkRequest, TimingLocationWorkEntity>();
+            CreateMap<LocationWorkEntity, LocationWorkBaseResponse>();
             CreateMap<TimingLocationWorkWithIdRequest, TimingLocationWorkEntity>();
+            CreateMap<SitterWorkBaseRequest, SitterWorkEntity>();
         }
     }
 }

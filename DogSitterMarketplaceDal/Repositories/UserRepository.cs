@@ -1,4 +1,4 @@
-﻿using DogSitterMarketplaceCore;
+using DogSitterMarketplaceCore;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.Contexts;
 using DogSitterMarketplaceDal.IRepositories;
@@ -213,11 +213,11 @@ namespace DogSitterMarketplaceDal.Repositories
                 return await _context.Users
                                 .Include(u => u.UserRole)
                                 .Include(u => u.SitterWorks)
-                                .ThenInclude(sw => sw.LocationWork)
+                                .ThenInclude(sw => sw.LocationsWork)
                                  .Include(u => u.SitterWorks)
                                 .ThenInclude(sw => sw.WorkType)
                                 .Where(u => u.UserRole.Name == UserRole.Sitter
-                                       && u.SitterWorks.Any(sw => sw.LocationWork.Any(l => l.LocationId == locationId)))
+                                       && u.SitterWorks.Any(sw => sw.LocationsWork.Any(l => l.LocationId == locationId)))
                                 .ToListAsync();
             }
             catch (Exception ex)

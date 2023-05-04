@@ -25,7 +25,7 @@ namespace DogSitterMarketplaceDal.Models.Works
 
         [Required]
         [ForeignKey(nameof(LocationWorkId))]
-        public virtual LocationWorkEntity LocationWork { get; set; }
+        public LocationWorkEntity LocationWork { get; set; }
 
         public int LocationWorkId { get; set; }
 

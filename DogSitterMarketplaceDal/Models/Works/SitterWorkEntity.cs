@@ -25,7 +25,7 @@ namespace DogSitterMarketplaceDal.Models.Works
         public int WorkTypeId { get; set; }
 
         [Required]
-        public List<LocationWorkEntity> LocationWork { get; set; } = new List<LocationWorkEntity>();
+        public List<LocationWorkEntity> LocationsWork { get; set; } = new List<LocationWorkEntity>();
 
         [Required]
         public bool IsDeleted { get; set; }
