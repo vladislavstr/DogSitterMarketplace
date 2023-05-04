@@ -10,7 +10,6 @@ using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;
 using DogSitterMarketplaceDal.Repositories;
 using NLog;
-using System.Collections.Generic;
 
 namespace DogSitterMarketplaceBll.Services
 {
@@ -97,7 +96,7 @@ namespace DogSitterMarketplaceBll.Services
             orderEntity.Pets.AddRange(petsNotDeleted);
             var orderStatusUnderConsideration = await _orderRepository.GetOrderStatusByName(OrderStatus.UnderConsideration);
             orderEntity.OrderStatusId = orderStatusUnderConsideration.Id;
-            orderEntity.Summ = summ.Value;
+            orderEntity.Summ = summ.Value * petsNotDeleted.Count;
 
             var addOrderEntity = await _orderRepository.AddNewOrder(orderEntity);
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
@@ -350,7 +349,7 @@ namespace DogSitterMarketplaceBll.Services
                     if (match == null)
                     {
                         messages.Add($"Pet with id {petId} not found now.");
-                    }                    
+                    }
                 }
             }
 

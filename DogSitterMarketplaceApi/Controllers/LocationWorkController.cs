@@ -29,7 +29,7 @@ namespace DogSitterMarketplaceApi.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<LocationWorkResponseDto>> AddNewLocationWork([FromQuery]LocationWorkRequestDto locationWork)
+        public async Task<ActionResult<LocationWorkResponseDto>> AddNewLocationWork([FromQuery] LocationWorkRequestDto locationWork)
         {
             LocationWorkResponseDto result;
 
@@ -50,7 +50,7 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPatch]
-        public async Task<ActionResult<LocationWorkResponseDto>> UpdateLocationWork([FromQuery]UpdateLocationWorkRequesDto locationWork)
+        public async Task<ActionResult<LocationWorkResponseDto>> UpdateLocationWork([FromQuery] UpdateLocationWorkRequesDto locationWork)
         {
             LocationWorkResponseDto result;
 
@@ -91,7 +91,7 @@ namespace DogSitterMarketplaceApi.Controllers
         {
             try
             {
-                 return Ok(_mapper.Map<List<LocationWorkBaseResponseDto>>(_locationService.GetAllLocationWork(isNotActive)));
+                return Ok(_mapper.Map<List<LocationWorkBaseResponseDto>>(_locationService.GetAllLocationWork(isNotActive)));
             }
             catch (FileNotFoundException ex)
             {
@@ -126,11 +126,11 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("bySytter/{sitterWorkId}")]
-        public async Task<ActionResult<List<LocationWorkBaseResponseDto>>> GetAllLocationWorkBySitterWork(int sitterWorkId,[FromQuery]bool? isNotActive)
+        public async Task<ActionResult<List<LocationWorkBaseResponseDto>>> GetAllLocationWorkBySitterWork(int sitterWorkId, [FromQuery] bool? isNotActive)
         {
             try
             {
-                return Ok(_mapper.Map<List<LocationWorkBaseResponseDto>>(await _locationService.GetAllLocationWorkBySitterWork(sitterWorkId,isNotActive)));
+                return Ok(_mapper.Map<List<LocationWorkBaseResponseDto>>(await _locationService.GetAllLocationWorkBySitterWork(sitterWorkId, isNotActive)));
             }
             catch (FileNotFoundException ex)
             {
@@ -178,7 +178,7 @@ namespace DogSitterMarketplaceApi.Controllers
         //}
 
         [HttpGet("locations")]
-        public async Task<ActionResult<List<LocationResponseDto>>> GetAllLocation( bool? isDeleted)
+        public async Task<ActionResult<List<LocationResponseDto>>> GetAllLocation(bool? isDeleted)
         {
             return _mapper.Map<List<LocationResponseDto>>(await _locationService.GetAllLocation(isDeleted));
         }

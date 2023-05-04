@@ -21,12 +21,12 @@ namespace DogSitterMarketplaceBll.IServices
 
         public Task<List<LocationWorkResponse>> GetAllLocationWorkBySitterWork(int sitterWorkId, bool? isNotActive = null);
 
-        public Task<List<LocationWorkResponse>> GetAllLocationWorkByLocation(int locationId, bool? isNotActive=null);
+        public Task<List<LocationWorkResponse>> GetAllLocationWorkByLocation(int locationId, bool? isNotActive = null);
 
         //public  Task<List<LocationWorkResponse>> GetAllLocationWorkByLocationAndStatus(int locationId, bool isNotActive = false);
 
         //public Task<List<LocationResponse>> GetAllLocation();
 
-        public Task<List<LocationResponse>> GetAllLocation(bool? IsDeleted=null);
+        public Task<List<LocationResponse>> GetAllLocation(bool? IsDeleted = null);
     }
 }

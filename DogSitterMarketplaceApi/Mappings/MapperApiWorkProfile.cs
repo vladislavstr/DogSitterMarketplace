@@ -22,7 +22,7 @@ namespace DogSitterMarketplaceApi.Mappings
             CreateMap<TimingLocationWorkResponse, TimingLocationWorkResponseDto>();
             CreateMap<DayOfWeekResponse, DayOfWeekResponseDto>();
             CreateMap<DayOfWeekRequestDto, DayOfWeekRequest>();
-            CreateMap<LocationWorkRequestDto,LocationWorkBaseRequest>();
+            CreateMap<LocationWorkRequestDto, LocationWorkBaseRequest>();
             CreateMap<LocationWorkRequestDto, LocationWorkUpdateRequest>();
             CreateMap<UpdateLocationWorkRequesDto, LocationWorkUpdateRequest>();
             CreateMap<LocationWorkResponse, LocationWorkResponseDto>();
@@ -32,7 +32,7 @@ namespace DogSitterMarketplaceApi.Mappings
             CreateMap<SitterWorkRequestDto, SitterWorkRequest>();
             CreateMap<SitterWorkBaseRequestDto, SitterWorkBaseRequest>();
             CreateMap<SitterWorkBaseRequestDto, SitterWorkRequest>();
-            CreateMap<SitterWorkUpdateRequestDto,SitterWorkRequest>();
+            CreateMap<SitterWorkUpdateRequestDto, SitterWorkRequest>();
             CreateMap<SitterWorkBaseResponse, SitterWorkBaseResponseDto>();
             CreateMap<SitterWorkResponse, SitterWorkResponseDto>();
             CreateMap<TimingLocationWorkResponse, TimingLocationWorkResponseDto>();

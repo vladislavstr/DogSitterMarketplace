@@ -19,9 +19,9 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public Task<LocationWorkEntity> GetLocationWorkByid(int id);
 
-        public Task<List<LocationWorkEntity>> GetAllLocationsWorkBySitterWork(int sitterWorkId,bool? IsNotActive=null);
+        public Task<List<LocationWorkEntity>> GetAllLocationsWorkBySitterWork(int sitterWorkId, bool? IsNotActive = null);
 
-        public Task<List<LocationWorkEntity>> GetAllLocationWorkByLocation(int locationId,bool? IsNotActive);
+        public Task<List<LocationWorkEntity>> GetAllLocationWorkByLocation(int locationId, bool? IsNotActive);
 
         public Task<List<LocationEntity>> GetAllLocation(bool? IsDeleted = null);
 

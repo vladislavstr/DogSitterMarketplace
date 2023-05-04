@@ -1,6 +1,6 @@
 namespace DogSitterMarketplaceBll.Models.Works.Request
-{ 
-    public class SitterWorkRequest:SitterWorkBaseRequest
+{
+    public class SitterWorkRequest : SitterWorkBaseRequest
     {
         public int Id { get; set; }
 

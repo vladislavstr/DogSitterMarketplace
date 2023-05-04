@@ -143,7 +143,7 @@ namespace DogSitterMarketplaceBll.Tests
         {
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentFromId)).ReturnsAsync(userCommentFromEntity);
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userCommentToId)).ReturnsAsync(userCommentToEntity);
-            _mockOrderService.Setup(os => os.CheckAndGetOrderIsExistAndIsNotDeleted(orderId)).ThrowsAsync( new NotFoundException(orderId, "OrderEntity"));
+            _mockOrderService.Setup(os => os.CheckAndGetOrderIsExistAndIsNotDeleted(orderId)).ThrowsAsync(new NotFoundException(orderId, "OrderEntity"));
 
             Assert.ThrowsAsync<NotFoundException>(async () => await _commentService.AddComment(addComment));
 
@@ -204,7 +204,7 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresForUserAboutHim_ForClientAboutHim_WhenUserRoleIsNotExist_ShouldBeNotFoundException_TestCaseSource))]
-        public void GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest_WhenUserRoleIsNotExist_ShouldBeNotFoundException(int userId, UserEntity userEntity, 
+        public void GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest_WhenUserRoleIsNotExist_ShouldBeNotFoundException(int userId, UserEntity userEntity,
                                                                                                                                List<CommentEntity> commentsEntities, int userRoleId)
         {
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).ReturnsAsync(userEntity);
@@ -219,7 +219,7 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresForUserAboutHim_ForClientAboutHim_WhenUserRoleIsNotClient_ShouldBeNotFoundException_TestCaseSource))]
-        public void GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest_WhenUserRoleIsNotClient_ShouldBeNotFoundException(int userId, UserEntity userEntity, 
+        public void GetCommentsAndScoresForUserAboutHim_ForClientAboutHimTest_WhenUserRoleIsNotClient_ShouldBeNotFoundException(int userId, UserEntity userEntity,
                                                                                                                  List<CommentEntity> commentsEntities, int userRoleId, UserRoleEntity userRole)
         {
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userId)).ReturnsAsync(userEntity);
@@ -259,7 +259,7 @@ namespace DogSitterMarketplaceBll.Tests
             _mockCommentRepo.Verify(c => c.GetAllCommentsAndScoresByUserId(userId), Times.Once);
             _mockUserRepo.Verify(u => u.GetUserRoleById(userRoleId), Times.Once);
         }
-        
+
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresForUserAboutHim_ForSitterAboutHim_WhenUserRoleIsNotClient_ShouldBeNotFoundException_TestCaseSource))]
         public void GetCommentsAndScoresForUserAboutHim_ForSitterAboutHimTest_WhenUserRoleIsNotClient_ShouldBeNotFoundException(int userId, UserEntity userEntity,
                                                                                                                  List<CommentEntity> commentsEntities, int userRoleId, UserRoleEntity userRole)
@@ -299,7 +299,7 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenSitterIsNotExist_ShouldBeNotFoundException_TestCaseSource))]
-        public void GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTest_WhenSitterIsNotExist_ShouldBeNotFoundException(int userIdToComment, int userIdFromComment, 
+        public void GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTest_WhenSitterIsNotExist_ShouldBeNotFoundException(int userIdToComment, int userIdFromComment,
                                                                                                                                  int userRoleWhoGetCommentId, int userRoleCommentToId)
         {
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdToComment)).ThrowsAsync(new NotFoundException(userIdToComment, "UserEntity"));
@@ -332,9 +332,9 @@ namespace DogSitterMarketplaceBll.Tests
         }
 
         [TestCaseSource(typeof(CommentServiceTestCaseSource), nameof(CommentServiceTestCaseSource.GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitter_WhenUserRoleWhoGetCommentIsNotExist_ShouldBeNotFoundException_TestCaseSource))]
-        public void GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTest_WhenUserRoleWhoGetCommentIsNotExist_ShouldBeNotFoundException(int userIdToComment, 
+        public void GetCommentsAndScoresAboutOtherUsers_ForClientAboutSitterTest_WhenUserRoleWhoGetCommentIsNotExist_ShouldBeNotFoundException(int userIdToComment,
                                                                                                     UserEntity userEntityToComment, int userIdFromComment, UserEntity userEntityFromComment,
-                                                                                                    List<CommentEntity> commentsEntities, int userRoleWhoGetCommentId,  int userRoleCommentToId)
+                                                                                                    List<CommentEntity> commentsEntities, int userRoleWhoGetCommentId, int userRoleCommentToId)
         {
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdToComment)).ReturnsAsync(userEntityToComment);
             _mockUserRepo.Setup(u => u.GetExistAndNotDeletedUserById(userIdFromComment)).ReturnsAsync(userEntityFromComment);

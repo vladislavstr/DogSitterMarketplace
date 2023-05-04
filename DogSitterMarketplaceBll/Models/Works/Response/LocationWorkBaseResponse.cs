@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DogSitterMarketplaceBll.Models.Works.Response
+﻿namespace DogSitterMarketplaceBll.Models.Works.Response
 {
     public class LocationWorkBaseResponse
     {

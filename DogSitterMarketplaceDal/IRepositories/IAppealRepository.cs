@@ -13,7 +13,7 @@ namespace DogSitterMarketplaceDal.IRepositories
         public IEnumerable<AppealTypeEntity> GetAllAppealTypes();
 
         public AppealEntity GetAppealByUserIdToWhom(int id);
-        
+
         public AppealEntity GetAppealByUserIdFromWhom(int id);
 
         public AppealEntity AddAppeal(AppealEntity appeal);

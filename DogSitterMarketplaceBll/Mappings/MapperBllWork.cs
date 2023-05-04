@@ -17,11 +17,11 @@ namespace DogSitterMarketplaceBll.Mappings
             CreateMap<LocationWorkBaseRequest, LocationWorkEntity>();
             CreateMap<LocationWorkUpdateRequest, LocationWorkEntity>();
             CreateMap<SitterWorkRequest, SitterWorkEntity>();
-            CreateMap<SitterWorkEntity,SitterWorkBaseResponse>();
+            CreateMap<SitterWorkEntity, SitterWorkBaseResponse>();
             CreateMap<SitterWorkEntity, SitterWorkResponse>();
             CreateMap<TimingLocationWorkEntity, TimingLocationWorkResponse>();
-            CreateMap<TimingLocationWorkRequest, TimingLocationWorkEntity>(); 
-            CreateMap<LocationWorkEntity,LocationWorkBaseResponse>();
+            CreateMap<TimingLocationWorkRequest, TimingLocationWorkEntity>();
+            CreateMap<LocationWorkEntity, LocationWorkBaseResponse>();
             CreateMap<TimingLocationWorkWithIdRequest, TimingLocationWorkEntity>();
             CreateMap<SitterWorkBaseRequest, SitterWorkEntity>();
         }

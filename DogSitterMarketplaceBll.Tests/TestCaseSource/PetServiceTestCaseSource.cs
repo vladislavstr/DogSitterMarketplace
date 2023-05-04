@@ -3,12 +3,7 @@ using DogSitterMarketplaceBll.Models.Pets.Response;
 using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceDal.Models.Pets;
 using DogSitterMarketplaceDal.Models.Users;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DogSitterMarketplaceBll.Tests.TestCaseSource
 {
@@ -133,7 +128,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 {
                     Id = 321
                 },
-                Characteristics = "weight - 22UPD",                
+                Characteristics = "weight - 22UPD",
             };
 
             yield return new object[] { petEntity, updatePetEntity, userId, userEntity, petUpdate, expected };

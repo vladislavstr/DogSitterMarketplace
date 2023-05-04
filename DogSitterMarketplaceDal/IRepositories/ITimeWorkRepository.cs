@@ -1,5 +1,4 @@
-﻿using DogSitterMarketplaceDal.Contexts;
-using DogSitterMarketplaceDal.Models.Works;
+﻿using DogSitterMarketplaceDal.Models.Works;
 
 namespace DogSitterMarketplaceDal.IRepositories
 {
