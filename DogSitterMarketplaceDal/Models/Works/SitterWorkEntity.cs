@@ -10,7 +10,7 @@ namespace DogSitterMarketplaceDal.Models.Works
         public int Id { get; set; }
 
         [Column(TypeName = "nvarchar(500)"),]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         [Required]
         [ForeignKey(nameof(UserId))]
