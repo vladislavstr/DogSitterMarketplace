@@ -280,7 +280,7 @@ namespace DogSitterMarketplaceBll.Services
                 {
                     foreach (var sitterWork in allSitterWorks)
                     {
-                        foreach (var locationWork in sitterWork.LocationWork)
+                        foreach (var locationWork in sitterWork.LocationsWork)
                         {
                             if (locationWork.LocationId == locationId)
                             {

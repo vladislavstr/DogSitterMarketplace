@@ -2,7 +2,7 @@ using DogSitterMarketplaceBll.Models.Works.Response;
 
 namespace DogSitterMarketplaceBll.Models.Works.Request
 {
-    public class LocationWorkRequest
+    public class LocationWorkBaseRequest
     {
         public int Price { get; set; }
 
@@ -11,7 +11,5 @@ namespace DogSitterMarketplaceBll.Models.Works.Request
         public int LocationId { get; set; }
 
         public bool IsNotActive { get; set; }
-
-        public List<TimingLocationWorkRequest> TimingLocations { get; set; }
     }
 }

@@ -5,18 +5,12 @@ using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceCore.Exceptions;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Works;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ILogger = NLog.ILogger;
 using LogLevel = NLog.LogLevel;
 
 namespace DogSitterMarketplaceBll.Services
 {
-    public class LocationService: ILocationService
+    public class LocationService : ILocationService
     {
         private static IWorkAndLocationRepository _workAndLocationRepo;
         private static IMapper _mapper;
@@ -30,9 +24,9 @@ namespace DogSitterMarketplaceBll.Services
             _logger = logger;
         }
 
-        public bool AddNewLocationWork(LocationWorkRequest location)
+        public async Task<LocationWorkResponse> AddNewLocationWork(LocationWorkBaseRequest location)
         {
-            bool result = false;
+            LocationWorkResponse result = null;
 
             if (location.Price <= 0)
             {
@@ -40,29 +34,26 @@ namespace DogSitterMarketplaceBll.Services
                 throw new ExcepsionOfWorkOnLocation($"service price cannot be less than 0 ");
             }
 
-            var oldLocationWork = _workAndLocationRepo.GetAllLocationsWorkBySitterWork(location.SitterWorkId);
+            var oldLocationWork = await _workAndLocationRepo.GetAllLocationsWorkBySitterWork(location.SitterWorkId);
             var newLocationWornBll = _mapper.Map<LocationWorkEntity>(location);
 
-            if (oldLocationWork != null)
+            if (oldLocationWork.Count!=0)
             {
                 if (oldLocationWork.Exists(lw => lw.LocationId == newLocationWornBll.LocationId && lw.IsNotActive == false))
                 {
                     _logger.Log(LogLevel.Warn, $"The new location {newLocationWornBll.ToString()} is already in use for the specified job type");
                     throw new ExcepsionOfWorkOnLocation($"The new location {newLocationWornBll.ToString()} is already in use for the specified job type");
                 }
-                else
-                {
-                    result = _workAndLocationRepo.AddNewLocationWork(newLocationWornBll);
-                    _logger.Log(LogLevel.Info, $"The new location is add");
-                }
             }
+
+            result = _mapper.Map<LocationWorkResponse>(await _workAndLocationRepo.AddNewLocationWork(newLocationWornBll));
 
             return result;
         }
 
-        public bool UpdateLocationWork(UpdateLocationWorkRequest location)
+        public async Task<LocationWorkResponse> UpdateLocationWork(LocationWorkUpdateRequest location)
         {
-            bool result;
+            LocationWorkResponse result;
 
             if (location.Price <= 0)
             {
@@ -71,60 +62,75 @@ namespace DogSitterMarketplaceBll.Services
             }
 
             var updateLocation = _mapper.Map<LocationWorkEntity>(location);
-            var oldLocationWork = _workAndLocationRepo.GetAllLocationsWorkBySitterWork(updateLocation.SitterWorkId);
+            var oldLocationWork = await _workAndLocationRepo.GetAllLocationsWorkBySitterWork(updateLocation.SitterWorkId);
 
-            if (oldLocationWork.Exists(lw => lw.LocationId == updateLocation.LocationId && lw.IsNotActive == false && lw.Id!=updateLocation.Id))
+            if (!oldLocationWork.Exists(lw => lw.Id == updateLocation.Id))
             {
-                _logger.Log(LogLevel.Warn, $"The new location {updateLocation.ToString()} is already in use for the specified job type");
+                _logger.Log(LogLevel.Error, $"There is no location for the service with this ID {updateLocation.Id}");
+                throw new FileNotFoundException($"There is no location for the service with this ID {updateLocation.Id}");
+            }
+            else if (oldLocationWork.Exists(lw => lw.LocationId == updateLocation.LocationId && lw.IsNotActive == false && lw.Id != updateLocation.Id))
+            {
+                _logger.Log(LogLevel.Error, $"The new location {updateLocation.ToString()} is already in use for the specified job type");
                 throw new ExcepsionOfWorkOnLocation($"The new location {updateLocation.ToString()} is already in use for the specified job type");
             }
             else
             {
-                result = _workAndLocationRepo.UpdateLocationWork(updateLocation);
+                result = _mapper.Map<LocationWorkResponse>(await _workAndLocationRepo.UpdateLocationWork(updateLocation));
                 _logger.Log(LogLevel.Info, $"The new location is add");
             }
 
             return result;
         }
 
-        public bool DeleteLocationWork(int locationWorkId)
+        public async Task<bool> DeleteLocationWork(int locationWorkId)
         {
-            return _workAndLocationRepo.DeleteLocationWork(locationWorkId);
+            return await _workAndLocationRepo.DeleteLocationWork(locationWorkId);
         }
 
-        public List<LocationWorkResponse> GetAllLocationWork()
+        public List<LocationWorkResponse> GetAllLocationWork(bool? isNotActive)
         {
-            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetAllLocationWork());
+            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetAllLocationWork(isNotActive));
         }
 
-        public LocationWorkResponse GetLocationWorkByid(int id)
+        public async Task<LocationWorkResponse> GetLocationWorkByid(int id)
         {
-            return _mapper.Map<LocationWorkResponse>(_workAndLocationRepo.GetLocationWorkByid(id));
+            return _mapper.Map<LocationWorkResponse>(await _workAndLocationRepo.GetLocationWorkByid(id));
         }
 
-        public List<LocationWorkResponse> GetAllLocationWorkbyActiveStatus(bool isNotActive = false)
+        //public async Task<List<LocationWorkResponse>> GetAllLocationWorkbyActiveStatus(bool isNotActive = false)
+        //{
+        //    return _mapper.Map<List<LocationWorkResponse>>(await _workAndLocationRepo.GetAllLocationWorkbyActiveStatus(isNotActive));
+        //}
+
+        //public async Task<List<LocationWorkResponse>> GetLocationsWorkBySitterWorkAndStatus(int sitterWorkId, bool isNotActive = false)
+        //{
+        //    return _mapper.Map<List<LocationWorkResponse>>(await _workAndLocationRepo.GetLocationsWorkBySitterWorkAndStatus(sitterWorkId, isNotActive));
+        //}
+
+        public async Task<List<LocationWorkResponse>> GetAllLocationWorkBySitterWork(int sitterWorkId, bool? isNotActive)
         {
-            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetAllLocationWorkbyActiveStatus(isNotActive));
+            return _mapper.Map<List<LocationWorkResponse>>(await _workAndLocationRepo.GetAllLocationsWorkBySitterWork(sitterWorkId,isNotActive));
         }
 
-        public List<LocationWorkResponse> GetLocationsWorkBySitterWorkAndStatus(int sitterWorkId, bool isNotActive = false)
+        public async Task<List<LocationWorkResponse>> GetAllLocationWorkByLocation(int locationId, bool? isNotActive)
         {
-            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetLocationsWorkBySitterWorkAndStatus(sitterWorkId, isNotActive));
+            return _mapper.Map<List<LocationWorkResponse>>(await _workAndLocationRepo.GetAllLocationWorkByLocation(locationId,isNotActive));
         }
 
-        public List<LocationWorkResponse> GetAllLocationWorkBySitterWork(int sitterWorkId)
-        {
-            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetAllLocationsWorkBySitterWork(sitterWorkId));
-        }
+        //public async Task<List<LocationWorkResponse>> GetAllLocationWorkByLocationAndStatus(int locationId, bool isNotActive = false)
+        //{
+        //    return _mapper.Map<List<LocationWorkResponse>>(await _workAndLocationRepo.GetAllLocationsWorkByLocationAndStatus(locationId, isNotActive));
+        //}
 
-        public List<LocationWorkResponse> GetAllLocationWorkByLocation(int locationId)
-        {
-            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetAllLocationWorkByLocation(locationId));
-        }
+        //public async Task<List<LocationResponse>> GetAllLocation()
+        //{
+        //    return _mapper.Map<List<LocationResponse>>(await _workAndLocationRepo.GetAllLocation());
+        //}
 
-        public List<LocationWorkResponse> GetAllLocationWorkByLocationAndStatus(int locationId, bool isNotActive = false)
+        public async Task<List<LocationResponse>> GetAllLocation(bool? IsDeleted)
         {
-            return _mapper.Map<List<LocationWorkResponse>>(_workAndLocationRepo.GetAllLocationsWorkByLocationAndStatus(locationId, isNotActive));
+            return _mapper.Map<List<LocationResponse>>(await _workAndLocationRepo.GetAllLocation(IsDeleted));
         }
     }
 }

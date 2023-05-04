@@ -19,13 +19,13 @@ namespace DogSitterMarketplaceDal.Models.Works
 
         [Required]
         [ForeignKey(nameof(DayOfWeekId))]
-        public DayOfWeekEntity DayOfWeek { get; set; }
+        public  DayOfWeekEntity DayOfWeek { get; set; }
 
         public int DayOfWeekId { get; set; }
 
         [Required]
         [ForeignKey(nameof(LocationWorkId))]
-        public LocationWorkEntity LocationWork { get; set; }
+        public  LocationWorkEntity LocationWork { get; set; }
 
         public int LocationWorkId { get; set; }
 

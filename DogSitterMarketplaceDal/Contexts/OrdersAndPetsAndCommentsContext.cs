@@ -31,7 +31,7 @@ namespace DogSitterMarketplaceDal.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSItterMarketplaseDBConnect"));
+            builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSitterMarketplaceDBConnect"));
         }
     }
 }

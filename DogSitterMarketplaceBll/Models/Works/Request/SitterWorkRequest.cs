@@ -1,12 +1,8 @@
 ﻿namespace DogSitterMarketplaceBll.Models.Works.Request
 { 
-    public class SitterWorkRequest
+    public class SitterWorkRequest:SitterWorkBaseRequest
     {
-        public string? Comment { get; set; }
-
-        public int UserId { get; set; }
-
-        public int WorkTypeId { get; set; }
+        public int Id { get; set; }
 
         public List<int> LocationsWorks { get; set; }
     }

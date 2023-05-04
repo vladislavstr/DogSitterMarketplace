@@ -15,17 +15,17 @@ namespace DogSitterMarketplaceDal.Models.Works
         [ForeignKey(nameof(LocationId))]
         public LocationEntity Location { get; set; }
 
-        public int? LocationId { get; set; }
+        public int LocationId { get; set; }
 
         [Required]
-        public List<TimingLocationWorkEntity> TimingLocationWorks { get; } = new List<TimingLocationWorkEntity>();
+        public List<TimingLocationWorkEntity> TimingLocationWorks { get; set; } = new List<TimingLocationWorkEntity>();
 
         [Required]
         public bool IsNotActive { get; set; }
 
         [Required]
         [ForeignKey(nameof(SitterWorkId))]
-        public SitterWorkEntity SitterWork { get; set; }
+        public  SitterWorkEntity SitterWork { get; set; }
 
         public int SitterWorkId { get; set; }
 

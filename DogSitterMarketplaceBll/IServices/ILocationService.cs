@@ -1,33 +1,32 @@
 ﻿using DogSitterMarketplaceBll.Models.Works.Request;
 using DogSitterMarketplaceBll.Models.Works.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DogSitterMarketplaceBll.IServices
 {
     public interface ILocationService
     {
-        public bool AddNewLocationWork(LocationWorkRequest location);
+        public Task<LocationWorkResponse> AddNewLocationWork(LocationWorkBaseRequest location);
 
-        public bool UpdateLocationWork(UpdateLocationWorkRequest location);
+        public Task<LocationWorkResponse> UpdateLocationWork(LocationWorkUpdateRequest location);
 
-        public bool DeleteLocationWork(int locationWorkId);
+        public Task<bool> DeleteLocationWork(int locationWorkId);
 
-        public List<LocationWorkResponse> GetAllLocationWork();
+        public List<LocationWorkResponse> GetAllLocationWork(bool? isNotActive = null);
 
-        public LocationWorkResponse GetLocationWorkByid(int id);
+        public Task<LocationWorkResponse> GetLocationWorkByid(int id);
 
-        public List<LocationWorkResponse> GetAllLocationWorkbyActiveStatus(bool isNotActive = false);
+        //public  Task<List<LocationWorkResponse>> GetAllLocationWorkbyActiveStatus(bool isNotActive = false);
 
-        public List<LocationWorkResponse> GetAllLocationWorkBySitterWork(int sitterWorkId);
+        //public  Task<List<LocationWorkResponse>> GetLocationsWorkBySitterWorkAndStatus(int sitterWorkId, bool isNotActive = false);
 
-        public List<LocationWorkResponse> GetLocationsWorkBySitterWorkAndStatus(int sitterWorkId, bool isNotActive = false);
+        public Task<List<LocationWorkResponse>> GetAllLocationWorkBySitterWork(int sitterWorkId, bool? isNotActive = null);
 
-        public List<LocationWorkResponse> GetAllLocationWorkByLocation(int locationId);
+        public Task<List<LocationWorkResponse>> GetAllLocationWorkByLocation(int locationId, bool? isNotActive=null);
 
-        public List<LocationWorkResponse> GetAllLocationWorkByLocationAndStatus(int locationId, bool isNotActive = false);
+        //public  Task<List<LocationWorkResponse>> GetAllLocationWorkByLocationAndStatus(int locationId, bool isNotActive = false);
+
+        //public Task<List<LocationResponse>> GetAllLocation();
+
+        public Task<List<LocationResponse>> GetAllLocation(bool? IsDeleted=null);
     }
 }
