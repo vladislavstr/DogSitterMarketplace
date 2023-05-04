@@ -80,7 +80,10 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public async Task<List<DayOfWeekEntity>> GetDaysOfWeek()
         {
-            return await _workContext.DaysOfWeek.ToListAsync();
+            var result = new List<DayOfWeekEntity>();
+            result = await _workContext.DaysOfWeek.ToListAsync();
+            result.Sort();
+            return result;
         }
 
         public TimingLocationWorkEntity GetTiming(int idTiming)

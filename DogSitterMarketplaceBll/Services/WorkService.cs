@@ -36,6 +36,7 @@ namespace DogSitterMarketplaceBll.Services
             else
             {
                 _logger.Log(LogLevel.Error, $"This service is already provided by the user.");
+                throw new ArgumentException("This service is already provided by the user");
             }
 
             return result;
@@ -53,6 +54,7 @@ namespace DogSitterMarketplaceBll.Services
             else
             {
                 _logger.Log(LogLevel.Error, $"This service is already provided by the userThis service is already provided by the user.");
+                throw new  ArgumentException("This service is already provided by the userThis service is already provided by the user.");
             }
 
             return result;
@@ -83,9 +85,9 @@ namespace DogSitterMarketplaceBll.Services
         //    return _mapper.Map<List<SitterWorkResponse>>(_workAndLocationRepo.GetSitterWorksUser(userId, isDeleted));
         //}
 
-        public List<SitterWorkResponse> GetSitterWorks(bool? isDeleted = null)
+        public async Task<List<SitterWorkResponse>> GetSitterWorks(bool? isDeleted = null)
         {
-            return _mapper.Map<List<SitterWorkResponse>>(_workAndLocationRepo.GetSitterWorks());
+            return _mapper.Map<List<SitterWorkResponse>>(await _workAndLocationRepo.GetSitterWorks(isDeleted));
         }
 
         //public async Task<List<SitterWorkResponse>> GetSitterWorksByStatusIsDeleted(bool? isDeleted = null)

@@ -112,7 +112,7 @@ namespace DogSitterMarketplaceApi.Controllers
         //    }
         //}
 
-        [HttpGet("fullInfoOne/{id}")]
+        [HttpGet("one/{id}")]
         public async Task<ActionResult<LocationWorkResponseDto>> GetLocationWorkByid(int id)
         {
             try

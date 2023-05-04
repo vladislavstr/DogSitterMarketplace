@@ -152,7 +152,7 @@ namespace DogSitterMarketplaceDal.Repositories
                 throw new FileNotFoundException($"Location by id {locationId} not found");
             }
 
-            var sitter = await _workContext.LocationWorks
+            var locationsWork = await _workContext.LocationWorks
                 .Include(sw => sw.Location)
                 .Include(sw => sw.TimingLocationWorks)
                 .ThenInclude(sw => sw.DayOfWeek)
@@ -161,12 +161,12 @@ namespace DogSitterMarketplaceDal.Repositories
                 .Where(sw => (sw.LocationId == locationId && IsNotActive == null)
                 || (sw.LocationId == locationId && sw.IsNotActive == IsNotActive)).ToListAsync();
 
-            if (sitter == null)
+            if (locationsWork == null)
             {
                 _logger.Log(LogLevel.Warn, $"Location work by location {locationId} not found");
             }
 
-            return sitter;
+            return locationsWork;
         }
 
         public async Task<List<LocationEntity>> GetAllLocation(bool? IsDeleted = null)
@@ -332,17 +332,6 @@ namespace DogSitterMarketplaceDal.Repositories
 
             return workTypes;
         }
-
-        //public LocationWorkEntity GetLocationWorkByid(int id)
-        //{
-        //    var location = _workContext.LocationWorks
-        //        .Include(lw => lw.TimingLocationWorks)
-        //        .Include(lw => lw.Location)
-        //        .Include(lw => lw.SitterWork)
-        //        .SingleOrDefault(lw => lw.Id == id);
-
-        //    return location;
-        //}
 
         public SitterWorkEntity GetSitterWorkByItsId(int id)
         {

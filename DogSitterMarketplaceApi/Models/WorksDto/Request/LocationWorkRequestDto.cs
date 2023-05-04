@@ -1,10 +1,12 @@
 ﻿using DogSitterMarketplaceApi.Models.WorksDto.Request;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DogSitterMarketplaceApi.Models.Works.Request
 {
     public class LocationWorkRequestDto
     {
-        public int Price { get; set; }
+        public decimal  Price { get; set; }
 
         public int SitterWorkId { get; set; }
 

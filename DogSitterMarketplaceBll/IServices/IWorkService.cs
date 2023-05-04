@@ -17,7 +17,7 @@ namespace DogSitterMarketplaceBll.IServices
 
         //public List<SitterWorkResponse> GetSitterWorksUserByStatusIsDeleted(int userId, bool isDeleted = false);
 
-        public List<SitterWorkResponse> GetSitterWorks(bool? isDeleted = null);
+        public Task<List<SitterWorkResponse>> GetSitterWorks(bool? isDeleted = null);
 
         //public  Task<List<SitterWorkResponse>> GetSitterWorksByStatusIsDeleted(bool isDeleted = false);
 

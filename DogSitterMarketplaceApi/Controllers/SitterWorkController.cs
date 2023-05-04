@@ -33,6 +33,10 @@ namespace DogSitterMarketplaceApi.Controllers
                 var result = _mapper.Map<SitterWorkBaseResponseDto>(await _workService.AddSitterWork(sitterWorkBll));
                 return Ok(result);
             }
+            catch(ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (FileNotFoundException ex)
             {
                 return NotFound(ex.Message);
@@ -47,6 +51,10 @@ namespace DogSitterMarketplaceApi.Controllers
                 var sitterWorkBll = _mapper.Map<SitterWorkRequest>(sitterWork);
                 var result = _mapper.Map<SitterWorkResponseDto>(await _workService.UpdateSitterWork(sitterWorkBll));
                 return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (FileNotFoundException ex)
             {
@@ -82,12 +90,12 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("byUser/{sitterWorkId}")]
-        public ActionResult<List<SitterWorkBaseResponseDto>> GetSitterWorksUser(int userId, [FromQuery] bool? isDeleted = null)
+        [HttpGet("byUser/{userId}")]
+        public ActionResult<List<SitterWorkResponseDto>> GetSitterWorksUser(int userId, [FromQuery] bool? isDeleted = null)
         {
             try
             {
-                return Ok(_mapper.Map<SitterWorkResponseDto>(_workService.GetSitterWorksUser(userId, isDeleted)));
+                return Ok(_mapper.Map <List<SitterWorkResponseDto>>(_workService.GetSitterWorksUser(userId, isDeleted)));
             }
             catch (FileNotFoundException ex)
             {
@@ -96,15 +104,15 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<List<SitterWorkBaseResponseDto>> GetSitterWorks([FromQuery] bool? IsDeleted = null)
+        public async Task<ActionResult<List<SitterWorkBaseResponseDto>>> GetSitterWorks([FromQuery] bool? IsDeleted = null)
         {
-            return Ok(_mapper.Map<List<SitterWorkBaseResponseDto>>(_workService.GetSitterWorks(IsDeleted)));
+            return Ok(_mapper.Map<List<SitterWorkBaseResponseDto>>(await _workService.GetSitterWorks(IsDeleted)));
         }
 
         [HttpGet("types")]
-        public ActionResult<List<WorkTypeResponseDto>> GetWorkTypes([FromQuery] bool? IsDeleted = null)
+        public async Task<ActionResult<List<WorkTypeResponseDto>>> GetWorkTypes([FromQuery] bool? IsDeleted = null)
         {
-            return Ok(_mapper.Map<List<WorkTypeResponseDto>>(_workService.GetWorkTypes(IsDeleted)));
+            return Ok(_mapper.Map<List<WorkTypeResponseDto>>(await _workService.GetWorkTypes(IsDeleted)));
         }
     }
 }
