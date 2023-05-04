@@ -95,7 +95,7 @@ namespace DogSitterMarketplaceBll.Services
             //if (userRole.Name == UserRole.Client)
             //{
             var allSittersEntity = await _userRepository.GetAllSittersByLocationId(locationId);
-            var allSittersIsActiveEntity = allSittersEntity.Where(s => s.SitterWorks.Any(sw => sw.LocationWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))).ToList();
+            var allSittersIsActiveEntity = allSittersEntity.Where(s => s.SitterWorks.Any(sw => sw.LocationsWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))).ToList();
             //    var usersShortsResponse = _mapper.Map<List<UserShortLocationWorkResponse>>(allSittersIsActiveEntity);
             var usersShortsResponse = allSittersIsActiveEntity.Select(s => new UserShortLocationWorkResponse
             {
@@ -103,10 +103,10 @@ namespace DogSitterMarketplaceBll.Services
                 Email = s.Email,
                 PhoneNumber = s.PhoneNumber,
                 Name = s.Name,
-                WorkTypesPrices = s.SitterWorks.Where(sw => sw.LocationWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))
+                WorkTypesPrices = s.SitterWorks.Where(sw => sw.LocationsWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))
                 .Select(sw => new WorkTypePriceResponse
                 {
-                    Price = sw.LocationWork.First(l => l.LocationId == locationId).Price,
+                    Price = sw.LocationsWork.First(l => l.LocationId == locationId).Price,
                     WorkType = _mapper.Map<WorkTypeResponse>(sw.WorkType)
                 }).ToList()
             }).ToList();

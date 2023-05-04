@@ -65,12 +65,12 @@ namespace DogSitterMarketplaceBll.Services
 
             var sitterWork = await _workAndLocationRepository.GetNotDeletedSitterWorkById(newOrder.SitterWorkId);
 
-            if (sitterWork.LocationWork == null)
+            if (sitterWork.LocationsWork == null)
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(OrderRepository)} {nameof(OrderEntity)} {nameof(AddOrder)},LocationWork is null");
                 throw new ArgumentException("LocationWork is null");
             }
-            var summ = sitterWork.LocationWork.SingleOrDefault(lw => lw.SitterWorkId == newOrder.SitterWorkId && lw.LocationId == newOrder.LocationId)?.Price;
+            var summ = sitterWork.LocationsWork.SingleOrDefault(lw => lw.SitterWorkId == newOrder.SitterWorkId && lw.LocationId == newOrder.LocationId)?.Price;
 
             if (!summ.HasValue || summ == 0)
             {
