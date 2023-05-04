@@ -77,8 +77,10 @@ namespace DogSitterMarketplaceDal.Repositories
                         .Include(o => o.SitterWork)
                         .Include(o => o.Location)
                         .Include(o => o.SitterWork.User)
+                        .ThenInclude(u => u.UserRole)
                         .Include(o => o.SitterWork.WorkType)
                         .Include(o => o.Comments)
+                        .ThenInclude(c => c.CommentFromUser)
                         .Include(o => o.Appeals)
                         .Include(o => o.Pets)
                         .AsNoTracking().ToListAsync();
@@ -158,6 +160,7 @@ namespace DogSitterMarketplaceDal.Repositories
             return await _context.Orders
                 .Include(o => o.OrderStatus)
                 .Include(o => o.SitterWork)
+                .ThenInclude(sw => sw.User)
                 .Include(o => o.Location)
                 .Include(o => o.Pets)
                 .SingleAsync(o => o.Id == orderUpdateEntity.Id);

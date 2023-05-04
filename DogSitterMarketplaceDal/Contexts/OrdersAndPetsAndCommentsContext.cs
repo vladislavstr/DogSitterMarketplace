@@ -35,5 +35,26 @@ namespace DogSitterMarketplaceDal.Contexts
         {
             builder.UseSqlServer(Environment.GetEnvironmentVariable("DogSitterDBConnect"));
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(m => m.GetForeignKeys()))
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
+            }
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var isDeletedProp = entityType.FindProperty("IsDeleted");
+                if (isDeletedProp != null)
+                {
+                    isDeletedProp.SetDefaultValue(false);
+                }
+            }
+
+            modelBuilder.Entity<LocationWorkEntity>().Property(lw => lw.IsNotActive).HasDefaultValue(false);
+        }
     }
 }
