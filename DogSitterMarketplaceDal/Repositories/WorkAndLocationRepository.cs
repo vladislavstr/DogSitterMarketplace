@@ -333,17 +333,6 @@ namespace DogSitterMarketplaceDal.Repositories
             return workTypes;
         }
 
-        //public LocationWorkEntity GetLocationWorkByid(int id)
-        //{
-        //    var location = _workContext.LocationWorks
-        //        .Include(lw => lw.TimingLocationWorks)
-        //        .Include(lw => lw.Location)
-        //        .Include(lw => lw.SitterWork)
-        //        .SingleOrDefault(lw => lw.Id == id);
-
-        //    return location;
-        //}
-
         public SitterWorkEntity GetSitterWorkByItsId(int id)
         {
             var sitterWork = _workContext.SitterWorks

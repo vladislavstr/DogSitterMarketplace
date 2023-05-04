@@ -6,8 +6,6 @@
 
         public string? Comment { get; set; }
 
-        // public int OrderStatusId { get; set; }
-
         public int SitterWorkId { get; set; }
 
         public decimal Summ { get; set; }

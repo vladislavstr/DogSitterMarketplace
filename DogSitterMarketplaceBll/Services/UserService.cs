@@ -1,5 +1,4 @@
 using AutoMapper;
-
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Users.Request;
 using DogSitterMarketplaceBll.Models.Users.Response;
@@ -86,17 +85,10 @@ namespace DogSitterMarketplaceBll.Services
             _userRepository.DeleteUserById(id);
         }
 
-        //добавить логгер
         public async Task<List<UserShortLocationWorkResponse>> GetAllSittersByLocationId(int locationId)
         {
-            //var userEntity = _userRepository.GetUserWithRoleById(clientId);
-            //var userRole = userEntity.UserRole;
-
-            //if (userRole.Name == UserRole.Client)
-            //{
             var allSittersEntity = await _userRepository.GetAllSittersByLocationId(locationId);
             var allSittersIsActiveEntity = allSittersEntity.Where(s => s.SitterWorks.Any(sw => sw.LocationsWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))).ToList();
-            //    var usersShortsResponse = _mapper.Map<List<UserShortLocationWorkResponse>>(allSittersIsActiveEntity);
             var usersShortsResponse = allSittersIsActiveEntity.Select(s => new UserShortLocationWorkResponse
             {
                 Id = s.Id,
@@ -112,12 +104,6 @@ namespace DogSitterMarketplaceBll.Services
             }).ToList();
 
             return usersShortsResponse;
-            //}
-            //else
-            //{
-            //    // _logger.Log(LogLevel.Debug, $"{nameof(UserService)} {nameof(GetAllSittersByLocationId)} User with id {clientId} does not have nessety role for get List os Sitters");
-            //    throw new ArgumentException($"User with id {clientId} does not have nessety role for get List os Sitters");
-            //}
         }
     }
 }

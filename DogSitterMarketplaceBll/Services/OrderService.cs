@@ -97,7 +97,7 @@ namespace DogSitterMarketplaceBll.Services
             orderEntity.Pets.AddRange(petsNotDeleted);
             var orderStatusUnderConsideration = await _orderRepository.GetOrderStatusByName(OrderStatus.UnderConsideration);
             orderEntity.OrderStatusId = orderStatusUnderConsideration.Id;
-            orderEntity.Summ = summ.Value;
+            orderEntity.Summ = summ.Value*petsNotDeleted.Count;
 
             var addOrderEntity = await _orderRepository.AddNewOrder(orderEntity);
             var addOrderResponse = _mapper.Map<OrderResponse>(addOrderEntity);
