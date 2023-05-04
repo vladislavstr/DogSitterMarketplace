@@ -21,6 +21,7 @@ namespace DogSitterMarketplaceBll.Mappings
             CreateMap<OrderEntity, OrderResponse>();
             CreateMap<OrderStatusEntity, OrderStatusResponse>();
             CreateMap<SitterWorkEntity, SitterWorkResponse>();
+            CreateMap<SitterWorkEntity, SitterWorkBaseResponse>();
             CreateMap<WorkTypeEntity, WorkTypeResponse>();
             CreateMap<LocationEntity, LocationResponse>();
             CreateMap<CommentEntity, CommentWithUserShortResponse>();
