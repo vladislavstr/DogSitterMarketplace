@@ -6,6 +6,8 @@ using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Users;
+using ILogger = NLog.ILogger;
+using LogLevel = NLog.LogLevel;
 
 namespace DogSitterMarketplaceBll.Services
 {
@@ -13,62 +15,88 @@ namespace DogSitterMarketplaceBll.Services
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly ILogger _logger;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, ILogger nLogger)
         {
             _mapper = mapper;
             _userRepository = userRepository;
+            _logger = nLogger;
         }
 
         public List<UserResponse> GetAllUsers()
         {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(GetAllUsers)}");
+
             var allusersEntitys = _userRepository.GetAllUsers();
             var userResponse = _mapper.Map<List<UserResponse>>(allusersEntitys);
+
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(GetAllUsers)}");
 
             return userResponse;
         }
 
         public ICollection<UserResponse> GetAllNotDeletedUsers()
         {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(GetAllNotDeletedUsers)}");
+
             var allusersEntitys = _userRepository.GetAllUsers();
             var usersEntitys = allusersEntitys
                            .Where(u => !u.IsDeleted);
             var userResponse = _mapper.Map<ICollection<UserResponse>>(usersEntitys);
+
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(GetAllNotDeletedUsers)}");
 
             return userResponse;
         }
 
         public UserResponse GetUserById(int id)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(GetUserById)}");
+
             var usersEntitys = _userRepository.GetUserById(id);
             var userResponse = _mapper.Map<UserResponse>(usersEntitys);
+
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(GetUserById)}");
 
             return userResponse;
         }
 
         public UserResponse AddUser(UserRequest user)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(AddUser)}");
+
             var userEntity = _mapper.Map<UserEntity>(user);
             var addUserEntity = _userRepository.AddUser(userEntity);
             var addUserResponse = _mapper.Map<UserResponse>(addUserEntity);
+
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(AddUser)}");
 
             return addUserResponse;
         }
 
         public UserPassportDataResponse AddUserPassportData(UserPassportDataRequest PassportData)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(AddUserPassportData)}");
+
             var userPassportDataEntity = _mapper.Map<UserPassportDataEntity>(PassportData);
             var addUserPassportDataEntity = _userRepository.AddUserPassportData(userPassportDataEntity);
             var addUserPassportDataResponse = _mapper.Map<UserPassportDataResponse>(addUserPassportDataEntity);
+
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(AddUserPassportData)}");
 
             return addUserPassportDataResponse;
         }
 
         public UserStatusResponse AddUserStatus(UserStatusRequest userStatus)
         {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(AddUserStatus)}");
+
             var userStatusEntity = _mapper.Map<UserStatusEntity>(userStatus);
             var adduserStatusEntity = _userRepository.AddUserStatus(userStatusEntity);
             var adduserStatusResponse = _mapper.Map<UserStatusResponse>(adduserStatusEntity);
+
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(AddUserStatus)}");
 
             return adduserStatusResponse;
         }

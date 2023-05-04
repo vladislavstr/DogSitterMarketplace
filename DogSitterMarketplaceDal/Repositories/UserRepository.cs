@@ -53,8 +53,8 @@ namespace DogSitterMarketplaceDal.Repositories
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
-                throw new Exception($"Id:{id} - отсутствует");
+                _logger.Log(LogLevel.Error, $"User with id {id} not found");
+                throw new FileNotFoundException($"User with id {id} not found");
             }
         }
 

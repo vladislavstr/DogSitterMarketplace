@@ -35,6 +35,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(GetAllUsers)}");
                 return BadRequest(ex.Message);
             }
         }
@@ -48,6 +49,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(GetAllNotDeletedUsers)}");
                 return BadRequest(ex.Message);
             }
         }
@@ -59,8 +61,13 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 return Ok(_userService.GetUserById(id));
             }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(GetUserById)}");
                 return BadRequest(ex.Message);
             }
         }
@@ -74,8 +81,17 @@ namespace DogSitterMarketplaceApi.Controllers
                 _userService.DeleteUserById(id);
                 return NoContent();
             }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(DeleteUserById)}");
                 return BadRequest(ex.Message);
             }
         }
@@ -91,8 +107,13 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/User", UriKind.Relative), addUserResponseDto);
             }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(AddUser)}");
                 return BadRequest(ex.Message);
             }
         }
@@ -108,8 +129,13 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/User", UriKind.Relative), addUserPassportDataResponseDto);
             }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
             catch (Exception ex)
             {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(AddUserPassportData)}");
                 return BadRequest(ex.Message);
             }
         }
@@ -125,8 +151,14 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/User", UriKind.Relative), addUserStatusResponseDto);
             }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
             catch (Exception ex)
             {
+  
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(AddUserStatus)}");
                 return BadRequest(ex.Message);
             }
         }

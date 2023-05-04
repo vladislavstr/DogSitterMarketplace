@@ -5,7 +5,6 @@ using DogSitterMarketplaceBll.Models.Appeals.Request;
 using DogSitterMarketplaceBll.Models.Appeals.Response;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Appeals;
-using NLog;
 using ILogger = NLog.ILogger;
 using LogLevel = NLog.LogLevel;
 
