@@ -69,13 +69,13 @@ namespace DogSitterMarketplaceBll.Services
 
         public async Task<SitterWorkResponse> GetInfoSitterWork(int sitterWorkId, bool? isDeleted)
         {
-            var t =  _mapper.Map<SitterWorkResponse>(await _workAndLocationRepo.GetInfoSitterWork(sitterWorkId, isDeleted));
+            var t = _mapper.Map<SitterWorkResponse>(await _workAndLocationRepo.GetInfoSitterWork(sitterWorkId, isDeleted));
             return t;
         }
 
-        public List<SitterWorkResponse> GetSitterWorksUser(int userId,bool? workIsDeleted = null)
+        public List<SitterWorkResponse> GetSitterWorksUser(int userId, bool? workIsDeleted = null)
         {
-            return _mapper.Map<List<SitterWorkResponse>>(_workAndLocationRepo.GetSitterWorksUser(userId,workIsDeleted));
+            return _mapper.Map<List<SitterWorkResponse>>(_workAndLocationRepo.GetSitterWorksUser(userId, workIsDeleted));
         }
 
         //public List<SitterWorkResponse> GetSitterWorksUserByStatusIsDeleted(int userId, bool isDeleted = false)

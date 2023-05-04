@@ -75,8 +75,8 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public UserEntity AddUser(UserEntity user)
         {
-                _context.Users.Add(user);
-                _context.SaveChanges();
+            _context.Users.Add(user);
+            _context.SaveChanges();
 
             _logger.Log(LogLevel.Info, $"Add new User {user.ToString()}");
 
@@ -91,14 +91,14 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public UserPassportDataEntity AddUserPassportData(UserPassportDataEntity PassportData)
         {
-                _context.UsersPassportData.Add(PassportData);
-                _context.SaveChanges();
+            _context.UsersPassportData.Add(PassportData);
+            _context.SaveChanges();
 
             _logger.Log(LogLevel.Info, $"Add new UserPassportData {PassportData.ToString()}");
 
             return _context.UsersPassportData
                     .Single(upd => upd.Id == PassportData.Id);
-           
+
         }
 
         public void DeleteUserById(int id)

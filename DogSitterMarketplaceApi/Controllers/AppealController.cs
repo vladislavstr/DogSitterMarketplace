@@ -191,13 +191,13 @@ namespace DogSitterMarketplaceApi.Controllers
             {
                 if (statusId != 1)
                 {
-                    if(text is not null)
+                    if (text is not null)
                     {
 
-                    var addAppealResponse = _appealService.DoResponseTextByAppeal(id,text,statusId);
-                    var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
+                        var addAppealResponse = _appealService.DoResponseTextByAppeal(id, text, statusId);
+                        var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
 
-                    return Created(new Uri("api/Appeal", UriKind.Relative), addAppealResponseDto);
+                        return Created(new Uri("api/Appeal", UriKind.Relative), addAppealResponseDto);
                     }
                     else
                     {

@@ -28,7 +28,7 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPost("newTimings/{locationWorkId}")]
-        public async Task<ActionResult<List<TimingLocationWorkResponseDto>>> AddNewTimesWorks(int locationWorkId,[FromQuery] List<TimingLocationWorkRequestDto> newTimings)
+        public async Task<ActionResult<List<TimingLocationWorkResponseDto>>> AddNewTimesWorks(int locationWorkId, [FromQuery] List<TimingLocationWorkRequestDto> newTimings)
         {
             ChekWriteTime(newTimings);
             var newTimingsAdd = new List<TimingLocationWorkResponseDto>();

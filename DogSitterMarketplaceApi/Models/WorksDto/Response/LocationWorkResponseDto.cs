@@ -2,7 +2,7 @@
 
 namespace DogSitterMarketplaceApi.Models.WorksDto
 {
-    public class LocationWorkResponseDto:LocationWorkBaseResponseDto
+    public class LocationWorkResponseDto : LocationWorkBaseResponseDto
     {
 
         public SitterWorkBaseResponseDto SitterWork { get; set; }

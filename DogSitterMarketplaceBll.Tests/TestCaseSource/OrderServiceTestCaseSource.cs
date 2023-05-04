@@ -3051,15 +3051,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 },
                 SitterWork = new SitterWorkEntity
                 {
-                    Id = 10,
-                    //LocationsWork = new List<LocationWorkEntity>
-                    //{
-                    //    new LocationWorkEntity
-                    //    {
-                    //        SitterWorkId = 10,
-                    //        LocationId = 1000
-                    //    }
-                    //}
+                    Id = 10
                 },
                 Location = new LocationEntity
                 {
@@ -3117,24 +3109,11 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                     Name = "type101",
                     IsDeleted = false
                 },
-                WorkTypeId = 101,
-                //LocationsWork = new List<LocationWorkEntity>
-                //{
-                //new LocationWorkEntity
-                //    {
-                //     LocationId = 1000,
-                //     SitterWorkId = 10,
-                //     Price = 100
-                //    }
-                //},
+                WorkTypeId = 101
                 IsDeleted = false,
             };
             List<SitterWorkEntity> allSitterWorks = new List<SitterWorkEntity>
             {
-                //new SitterWorkEntity
-                //{
-                // LocationsWork = new List<LocationWorkEntity>()
-                //}
                 new SitterWorkEntity
                 {
                 LocationsWork = new List<LocationWorkEntity>
@@ -3201,15 +3180,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
                 },
                 SitterWork = new SitterWorkEntity
                 {
-                    Id = 10,
-                    //LocationsWork = new List<LocationWorkEntity>
-                    //{
-                    //    new LocationWorkEntity
-                    //    {
-                    //        SitterWorkId = 10,
-                    //        LocationId = 1000
-                    //    }
-                    //}
+                    Id = 10
                 },
                 Location = new LocationEntity
                 {
@@ -3281,11 +3252,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             };
             List<SitterWorkEntity> allSitterWorks2 = new List<SitterWorkEntity>
             {
-                //new SitterWorkEntity
                 new SitterWorkEntity
-                //{ 
-                //LocationsWork= new List<LocationWorkEntity>()
-                //}
                 {
                 LocationsWork = new List<LocationWorkEntity>
                     {
@@ -3328,15 +3295,7 @@ namespace DogSitterMarketplaceBll.Tests.TestCaseSource
             {
                 new SitterWorkEntity
                 {
-                    Id = 10,
-                    //LocationsWork = new List<LocationWorkEntity>
-                    //    {
-                    //        new LocationWorkEntity
-                    //        {
-                    //            SitterWorkId = 10,
-                    //            LocationId = 1000
-                    //        }
-                    //    }
+                    Id = 10
                 }
             };
             List<OrderResponse> expected = new List<OrderResponse>

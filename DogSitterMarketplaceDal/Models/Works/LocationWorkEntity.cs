@@ -25,7 +25,7 @@ namespace DogSitterMarketplaceDal.Models.Works
 
         [Required]
         [ForeignKey(nameof(SitterWorkId))]
-        public  SitterWorkEntity SitterWork { get; set; }
+        public SitterWorkEntity SitterWork { get; set; }
 
         public int SitterWorkId { get; set; }
 

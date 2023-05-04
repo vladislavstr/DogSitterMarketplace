@@ -37,7 +37,7 @@ namespace DogSitterMarketplaceBll.Services
             var oldLocationWork = await _workAndLocationRepo.GetAllLocationsWorkBySitterWork(location.SitterWorkId);
             var newLocationWornBll = _mapper.Map<LocationWorkEntity>(location);
 
-            if (oldLocationWork.Count!=0)
+            if (oldLocationWork.Count != 0)
             {
                 if (oldLocationWork.Exists(lw => lw.LocationId == newLocationWornBll.LocationId && lw.IsNotActive == false))
                 {
@@ -110,12 +110,12 @@ namespace DogSitterMarketplaceBll.Services
 
         public async Task<List<LocationWorkResponse>> GetAllLocationWorkBySitterWork(int sitterWorkId, bool? isNotActive)
         {
-            return _mapper.Map<List<LocationWorkResponse>>(await _workAndLocationRepo.GetAllLocationsWorkBySitterWork(sitterWorkId,isNotActive));
+            return _mapper.Map<List<LocationWorkResponse>>(await _workAndLocationRepo.GetAllLocationsWorkBySitterWork(sitterWorkId, isNotActive));
         }
 
         public async Task<List<LocationWorkResponse>> GetAllLocationWorkByLocation(int locationId, bool? isNotActive)
         {
-            return _mapper.Map<List<LocationWorkResponse>>(await _workAndLocationRepo.GetAllLocationWorkByLocation(locationId,isNotActive));
+            return _mapper.Map<List<LocationWorkResponse>>(await _workAndLocationRepo.GetAllLocationWorkByLocation(locationId, isNotActive));
         }
 
         //public async Task<List<LocationWorkResponse>> GetAllLocationWorkByLocationAndStatus(int locationId, bool isNotActive = false)
