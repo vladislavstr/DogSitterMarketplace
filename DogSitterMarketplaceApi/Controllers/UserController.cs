@@ -96,6 +96,23 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
+        [HttpPost("PassportData", Name = "AddUserPassportData")]
+        public ActionResult<UserPassportDataResponseDto> AddUserPassportData(UserPassportDataRequestDto userPassportData)
+        {
+            try
+            {
+                var userPassportDataRequst = _mapper.Map<UserPassportDataRequest>(userPassportData);
+                var addUserPassportDataResponse = _userService.AddUserPassportData(userPassportDataRequst);
+                var addUserPassportDataResponseDto = _mapper.Map<UserPassportDataResponseDto>(addUserPassportDataResponse);
+
+                return Created(new Uri("api/User", UriKind.Relative), addUserPassportDataResponseDto);
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
+
         [HttpGet("allSittersByLocation/{locationId}", Name = "GetAllSittersByLocationId")]
         public async Task<ActionResult<List<UserShortLocationWorkResponseDto>>> GetAllSittersByLocationId(int locationId)
         {
