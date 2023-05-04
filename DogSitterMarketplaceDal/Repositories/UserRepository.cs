@@ -117,6 +117,25 @@ namespace DogSitterMarketplaceDal.Repositories
                 var user = _context.Users.Single(u => !u.IsDeleted && u.Id == id);
                 user.IsDeleted = true;
                 _context.SaveChanges();
+
+                _logger.Log(LogLevel.Info, $"User with id {id} is deleted");
+            }
+            catch (Exception exception)
+            {
+                _logger.Log(LogLevel.Error, $"User with id {id} not found");
+                throw new FileNotFoundException($"User with id {id} not found");
+            }
+        }
+
+        public void BlockingUserById(int id)
+        {
+            try
+            {
+                var user = _context.Users.Single(u => !u.IsDeleted && u.Id == id);
+                user.UserStatusId = 2;
+                _context.SaveChanges();
+
+                _logger.Log(LogLevel.Info, $"User with id {id} is banned");
             }
             catch (Exception exception)
             {
@@ -143,7 +162,8 @@ namespace DogSitterMarketplaceDal.Repositories
         //        }
         //        else
         //        {
-        //            throw new Exception($"Id:{user.Name} - отсутствует");
+        //            _logger.Log(LogLevel.Error, $"User with id {id} not found");
+        //throw new FileNotFoundException($"User with id {id} not found");
         //        }
         //    }
         //    catch (Exception exception)

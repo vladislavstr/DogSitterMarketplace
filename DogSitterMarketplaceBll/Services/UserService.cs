@@ -6,6 +6,7 @@ using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Users;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 using ILogger = NLog.ILogger;
 using LogLevel = NLog.LogLevel;
 
@@ -66,6 +67,18 @@ namespace DogSitterMarketplaceBll.Services
         {
             _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(AddUser)}");
 
+            List<UserResponse> usersResponse = new List<UserResponse>();
+            usersResponse = GetAllNotDeletedUsers().ToList();
+            if (usersResponse.Exists(u => u.Email == user.Email && u.UserStatus.Id == 2))
+            {
+                throw new ArgumentException($"User with Email {user.Email} is banned");
+            }
+            else if (usersResponse.Exists(u => u.Email == user.Email)) 
+            {
+                throw new ArgumentException($"User with Email {user.Email} is exist");
+            }
+            else 
+            { 
             var userEntity = _mapper.Map<UserEntity>(user);
             var addUserEntity = _userRepository.AddUser(userEntity);
             var addUserResponse = _mapper.Map<UserResponse>(addUserEntity);
@@ -73,6 +86,7 @@ namespace DogSitterMarketplaceBll.Services
             _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(AddUser)}");
 
             return addUserResponse;
+            }
         }
 
         public UserPassportDataResponse AddUserPassportData(UserPassportDataRequest PassportData)
@@ -120,6 +134,11 @@ namespace DogSitterMarketplaceBll.Services
         public void DeleteUserById(int id)
         {
             _userRepository.DeleteUserById(id);
+        }
+
+        public void BlockingUserById(int id)
+        {
+            _userRepository.BlockingUserById(id);
         }
 
         //добавить логгер

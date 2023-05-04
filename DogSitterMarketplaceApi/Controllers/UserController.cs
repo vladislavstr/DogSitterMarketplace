@@ -54,7 +54,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetUserById")]
+        [HttpGet("{id:int}", Name = "GetUserById")]
         public ActionResult GetUserById(int id)
         {
             try
@@ -73,7 +73,7 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
 
-        [HttpDelete("{id}", Name = "DeleteUserById")]
+        [HttpDelete("{id:int}", Name = "DeleteUserById")]
         public IActionResult DeleteUserById(int id)
         {
             try
@@ -96,6 +96,29 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
+        [HttpPatch("{id:int}", Name = "BlockingUserById")]
+        public IActionResult BlockingUserById(int id)
+        {
+            try
+            {
+                _userService.BlockingUserById(id);
+                return NoContent();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(BlockingUserById)}");
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost("AddUser", Name = "AddUser")]
         public ActionResult<UserResponseDto> AddUser(UserRequestDto user)
         {
@@ -107,9 +130,9 @@ namespace DogSitterMarketplaceApi.Controllers
 
                 return Created(new Uri("api/User", UriKind.Relative), addUserResponseDto);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -163,7 +186,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpGet("allSittersByLocation/{locationId}", Name = "GetAllSittersByLocationId")]
+        [HttpGet("allSittersByLocation/{locationId:int}", Name = "GetAllSittersByLocationId")]
         public async Task<ActionResult<List<UserShortLocationWorkResponseDto>>> GetAllSittersByLocationId(int locationId)
         {
             try

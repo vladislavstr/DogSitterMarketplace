@@ -16,7 +16,7 @@
 
         public int UserRoleId { get; set; }
 
-        public int UserStatusId { get; set; }
+        //public int UserStatusId { get; set; }
 
         //public ICollection<PetRequestDto> Pets { get; set; }
     }
