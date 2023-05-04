@@ -6,7 +6,7 @@ namespace DogSitterMarketplaceApi.Models.WorksDto
     {
         public int Id { get; set; }
 
-        public int Price { get; set; }
+        public decimal Price { get; set; }
 
         public LocationResponseDto Location { get; set; }
 

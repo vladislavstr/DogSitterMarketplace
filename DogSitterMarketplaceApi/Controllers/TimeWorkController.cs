@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DogSitterMarketplaceApi.Models.WorksDto.Request;
 using DogSitterMarketplaceApi.Models.WorksDto.Response;
 using DogSitterMarketplaceBll.IServices;
@@ -28,7 +28,7 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpPost("newTimings/{locationWorkId}")]
-        public async Task<ActionResult<List<TimingLocationWorkResponseDto>>> AddNewTimesWorks(int locationWorkId, [FromQuery] List<TimingLocationWorkRequestDto> newTimings)
+        public async Task<ActionResult<List<TimingLocationWorkResponseDto>>> AddNewTimesWorks(int locationWorkId,List<TimingLocationWorkRequestDto> newTimings)
         {
             ChekWriteTime(newTimings);
             var newTimingsAdd = new List<TimingLocationWorkResponseDto>();
@@ -179,12 +179,12 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("byLocationWork/{locationId}")]
-        public ActionResult<List<TimingLocationWorkResponseDto>> GetAllTimingOfLocationWork(int locationId)
+        public async Task<ActionResult<List<TimingLocationWorkResponseDto>>> GetAllTimingOfLocationWork(int locationId)
         {
             try
             {
                 var timings = _mapper.Map<List<TimingLocationWorkResponseDto>>
-                    (_timeWorkService.GetAllTimigsOfLocationWork(locationId));
+                    (await _timeWorkService.GetAllTimigsOfLocationWork(locationId));
                 return Ok(timings);
             }
             catch (FileNotFoundException ex)
@@ -194,10 +194,10 @@ namespace DogSitterMarketplaceApi.Controllers
         }
 
         [HttpGet("Days")]
-        public ActionResult<List<DayOfWeekResponseDto>> GetDaysOfWeek()
+        public async Task<ActionResult<List<DayOfWeekResponseDto>>> GetDaysOfWeek()
         {
             var days = _mapper.Map<List<DayOfWeekResponseDto>>
-                (_timeWorkService.GetDaysOfWeek());
+                (await _timeWorkService.GetDaysOfWeek());
             return Ok(days);
         }
     }

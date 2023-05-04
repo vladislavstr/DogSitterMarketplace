@@ -11,5 +11,7 @@ namespace DogSitterMarketplaceBll.Models.Works.Response
         public UserShortResponse User { get; set; }
 
         public WorkTypeResponse WorkType { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

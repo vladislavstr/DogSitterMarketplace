@@ -13,5 +13,7 @@ namespace DogSitterMarketplaceApi.Models.WorksDto
 
         public WorkTypeResponseDto WorkType { get; set; }
 
+        public bool IsDeleted { get; set; }
+
     }
 }
