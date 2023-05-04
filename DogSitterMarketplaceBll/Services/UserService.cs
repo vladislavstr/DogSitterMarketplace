@@ -85,7 +85,7 @@ namespace DogSitterMarketplaceBll.Services
             if (userRole.Name == UserRole.Client)
             {
                 var allSittersEntity = _userRepository.GetAllSittersByLocationId(locationId);
-                var allSittersIsActiveEntity = allSittersEntity.Where(s => s.SitterWorks.Any(sw => sw.LocationWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))).ToList();
+                var allSittersIsActiveEntity = allSittersEntity.Where(s => s.SitterWorks.Any(sw => sw.LocationsWork.Any(lw => !lw.IsNotActive && lw.LocationId == locationId))).ToList();
                 var usersShortsResponse = _mapper.Map<List<UserShortResponse>>(allSittersIsActiveEntity);
 
                 return usersShortsResponse;

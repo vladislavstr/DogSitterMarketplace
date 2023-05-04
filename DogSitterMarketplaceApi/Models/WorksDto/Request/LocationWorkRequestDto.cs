@@ -10,6 +10,6 @@ namespace DogSitterMarketplaceApi.Models.Works.Request
 
         public int LocationId { get; set; }
 
-        public bool IsNotActive { get; set; }
+        public bool? IsNotActive { get; set; }
     }
 }

@@ -3,7 +3,6 @@ using DogSitterMarketplaceApi.Models.WorksDto.Request;
 using DogSitterMarketplaceApi.Models.WorksDto.Response;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Works.Request;
-using DogSitterMarketplaceBll.Models.Works.Request;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using ILogger = NLog.ILogger;
@@ -28,18 +27,18 @@ namespace DogSitterMarketplaceApi.Controllers
             _validations = new TimingLocationWorkRequestDtoValidator();
         }
 
-        [HttpPost("addListTimingsToLocationWork", Name = "AddNewTimings")]
-        public ActionResult<bool> AddNewTimesWorks(int locationWorkId, List<TimingLocationWorkRequestDto> newTimings)
+        [HttpPost("newTimings/{locationWorkId}")]
+        public async Task<ActionResult<List<TimingLocationWorkResponseDto>>> AddNewTimesWorks(int locationWorkId,[FromQuery] List<TimingLocationWorkRequestDto> newTimings)
         {
             ChekWriteTime(newTimings);
-            bool newTimingsAdd = false;
+            var newTimingsAdd = new List<TimingLocationWorkResponseDto>();
 
             try
             {
                 var newTimingsBll = _mapper.Map<List<TimingLocationWorkRequest>>(newTimings);
-                newTimingsAdd = _timeWorkService.AddNewTimeWork(locationWorkId, newTimingsBll);
+                newTimingsAdd = _mapper.Map<List<TimingLocationWorkResponseDto>>(await _timeWorkService.AddNewTimeWork(locationWorkId, newTimingsBll));
 
-                return Ok(newTimingsAdd);
+                return Created(new Uri("api/Timings", UriKind.Relative), newTimingsAdd);
             }
             catch (InvalidWriteTimeException ex)
             {
@@ -51,22 +50,22 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (FileNotFoundException ex)
             {
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
             }
         }
 
-        [HttpPost("addOneTimingToLocationWork", Name = "AddNewTiming")]
-        public ActionResult<bool> AddNewTimeWork(TimingLocationWorkRequestDto newTiming)
+        [HttpPost]
+        public async Task<ActionResult<TimingLocationWorkResponseDto>> AddNewTimeWork([FromQuery] TimingLocationWorkRequestDto newTiming)
         {
             CheckWriteTime(newTiming);
-            bool newTimingAdd = false;
+            TimingLocationWorkResponseDto newTimingAdd = null;
 
             try
             {
                 var newTimingBll = _mapper.Map<TimingLocationWorkRequest>(newTiming);
-                newTimingAdd = _timeWorkService.AddNewTimeWork(newTimingBll);
+                newTimingAdd = _mapper.Map<TimingLocationWorkResponseDto>(await _timeWorkService.AddNewTimeWork(newTimingBll));
 
-                return Ok(newTimingAdd);
+                return Created(new Uri("api/Timing", UriKind.Relative), newTimingAdd);
             }
             catch (InvalidWriteTimeException ex)
             {
@@ -78,32 +77,55 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (FileNotFoundException ex)
             {
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
             }
-            catch (Exception ex)
+        }
+
+        [HttpPatch]
+        public async Task<ActionResult<TimingLocationWorkResponseDto>> UpdateTimeWork([FromQuery] TimingLocationWorkWithIdRequesDto updateTiming)
+        {
+            var chetTiming = _mapper.Map<TimingLocationWorkRequestDto>(updateTiming);
+            CheckWriteTime(chetTiming);
+            TimingLocationWorkResponseDto newTimingAdd = null;
+
+            try
+            {
+                var newTimingBll = _mapper.Map<TimingLocationWorkWithIdRequest>(updateTiming);
+                newTimingAdd = _mapper.Map<TimingLocationWorkResponseDto>(await _timeWorkService.UpdateTimeWork(newTimingBll));
+
+                return Created(new Uri("api/Timing", UriKind.Relative), newTimingAdd);
+            }
+            catch (InvalidWriteTimeException ex)
             {
                 return BadRequest(ex.Message);
             }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (FileNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
-        
+
         private void ChekWriteTime(List<TimingLocationWorkRequestDto> timings)
         {
             string exceptionMessage = "";
 
             foreach (var t in timings)
             {
-                var v = _validations.Validate(t);
+                var validate = _validations.Validate(t);
 
-                if (!v.IsValid)
+                if (!validate.IsValid)
                 {
-                    foreach (var er in v.Errors)
+                    foreach (var er in validate.Errors)
                     {
                         _logger.Log(LogLevel.Error, $"Property {er.PropertyName} failed validation. Error was: {er.AttemptedValue} {er.ErrorMessage}");
                         exceptionMessage = $"{er.AttemptedValue} {er.ErrorMessage}";
                     }
                 }
             }
-
             if (exceptionMessage != "")
             {
                 throw new InvalidWriteTimeException(exceptionMessage);
@@ -113,11 +135,11 @@ namespace DogSitterMarketplaceApi.Controllers
         private void CheckWriteTime(TimingLocationWorkRequestDto timing)
         {
             string exceptionMessage = "";
-            var v = _validations.Validate(timing);
+            var validate = _validations.Validate(timing);
 
-            if (!v.IsValid)
+            if (!validate.IsValid)
             {
-                foreach (var er in v.Errors)
+                foreach (var er in validate.Errors)
                 {
                     _logger.Log(LogLevel.Error, $"Property {er.PropertyName} failed validation. Error was: {er.AttemptedValue} {er.ErrorMessage}");
                     exceptionMessage = $"{er.AttemptedValue} {er.ErrorMessage}";
@@ -126,58 +148,22 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpPut("UpdateOneTiming", Name = "GetComment")]
-        public ActionResult<bool> UpdateTimeWork(TimingLocationWorkWithIdRequesDto timingUpdate)
-        {
-            var checkTiming = _mapper.Map<TimingLocationWorkRequestDto>(timingUpdate);
-            CheckWriteTime(checkTiming);
-            bool isUpdate = false;
 
+        [HttpDelete("{timingId}")]
+        public async Task<ActionResult<bool>> DeleteTiming(int timingId)
+        {
             try
             {
-                var timingUpdateBll = _mapper.Map<TimingLocationWorkWithIdRequest>(timingUpdate);
-                isUpdate = _timeWorkService.UpdateTimeWork(timingUpdateBll);
-                _logger.Log(LogLevel.Info, $"Timing is update");
-                return Ok(isUpdate);
-            }
-            catch (InvalidWriteTimeException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return BadRequest(ex.Message);
+                bool isDeleted = await _timeWorkService.DeleteTiming(timingId);
+                return Ok(isDeleted);
             }
             catch (FileNotFoundException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
-        [HttpDelete("DeleteTiming/timingId",Name = "DeleteTiming")]
-        public ActionResult<bool> DeleteTiming(int timingId)
-        {
-            try
-            {
-                bool isUpdate = _timeWorkService.DeleteTiming(timingId);
-                _logger.Log(LogLevel.Info, "Timing is delete");
-                return Ok(isUpdate);
-            }
-            catch (FileNotFoundException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("GetOneTiming/id",Name = "GetTiming")]
+        [HttpGet("timing/{timingId}")]
         public ActionResult<TimingLocationWorkResponseDto> GetOneTiming(int timingId)
         {
             try
@@ -186,30 +172,33 @@ namespace DogSitterMarketplaceApi.Controllers
                     (_timeWorkService.GetTiming(timingId));
                 return Ok(timing);
             }
-            catch(FileNotFoundException ex)
+            catch (FileNotFoundException ex)
             {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
             }
         }
 
-        [HttpGet("GetAllTimingOfLocationWork/id", Name = "GetAllTimingOfLocationWork")]
-        public ActionResult<List<TimingLocationWorkResponseDto>> GetAllTimingOfLocationWork(int timingId)
+        [HttpGet("byLocationWork/{locationId}")]
+        public ActionResult<List<TimingLocationWorkResponseDto>> GetAllTimingOfLocationWork(int locationId)
         {
             try
             {
-                var timings  = _mapper.Map<List<TimingLocationWorkResponseDto>>
-                    (_timeWorkService.GetAllTimigsOfLocationWork(timingId));
+                var timings = _mapper.Map<List<TimingLocationWorkResponseDto>>
+                    (_timeWorkService.GetAllTimigsOfLocationWork(locationId));
                 return Ok(timings);
             }
-            catch (Exception ex)
+            catch (FileNotFoundException ex)
             {
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
             }
         }
 
+        [HttpGet("Days")]
+        public ActionResult<List<DayOfWeekResponseDto>> GetDaysOfWeek()
+        {
+            var days = _mapper.Map<List<DayOfWeekResponseDto>>
+                (_timeWorkService.GetDaysOfWeek());
+            return Ok(days);
+        }
     }
 }
