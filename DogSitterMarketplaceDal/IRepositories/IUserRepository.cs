@@ -10,6 +10,8 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public UserEntity AddUser(UserEntity user);
 
+        public UserPassportDataEntity AddUserPassportData(UserPassportDataEntity PassportData);
+
         public void DeleteUserById(int id);
 
         //public void UpdateUserById(UserEntity user);

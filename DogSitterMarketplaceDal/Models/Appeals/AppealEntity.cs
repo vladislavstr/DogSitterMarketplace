@@ -2,6 +2,7 @@ using DogSitterMarketplaceDal.Models.Orders;
 using DogSitterMarketplaceDal.Models.Users;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DogSitterMarketplaceDal.Models.Appeals
 {
@@ -35,10 +36,11 @@ namespace DogSitterMarketplaceDal.Models.Appeals
 
         public int StatusId { get; set; }
 
-        //[Required]
+        [AllowNull]
         [ForeignKey(nameof(OrderId))]
         public OrderEntity? Order { get; set; }
 
+        [AllowNull]
         public int? OrderId { get; set; }
 
         [Required]

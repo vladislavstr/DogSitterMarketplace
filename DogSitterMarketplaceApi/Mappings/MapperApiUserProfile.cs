@@ -14,14 +14,23 @@ namespace DogSitterMarketplaceApi.Mappings
     {
         public MapperApiUserProfile()
         {
+            //User 
             CreateMap<UserResponse, UserResponseDto>();
             CreateMap<UserRequestDto, UserRequest>();
-            CreateMap<UserPassportDataRequestDto, UserPassportDataRequest>();
+
+            //PassportData 
             CreateMap<UserPassportDataResponse, UserPassportDataResponseDto>();
-            CreateMap<UserRoleRequestDto, UserRoleRequest>();
+            CreateMap<UserPassportDataRequestDto, UserPassportDataRequest>();
+
+            //Role 
             CreateMap<UserRoleResponse, UserRoleResponseDto>();
+            CreateMap<UserRoleRequestDto, UserRoleRequest>();
+
+            //Status 
             CreateMap<UserStatusRequestDto, UserStatusResponseDto>();
             CreateMap<UserStatusResponse, UserStatusResponseDto>();
+
+            //All 
             CreateMap<PetRequestDto, PetRequest>().ReverseMap();
             CreateMap<UserUpdateDto, UserUpdate>().ReverseMap();
             CreateMap<UserShortLocationWorkResponse, UserShortLocationWorkResponseDto>();

@@ -4,6 +4,7 @@ using DogSitterMarketplaceApi.Models.AppealsDto.Response;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Appeals.Request;
 using Microsoft.AspNetCore.Mvc;
+using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
 {
@@ -11,24 +12,19 @@ namespace DogSitterMarketplaceApi.Controllers
     [Route("api/[controller]")]
     public class AppealController : ControllerBase
     {
-        //private readonly ILogger _logger;
+        private readonly ILogger _logger;
         private readonly IMapper _mapper;
         private readonly IAppealService _appealService;
 
-        public AppealController(IAppealService appealService, IMapper mapper)//, ILogger logger)
+        public AppealController(IAppealService appealService, IMapper mapper, ILogger logger)
         {
-            //_logger = logger;
+            _logger = logger;
             _mapper = mapper;
             _appealService = appealService;
+            _logger = logger;
         }
 
-        [HttpGet("GrtPing")]
-        public IActionResult GrtPing()
-        {
-            return Ok();
-        }
-
-        [HttpGet("GetAllAppeals", Name = "GetAllAppeals")]
+        [HttpGet(Name = "GetAllAppeals")]
         public ActionResult<IEnumerable<AppealResponseDto>> GetAllAppeals()
         {
             try
@@ -37,11 +33,11 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("GetAllNotAnsweredAppeals", Name = "GetAllNotAnsweredAppeals")]
+        [HttpGet("NotAnswered", Name = "GetAllNotAnsweredAppeals")]
         public ActionResult GetAllNotAnsweredAppeals()
         {
             try
@@ -50,11 +46,11 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("GetAppealById/{id:int}", Name = "GetAppealById")]
+        [HttpGet("{id:int}", Name = "GetAppealById")]
         public ActionResult GetAppealById(int id)
         {
             try
@@ -63,11 +59,37 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("GetAppealByUserIdToWhom/{id:int}", Name = "GetAppealByUserIdToWhom")]
+        [HttpGet("Statuses", Name = "GetAllAppealStatuses")]
+        public ActionResult<IEnumerable<AppealStatusResponseDto>> GetAllAppealStatuses()
+        {
+            try
+            {
+                return Ok(_appealService.GetAllAppealStatuses());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("Types", Name = "GetAllAppealTypes")]
+        public ActionResult<IEnumerable<AppealTypeResponseDto>> GetAllAppealTypes()
+        {
+            try
+            {
+                return Ok(_appealService.GetAllAppealTypes());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("ToWhom/{id:int}", Name = "GetAppealByUserIdToWhom")]
         public ActionResult GetAppealByUserIdToWhom(int id)
         {
             try
@@ -76,11 +98,11 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("GetAppealByUserIdFromWhom/{id:int}", Name = "GetAppealByUserIdFromWhom")]
+        [HttpGet("FromWhom/{id:int}", Name = "GetAppealByUserIdFromWhom")]
         public ActionResult GetAppealByUserIdFromWhom(int id)
         {
             try
@@ -89,16 +111,20 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpPost("AddAppeal", Name = "AddAppeal")]
+        [HttpPost(Name = "AddAppeal")]
         public ActionResult<AppealResponseDto> AddAppeal(AppealRequestDto appeal)
         {
             try
             {
                 var appealRequst = _mapper.Map<AppealRequest>(appeal);
+
+                appealRequst.DateOfCreate = DateTime.UtcNow;
+                appealRequst.StatusId = 1;
+
                 var addAppealResponse = _appealService.AddAppeal(appealRequst);
                 var addAppealResponseDto = _mapper.Map<AppealResponseDto>(addAppealResponse);
 
@@ -106,11 +132,11 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpPost("AddAppealStatus", Name = "AddAppealStatus")]
+        [HttpPost("Status", Name = "AddAppealStatus")]
         public ActionResult<AppealStatusResponseDto> AddAppealStatus(AppealStatusRequestDto appealStatus)
         {
             try
@@ -123,11 +149,11 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpPost("AddAppealType", Name = "AddAppealType")]
+        [HttpPost("Type", Name = "AddAppealType")]
         public ActionResult<AppealTypeResponseDto> AddAppealType(AppealTypeRequestDto appealType)
         {
             try
@@ -140,11 +166,11 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpPut("UpdateAppealStatusById/{AppealId:int}_{StatusId:int}", Name = "UpdateAppealStatusById")]
+        [HttpPatch("Status/{AppealId:int}", Name = "UpdateAppealStatusById")]
         public IActionResult UpdateAppealStatusById(int AppealId, int StatusId)
         {
             try
@@ -154,11 +180,11 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpPut("DoResponseTextById/{id:int}", Name = "DoResponseTextById")]
+        [HttpPatch("ResponseText/{id:int}", Name = "DoResponseTextById")]
         public ActionResult<AppealUpdateDto> DoResponseTextByAppealId(int id, string text, int statusId)
         {
             try
@@ -185,7 +211,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }
