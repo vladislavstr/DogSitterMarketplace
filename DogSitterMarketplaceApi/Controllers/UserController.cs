@@ -3,6 +3,7 @@ using DogSitterMarketplaceApi.Models.UsersDto.Request;
 using DogSitterMarketplaceApi.Models.UsersDto.Response;
 using DogSitterMarketplaceBll.IServices;
 using DogSitterMarketplaceBll.Models.Users.Request;
+using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using ILogger = NLog.ILogger;
@@ -96,7 +97,7 @@ namespace DogSitterMarketplaceApi.Controllers
             }
         }
 
-        [HttpPatch("{id:int}", Name = "BlockingUserById")]
+        [HttpPatch("Blocking/{id:int}", Name = "BlockingUserById")]
         public IActionResult BlockingUserById(int id)
         {
             try
@@ -117,6 +118,32 @@ namespace DogSitterMarketplaceApi.Controllers
                 _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(BlockingUserById)}");
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPatch("{id:int}", Name = "UpdateUserById")]
+        public IActionResult UpdateUserById(int id, int UserPassportDataId, int UserStatusId)
+        {
+            try
+            {
+                var addUserResponse = _userService.UpdateUserById(id, UserPassportDataId, UserStatusId);
+                var addUserResponseDto = _mapper.Map<UserResponseDto>(addUserResponse);
+
+                return Created(new Uri("api/User", UriKind.Relative), addUserResponseDto);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(NLog.LogLevel.Error, $" {ex} {nameof(UserController)} {nameof(UpdateUserById)}");
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpPost("AddUser", Name = "AddUser")]

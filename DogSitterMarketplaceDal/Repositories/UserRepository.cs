@@ -75,8 +75,8 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public UserEntity AddUser(UserEntity user)
         {
-                _context.Users.Add(user);
-                _context.SaveChanges();
+            _context.Users.Add(user);
+            _context.SaveChanges();
 
             _logger.Log(LogLevel.Info, $"Add new User {user.ToString()}");
 
@@ -90,13 +90,13 @@ namespace DogSitterMarketplaceDal.Repositories
 
         public UserPassportDataEntity AddUserPassportData(UserPassportDataEntity passportData)
         {
-                _context.UsersPassportData.Add(passportData);
-                _context.SaveChanges();
+            _context.UsersPassportData.Add(passportData);
+            _context.SaveChanges();
 
             _logger.Log(LogLevel.Info, $"Add new UserPassportData {passportData.ToString()}");
 
             return _context.UsersPassportData
-                    .Single(upd => upd.Id == passportData.Id);   
+                    .Single(upd => upd.Id == passportData.Id);
         }
 
         public UserStatusEntity AddUserStatus(UserStatusEntity userStatus)
@@ -144,34 +144,31 @@ namespace DogSitterMarketplaceDal.Repositories
             }
         }
 
-        //public UserEntity UpdateUserById(UserEntity user)
-        //{
-        //    try
-        //    {
-        //        if (user != null)
-        //        {
-        //            var daseUser = _context.Users.Single(u => !u.IsDeleted && u.Id == id);
-        //            daseUser.Email = user.Email;
-        //            daseUser.Password = user.Password;
-        //            daseUser.PhoneNumber = user.PhoneNumber;
-        //            daseUser.Name = user.Name;
-        //            daseUser.PassportData = user.PassportData;
-        //            daseUser.Role = user.Role;
-        //            daseUser.Status = user.Status;
-        //            daseUser.Pets = user.Pets;
-        //        }
-        //        else
-        //        {
-        //            _logger.Log(LogLevel.Error, $"User with id {id} not found");
-        //throw new FileNotFoundException($"User with id {id} not found");
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        Console.WriteLine(exception.Message);
-        //        throw new ArgumentException();
-        //    }
-        //}
+        public UserEntity UpdateUserById(UserEntity user)
+        {
+            var daseUser = _context.Users
+                .Include(u => u.UserPassportData)
+                .Include(u => u.UserRole)
+                .Include(u => u.UserStatus)
+                .Single(u => !u.IsDeleted && u.Id == user.Id);
+
+            if (user == null)
+            {
+                _logger.Log(LogLevel.Error, $"{nameof(UserEntity)} with id {user.Id} not found.");
+                throw new NotFoundException(user.Id, nameof(UserEntity));
+            }
+
+            daseUser.UserPassportDataId = user.UserPassportDataId;
+            daseUser.UserStatusId = user.UserStatusId;
+
+            _context.SaveChanges();
+
+            return _context.Users
+                .Include(u => u.UserPassportData)
+                .Include(u => u.UserRole)
+                .Include(u => u.UserStatus)
+                .Single(u => u.Id == user.Id);
+        }
 
         public async Task<UserRoleEntity> GetUserRoleById(int id)
         {

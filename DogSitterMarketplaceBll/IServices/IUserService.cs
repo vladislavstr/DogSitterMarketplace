@@ -22,6 +22,8 @@ namespace DogSitterMarketplaceBll.IServices
 
         public void BlockingUserById(int id);
 
+        public UserResponse UpdateUserById(int id, int UserPassportDataId, int UserStatusId);
+
         public Task<List<UserShortLocationWorkResponse>> GetAllSittersByLocationId(int locationId);
     }
 }

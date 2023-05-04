@@ -18,7 +18,8 @@ namespace DogSitterMarketplaceDal.IRepositories
 
         public void BlockingUserById(int id);
 
-        //public void UpdateUserById(UserEntity user);
+        public UserEntity UpdateUserById(UserEntity user);
+
         public Task<UserRoleEntity> GetUserRoleById(int id);
 
         public Task<UserEntity> GetUserWithRoleById(int id);

@@ -6,7 +6,6 @@ using DogSitterMarketplaceBll.Models.Users.Response;
 using DogSitterMarketplaceBll.Models.Works.Response;
 using DogSitterMarketplaceDal.IRepositories;
 using DogSitterMarketplaceDal.Models.Users;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
 using ILogger = NLog.ILogger;
 using LogLevel = NLog.LogLevel;
 
@@ -76,19 +75,19 @@ namespace DogSitterMarketplaceBll.Services
             {
                 throw new ArgumentException($"User with Email {user.Email} is ,his status is banned Status.Id: {userResponse.UserStatus.Id}");
             }
-            else if (usersResponse.Exists(u => u.Email == user.Email)) 
+            else if (usersResponse.Exists(u => u.Email == user.Email))
             {
                 throw new ArgumentException($"User with Email {user.Email} is exist with Status.Id: {userResponse.UserStatus.Id}");
             }
-            else 
-            { 
-            var userEntity = _mapper.Map<UserEntity>(user);
-            var addUserEntity = _userRepository.AddUser(userEntity);
-            var addUserResponse = _mapper.Map<UserResponse>(addUserEntity);
+            else
+            {
+                var userEntity = _mapper.Map<UserEntity>(user);
+                var addUserEntity = _userRepository.AddUser(userEntity);
+                var addUserResponse = _mapper.Map<UserResponse>(addUserEntity);
 
-            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(AddUser)}");
+                _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(AddUser)}");
 
-            return addUserResponse;
+                return addUserResponse;
             }
         }
 
@@ -118,22 +117,6 @@ namespace DogSitterMarketplaceBll.Services
             return adduserStatusResponse;
         }
 
-        //public UserResponse AddUser(UserRequest user)
-        //{
-        //    var userEntity = _mapper.Map<UserEntity, UserEntity>(user);
-        //    var addUserEntity = _userRepository.AddUser(userEntity);
-        //    var addUserResponse = _mapper.Map<UserResponse>(addUserEntity);
-
-        //    return addUserResponse;
-        //}
-        //public Order Create(Order order)
-        //{
-        //    var orderDal = mapper.Map<Order, OrderDal>(order);
-        //    var resultDal = repository.Create(orderDal);
-
-        //    return mapper.Map<OrderDal, Order>(resultDal);
-        //}
-
         public void DeleteUserById(int id)
         {
             _userRepository.DeleteUserById(id);
@@ -143,6 +126,42 @@ namespace DogSitterMarketplaceBll.Services
         {
             _userRepository.BlockingUserById(id);
         }
+
+        public UserResponse UpdateUserById(int id, int UserPassportDataId, int UserStatusId)
+        {
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} start {nameof(UpdateUserById)}");
+
+            //UserResponse userResponse = new UserResponse();
+            //List<UserResponse> usersResponse = new List<UserResponse>();
+            //usersResponse = GetAllNotDeletedUsers().ToList();
+            //userResponse = usersResponse.Find(u => u.UserPassportData.Id == UserPassportDataId);
+            //foreach (UserResponse userResponseEntity in usersResponse)
+            //{
+            //    if (userResponseEntity.UserPassportData.Id == UserPassportDataId!)
+            //    {
+            //        throw new ArgumentException($"User{userResponse.Id} have UserPassportId {UserPassportDataId} = {userResponse.UserPassportData.PassportNumber}");
+            //        break;
+            //    }
+            //}
+            //if (usersResponse.Exists(u => u.UserPassportData.Id == UserPassportDataId))
+            //{
+            //    throw new ArgumentException($"User{userResponse.Id} have UserPassportId {UserPassportDataId} = {userResponse.UserPassportData.PassportNumber}");
+            //}
+            //else
+            //{
+
+            var userEntity = _userRepository.GetUserById(id);
+            userEntity.UserStatusId = UserStatusId;
+            userEntity.UserPassportDataId = UserPassportDataId;
+
+            var updateUserEntity = _userRepository.UpdateUserById(userEntity);
+            var updateUserResponse = _mapper.Map<UserResponse>(updateUserEntity);
+
+            _logger.Log(LogLevel.Info, $"{nameof(UserService)} end {nameof(UpdateUserById)}");
+
+            return updateUserResponse;
+        }
+
 
         //добавить логгер
         public async Task<List<UserShortLocationWorkResponse>> GetAllSittersByLocationId(int locationId)
