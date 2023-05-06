@@ -6,6 +6,7 @@ using DogSitterMarketplaceBll.Models.Orders.Request;
 using DogSitterMarketplaceCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 using ILogger = NLog.ILogger;
 
 namespace DogSitterMarketplaceApi.Controllers
@@ -147,8 +148,8 @@ namespace DogSitterMarketplaceApi.Controllers
 
         [HttpGet(Name = "GetAllNotDeletedOrders")]
         [SwaggerOperation(Summary = "Get All Not Deleted Orders")]
-        [SwaggerResponse(200, "Ok")]
-        [SwaggerResponse(400, "Bad Request")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<List<OrderResponseDto>>> GetAllNotDeletedOrders()
         {
             try

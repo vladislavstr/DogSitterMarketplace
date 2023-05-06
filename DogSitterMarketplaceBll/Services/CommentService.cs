@@ -40,7 +40,7 @@ namespace DogSitterMarketplaceBll.Services
 
             var userCommentFrom = await CheckUserIsExistAndIsNotDeleted(addComment.CommentFromUserId);
             var userCommentTo = await CheckUserIsExistAndIsNotDeleted(addComment.CommentToUserId);
-            var orderResponse = await _orderService.CheckAndGetOrderIsExistAndIsNotDeleted(addComment.OrderId);
+            var orderResponse = await _orderService.GetOrderOfTrow(addComment.OrderId);
             var userRoleCommentFrom = await _userRepository.GetUserRoleById(userCommentFrom.RoleId);
             var userRoleCommentTo = await _userRepository.GetUserRoleById(userCommentTo.RoleId);
 

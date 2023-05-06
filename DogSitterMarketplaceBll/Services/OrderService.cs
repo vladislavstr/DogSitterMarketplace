@@ -113,7 +113,7 @@ namespace DogSitterMarketplaceBll.Services
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(ChangeOrderStatus)}");
 
-            var orderResponse = await CheckAndGetOrderIsExistAndIsNotDeleted(orderId);
+            var orderResponse = await GetOrderOfTrow(orderId);
             var changeOrderResponse = new OrderResponse();
             var orderStatus = await _orderRepository.GetOrderStatusById(orderStatusId);
             switch (orderStatus.Name)
@@ -237,11 +237,7 @@ namespace DogSitterMarketplaceBll.Services
         {
             _logger.Log(LogLevel.Info, $"{nameof(OrderService)} start {nameof(UpdateOrder)}");
 
-            if (await CheckAndGetOrderIsExistAndIsNotDeleted(orderUpdate.Id) == null)
-            {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(UpdateOrder)} {nameof(OrderEntity)} with id {orderUpdate.Id} is not exist.");
-                throw new NotFoundException(orderUpdate.Id, nameof(OrderEntity));
-            }
+            await GetOrderOfTrow(orderUpdate.Id);
 
             var allPets = await _petRepository.GetPetsInOrderEntities(orderUpdate.Pets);
             var petsNotDeleted = allPets.Where(p => !p.IsDeleted).ToList();
@@ -271,12 +267,12 @@ namespace DogSitterMarketplaceBll.Services
             return updateOrderResponse;
         }
 
-        public async Task<OrderResponse> CheckAndGetOrderIsExistAndIsNotDeleted(int orderId)
+        public async Task<OrderResponse> GetOrderOfTrow(int orderId)
         {
             var orderEntity = await _orderRepository.GetOrderById(orderId);
             if (orderEntity.IsDeleted)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(CheckAndGetOrderIsExistAndIsNotDeleted)} {nameof(OrderEntity)} with id {orderId} is deleted.");
+                _logger.Log(LogLevel.Debug, $"{nameof(CommentService)} {nameof(GetOrderOfTrow)} {nameof(OrderEntity)} with id {orderId} is deleted.");
                 throw new NotFoundException(orderId, nameof(OrderEntity));
             }
             var orderResponse = _mapper.Map<OrderResponse>(orderEntity);
